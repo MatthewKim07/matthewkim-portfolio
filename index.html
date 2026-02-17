@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matthew Kim | Portfolio</title>
+    <meta
+      name="description"
+      content="Matthew Kim's portfolio: Mechatronics Engineering student at the University of Waterloo and Web Developer at UW Libraries."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="brand" href="#top">MK</a>
+        <nav class="main-nav" aria-label="Primary">
+          <a href="#about">About</a>
+          <a href="#education">Education</a>
+          <a href="#skills">Skills</a>
+          <a href="#projects">Projects</a>
+          <a href="#experience">Experience</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero reveal visible">
+          <p class="eyebrow">Portfolio</p>
+          <h1>Matthew Kim</h1>
+          <p class="headline">
+            Mechatronics Engineering student @ University of Waterloo | Web
+            Developer @ UW Libraries
+          </p>
+          <div class="hero-tags">
+            <span>SWE Intern</span>
+            <span>Backend / Full-Stack</span>
+            <span>Robotics + AI</span>
+            <span>Embedded + Hardware</span>
+          </div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#projects">View Projects</a>
+            <a
+              class="btn btn-ghost"
+              href="./assets/Matthew-Kim-Software-Engineer.pdf"
+              download
+              >Download Resume</a
+            >
+          </div>
+        </section>
+
+        <section class="content-section reveal" id="about">
+          <h2>About</h2>
+          <p>
+            I build software and systems across web, embedded, and engineering
+            workflows. I am currently focused on learning backend and full-stack
+            development while applying my mechatronics background to real-world
+            product, robotics, and interdisciplinary projects.
+          </p>
+          <p>
+            This portfolio highlights software, firmware, and engineering work
+            that reflects how I approach problems: practical, collaborative, and
+            detail-oriented.
+          </p>
+        </section>
+
+        <section class="content-section reveal" id="education">
+          <h2>Education</h2>
+          <article class="card">
+            <div class="card-top">
+              <h3>University of Waterloo</h3>
+              <p>Bachelor of Applied Science, Mechatronics Engineering</p>
+            </div>
+            <div class="meta">
+              <span>Expected Graduation: April 2030</span>
+              <span>Waterloo, Ontario</span>
+            </div>
+          </article>
+        </section>
+
+        <section class="content-section reveal" id="skills">
+          <h2>Skills</h2>
+          <div class="skills-grid">
+            <article class="card skill-card">
+              <h3>Languages</h3>
+              <ul>
+                <li>TypeScript</li>
+                <li>JavaScript</li>
+                <li>Python</li>
+                <li>C</li>
+                <li>C++</li>
+              </ul>
+            </article>
+            <article class="card skill-card">
+              <h3>Frameworks & Libraries</h3>
+              <ul>
+                <li>React</li>
+                <li>Next.js</li>
+                <li>Vite</li>
+                <li>Flask</li>
+                <li>Tailwind CSS</li>
+                <li>Hono</li>
+              </ul>
+            </article>
+            <article class="card skill-card">
+              <h3>Tools</h3>
+              <ul>
+                <li>Git & GitHub</li>
+                <li>Docker</li>
+                <li>Supabase</li>
+                <li>Prisma ORM</li>
+                <li>PostgreSQL</li>
+                <li>Playwright</li>
+              </ul>
+            </article>
+            <article class="card skill-card">
+              <h3>Other</h3>
+              <ul>
+                <li>REST APIs</li>
+                <li>WCAG / ARIA Accessibility</li>
+                <li>Firmware + Embedded Systems</li>
+                <li>CAD (Fusion 360)</li>
+                <li>FDM 3D Printing</li>
+                <li>HIL Testing</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section reveal" id="projects">
+          <h2>Projects</h2>
+          <div class="projects-grid">
+            <article class="card project-card">
+              <div class="project-head">
+                <h3>PantryPal</h3>
+                <a href="https://yourpantrypal.lovable.app/" target="_blank" rel="noreferrer"
+                  >Live Demo</a
+                >
+              </div>
+              <p>
+                PantryPal scans pantry photos, identifies ingredients, and
+                recommends recipes by ingredient match percentage while also
+                supporting meal planning and shopping lists.
+              </p>
+              <p class="impact">
+                <strong>Impact:</strong> Implemented AI ingredient scanning,
+                improved ingredient-to-recipe matching behavior, and shipped UI/UX
+                refinements.
+              </p>
+              <p class="stack">
+                TypeScript, React, Vite, Tailwind CSS, Supabase, Edamam API
+              </p>
+            </article>
+
+            <article class="card project-card">
+              <div class="project-head">
+                <h3>QueueMe</h3>
+                <span class="muted">Link coming soon</span>
+              </div>
+              <p>
+                Virtual queue management platform where companies create queues
+                and customers join remotely to reduce physical lineups and wait
+                friction.
+              </p>
+              <p class="impact">
+                <strong>Impact:</strong> Focused on backend integration,
+                connecting frontend and backend services, and enabling synced
+                queue interactions across multiple devices.
+              </p>
+              <p class="stack">
+                TypeScript, Python, React, Flask, REST APIs, Supabase
+              </p>
+            </article>
+
+            <article class="card project-card">
+              <div class="project-head">
+                <h3>Clarus</h3>
+                <span class="muted">In active development</span>
+              </div>
+              <p>
+                AI-powered academic optimization tool that extends D2L/Brightspace
+                with workload planning, deadline tracking, and productivity
+                insights.
+              </p>
+              <p class="impact">
+                <strong>Impact:</strong> Built the Work Plan Optimizer flow and
+                led interface design direction, including information structure,
+                visual identity, and dashboard layout.
+              </p>
+              <p class="stack">
+                TypeScript, Node.js, Next.js, React, Tailwind CSS, Fastify,
+                Prisma, PostgreSQL, Playwright, Zod, CryptoJS, Recharts
+              </p>
+            </article>
+
+            <article class="card project-card">
+              <div class="project-head">
+                <h3>WaterlooWorks+</h3>
+                <span class="muted">Currently developing</span>
+              </div>
+              <p>
+                Browser extension concept that improves WaterlooWorks with
+                resume-aware job matching, work-term signals, and application
+                support insights.
+              </p>
+              <p class="impact">
+                <strong>Impact:</strong> Ongoing build; details will be expanded
+                as milestones are completed.
+              </p>
+              <p class="stack">Tech stack details coming soon</p>
+            </article>
+
+            <article class="card project-card">
+              <div class="project-head">
+                <h3>UW Assignment Planner</h3>
+                <span class="muted">Internal project</span>
+              </div>
+              <p>
+                University of Waterloo assignment planning web app that generates
+                structured, date-based workflows and timelines.
+              </p>
+              <p class="impact">
+                <strong>Impact:</strong> Developed the full application end-to-end
+                independently.
+              </p>
+              <p class="stack">
+                TypeScript, Node.js, Hono, server-rendered HTML/CSS, vanilla
+                JavaScript, tsx, node:test
+              </p>
+            </article>
+
+            <article class="card project-card">
+              <div class="project-head">
+                <h3>Peristaltic Multi-Material 3D Food Printer</h3>
+                <span class="muted">Research + hardware</span>
+              </div>
+              <p>
+                Converted a Creality Ender 3 Pro into a multi-material food
+                printer through mechanical redesign, printed components, and
+                multi-syringe integration.
+              </p>
+              <p class="impact">
+                <strong>Impact:</strong> Designed and fabricated key CAD
+                components including a four-material syringe holder and heat lamp
+                mount for the conversion assembly.
+              </p>
+              <p class="stack">Fusion 360, Cura, PrusaSlicer</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section reveal" id="experience">
+          <h2>Experience</h2>
+          <div class="timeline">
+            <article class="card timeline-item">
+              <div class="role-head">
+                <h3>Web Developer (Co-op) · University of Waterloo Libraries</h3>
+                <p>Jan 2026 - Present</p>
+              </div>
+              <ul>
+                <li>
+                  Rebuilt a legacy Drupal 8 Assignment Planner into a standalone
+                  TypeScript, HTML, CSS, and Hono app supporting ~3,000 daily
+                  active users (GA4).
+                </li>
+                <li>
+                  Re-architected CMS-coupled logic into an independent
+                  application, reducing upgrade-related breakage and improving
+                  maintainability.
+                </li>
+                <li>
+                  Applied WCAG/ARIA accessibility standards and used Docker +
+                  Git/GitHub for consistent development workflows.
+                </li>
+              </ul>
+            </article>
+
+            <article class="card timeline-item">
+              <div class="role-head">
+                <h3>Firmware Developer · UW Formula Electric</h3>
+                <p>Sep 2025 - Dec 2025</p>
+              </div>
+              <ul>
+                <li>
+                  Developed embedded C/C++ firmware for ECUs handling vehicle
+                  communication via CAN/LIN and multiple sensor interfaces.
+                </li>
+                <li>
+                  Implemented HIL testing, signal simulation, and diagnostics,
+                  reducing per-board validation time by 35%.
+                </li>
+                <li>
+                  Collaborated with electrical and controls teams to debug
+                  hardware and improve real-time signal timing.
+                </li>
+              </ul>
+            </article>
+
+            <article class="card timeline-item">
+              <div class="role-head">
+                <h3>
+                  Engineering Research Assistant · FAST Research Group, Western
+                  University
+                </h3>
+                <p>Co-op term</p>
+              </div>
+              <ul>
+                <li>
+                  Designed 15+ CAD components in Fusion 360 and produced 10+ FDM
+                  prints with Cura for a multi-material 3D food printer.
+                </li>
+                <li>
+                  Performed testing, calibration, and iterative refinements,
+                  improving print consistency by 25%.
+                </li>
+                <li>
+                  Conducted experimental data collection and analysis across crop
+                  and photovoltaic performance conditions.
+                </li>
+              </ul>
+            </article>
+
+            <article class="card timeline-item">
+              <div class="role-head">
+                <h3>City of London · Recreation & Operations Roles</h3>
+                <p>Multiple terms</p>
+              </div>
+              <ul>
+                <li>
+                  Held public-facing roles including Skating Instructor, Theme
+                  Park Staff (Storybook Gardens), and Skate Cruiser.
+                </li>
+                <li>
+                  Full role details and quantified impact points are being added
+                  in the next update.
+                </li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section reveal" id="contact">
+          <h2>Contact</h2>
+          <p>
+            Open to internship and co-op opportunities across software,
+            mechatronics, robotics, embedded systems, and interdisciplinary
+            engineering teams.
+          </p>
+          <div class="contact-actions">
+            <a class="btn btn-primary" href="mailto:m398kim@uwaterloo.ca"
+              >Email</a
+            >
+            <a
+              class="btn btn-ghost"
+              href="https://github.com/MatthewKim07"
+              target="_blank"
+              rel="noreferrer"
+              >GitHub</a
+            >
+            <a
+              class="btn btn-ghost"
+              href="https://www.linkedin.com/in/matthew-min-kim/"
+              target="_blank"
+              rel="noreferrer"
+              >LinkedIn</a
+            >
+            <a
+              class="btn btn-ghost"
+              href="./assets/Matthew-Kim-Software-Engineer.pdf"
+              download
+              >Resume (PDF)</a
+            >
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
