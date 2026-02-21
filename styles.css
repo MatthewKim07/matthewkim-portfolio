@@ -290,6 +290,23 @@ h1 {
   gap: 0.45rem;
 }
 
+.project-video {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #000;
+}
+
+.project-video-link {
+  font-size: 0.86rem;
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
+.project-video-link:hover {
+  text-decoration: underline;
+}
+
 .project-head {
   display: flex;
   align-items: baseline;
@@ -326,6 +343,14 @@ h1 {
   grid-template-columns: 82px 1fr;
   gap: 0.95rem;
   align-items: center;
+}
+
+.education-top {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 0.95rem;
+  align-items: center;
+  margin-bottom: 0.4rem;
 }
 
 .org-logo-wrap {
@@ -406,6 +431,11 @@ h1 {
   }
 
   .timeline-top {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .education-top {
     grid-template-columns: 1fr;
     gap: 0.65rem;
   }
