@@ -955,17 +955,94 @@ h1 {
   display: grid;
   gap: 0.85rem;
   grid-template-columns: 1.35fr 1fr;
+  align-items: start;
 }
 
 .contact-form,
 .contact-links {
   display: grid;
   gap: 0.55rem;
+  align-content: start;
 }
 
 .contact-form h3,
 .contact-links h3 {
   font-size: 1.3rem;
+}
+
+.connect-intro {
+  margin: 0.1rem 0 0.25rem;
+  color: var(--ink-muted);
+  font-size: 0.92rem;
+}
+
+.connect-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.connect-link {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr;
+  align-items: center;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--panel) 60%, transparent);
+  padding: 0.62rem 0.72rem;
+  min-height: 4rem;
+  transition:
+    transform 170ms var(--ease-standard),
+    border-color 170ms var(--ease-standard),
+    background 170ms var(--ease-standard),
+    box-shadow 170ms var(--ease-standard);
+}
+
+.connect-link:hover,
+.connect-link:focus-visible {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--line-strong) 84%, var(--accent-soft));
+  background: color-mix(in srgb, var(--panel-strong) 72%, transparent);
+  box-shadow: 0 16px 30px -24px rgba(0, 0, 0, 0.82);
+}
+
+.connect-icon-wrap {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line-strong) 72%, transparent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--panel-strong) 58%, transparent);
+}
+
+.connect-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+.connect-title,
+.connect-sub {
+  display: block;
+  line-height: 1.25;
+}
+
+.connect-title {
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.connect-sub {
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
 }
 
 label {
@@ -1199,6 +1276,10 @@ textarea:focus-visible {
   .project-detail-columns {
     grid-template-columns: 1fr;
     gap: 0.65rem;
+  }
+
+  .connect-grid {
+    grid-template-columns: 1fr;
   }
 
   .timeline {
