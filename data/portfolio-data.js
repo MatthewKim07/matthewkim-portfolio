@@ -104,6 +104,9 @@ window.PORTFOLIO_DATA = {
         "Implemented AI ingredient scanning, improved ingredient-to-recipe matching behavior, and shipped UI/UX refinements.",
       stack: ["TypeScript", "React", "Vite", "Tailwind CSS", "Supabase", "Edamam API"],
       palette: { a: "#567f75", b: "#395b65" },
+      icon: "./assets/icons/carrot.png",
+      iconFit: "contain",
+      iconScale: 0.82,
       demoUrl: "https://yourpantrypal.lovable.app/",
       media: {
         type: "video",
@@ -132,6 +135,8 @@ window.PORTFOLIO_DATA = {
         "Focused on backend integration, connecting frontend and backend services, and enabling synced queue interactions across multiple devices.",
       stack: ["TypeScript", "Python", "React", "Flask", "REST APIs", "Supabase"],
       palette: { a: "#6f856d", b: "#6a5e4e" },
+      icon: "./assets/icons/QueueMe.png",
+      iconFit: "contain",
       approach: [
         "Defined service contracts for queue creation, join, status updates, and notification behavior.",
         "Integrated frontend queue views with backend queue state to support live synchronization.",
@@ -166,6 +171,7 @@ window.PORTFOLIO_DATA = {
         "Recharts",
       ],
       palette: { a: "#6b7d92", b: "#40576c" },
+      icon: "./assets/icons/icon.svg",
       approach: [
         "Mapped assignment workloads into a prioritized planning model with recommendation logic.",
         "Designed dashboard structures to emphasize deadlines, workload, and completion momentum.",
@@ -186,6 +192,7 @@ window.PORTFOLIO_DATA = {
       impact: "Ongoing build; details will be expanded as milestones are completed.",
       stack: ["Tech stack details coming soon"],
       palette: { a: "#7b6e56", b: "#4f5358" },
+      icon: "./assets/icons/logo.png",
       approach: [
         "Framed extension opportunities around speed, signal clarity, and workflow ergonomics.",
         "Explored matching logic ideas linking resume context to posting relevance.",
@@ -212,6 +219,7 @@ window.PORTFOLIO_DATA = {
         "node:test",
       ],
       palette: { a: "#6a857f", b: "#4d5f69" },
+      icon: "./assets/icons/uw-libraries.png",
       approach: [
         "Rebuilt planning features into an independent app architecture decoupled from legacy constraints.",
         "Focused on predictable date logic and practical student workflow output.",
@@ -232,6 +240,8 @@ window.PORTFOLIO_DATA = {
         "Designed and fabricated key CAD components including a four-material syringe holder and heat lamp mount for the conversion assembly.",
       stack: ["Fusion 360", "Cura", "PrusaSlicer"],
       palette: { a: "#8a7753", b: "#4f5f52" },
+      icon: "./assets/icons/fast-research-group.png",
+      iconScale: 0.88,
       approach: [
         "Designed conversion hardware for synchronized multi-material dispensing.",
         "Iterated printed parts for tolerances, mounting rigidity, and maintainability.",

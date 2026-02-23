@@ -74,11 +74,44 @@ function getProjectMark(title) {
   return chars || "PR";
 }
 
+function renderProjectIconBadge(project, variant = "tile") {
+  const baseClass =
+    variant === "detail" ? "project-logo-badge project-logo-badge--detail" : "project-logo-badge";
+
+  if (project.icon) {
+    const fitClass =
+      project.iconFit === "contain" ? "project-logo-image project-logo-image--contain" : "project-logo-image";
+    const logoScale = Number.isFinite(project.iconScale) ? project.iconScale : null;
+    const styleAttr = logoScale ? ` style="--logo-scale:${logoScale}"` : "";
+    const badgeVars = [];
+
+    if (project.iconBadgeBg) {
+      badgeVars.push(`--project-badge-bg:${project.iconBadgeBg}`);
+    }
+
+    const badgeStyleAttr = badgeVars.length ? ` style="${badgeVars.join(";")}"` : "";
+
+    return `
+      <span class="${baseClass}" aria-hidden="true"${badgeStyleAttr}>
+        <img class="${fitClass}" src="${escapeHtml(project.icon)}" alt="" loading="lazy"${styleAttr} />
+      </span>
+    `;
+  }
+
+  return `
+    <span class="${baseClass} project-logo-badge--fallback" aria-hidden="true">
+      <span class="project-logo-fallback">${escapeHtml(getProjectMark(project.title))}</span>
+    </span>
+  `;
+}
+
 function renderProjectTiles() {
   if (!els.projectsGrid) return;
 
   els.projectsGrid.innerHTML = data.projects
     .map((project) => {
+      const iconBadge = renderProjectIconBadge(project, "tile");
+
       return `
         <button class="card project-tile reveal" type="button" data-open-project="${escapeHtml(
           project.slug
@@ -87,9 +120,9 @@ function renderProjectTiles() {
             project.palette.b
           )};" aria-hidden="true">
             <span class="project-art-label">${escapeHtml(project.category)}</span>
-            <span class="project-logo-mark">${escapeHtml(getProjectMark(project.title))}</span>
+            ${iconBadge}
+            <span class="project-tile-title">${escapeHtml(project.title)}</span>
           </div>
-          <h3 class="project-tile-title">${escapeHtml(project.title)}</h3>
         </button>
       `;
     })
@@ -99,6 +132,7 @@ function renderProjectTiles() {
 function renderProjectDetail(project) {
   if (!els.projectDetail || !project) return;
 
+  const iconBadge = renderProjectIconBadge(project, "detail");
   const stackChips = project.stack
     .map((item) => `<span class="tag project-stack-chip">${escapeHtml(item)}</span>`)
     .join("");
@@ -151,7 +185,10 @@ function renderProjectDetail(project) {
       <p class="project-detail-meta">${escapeHtml(project.category)} · ${escapeHtml(project.status)}</p>
     </div>
 
-    <h3 class="project-detail-title">${escapeHtml(project.title)}</h3>
+    <div class="project-detail-head">
+      ${iconBadge}
+      <h3 class="project-detail-title">${escapeHtml(project.title)}</h3>
+    </div>
     <p class="project-detail-summary">${escapeHtml(project.summary)}</p>
     <p class="project-detail-impact"><strong>Impact:</strong> ${escapeHtml(project.impact)}</p>
 
