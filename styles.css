@@ -234,7 +234,18 @@ body.modal-open {
   height: 0.42rem;
   border-radius: 50%;
   border: 1px solid currentColor;
+  background: transparent;
   opacity: 0.65;
+  transform: scale(1);
+  transition:
+    background 180ms var(--ease-standard),
+    border-color 180ms var(--ease-standard),
+    opacity 180ms var(--ease-standard),
+    transform 180ms var(--ease-standard);
+}
+
+.main-nav a:hover::before {
+  background: color-mix(in srgb, currentColor 28%, transparent);
 }
 
 .main-nav a:hover,
@@ -243,6 +254,13 @@ body.modal-open {
   border-color: color-mix(in srgb, var(--line-strong) 88%, transparent);
   background: color-mix(in srgb, var(--panel) 65%, transparent);
   transform: translateY(-1px);
+}
+
+.main-nav a.active::before {
+  background: currentColor;
+  border-color: currentColor;
+  opacity: 1;
+  transform: scale(1.08);
 }
 
 main {

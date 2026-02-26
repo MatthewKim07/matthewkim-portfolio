@@ -5,6 +5,8 @@ const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)
 const state = {
   activeProjectSlug: null,
   previousProjectFocus: null,
+  lockedNavId: null,
+  lockedNavAt: 0,
 };
 
 const els = {
@@ -384,21 +386,56 @@ function setActiveNavLink(id) {
 }
 
 function observeActiveSection() {
-  const sectionObserver = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveNavLink(entry.target.id);
-        }
-      });
-    },
-    {
-      threshold: 0.45,
-      rootMargin: "-12% 0px -42% 0px",
-    }
-  );
+  if (!els.sections.length) return;
 
-  els.sections.forEach((section) => sectionObserver.observe(section));
+  let rafPending = false;
+
+  const updateActiveSection = () => {
+    const headerHeight = els.header ? els.header.offsetHeight : 0;
+    const probeLine = headerHeight + 18;
+
+    if (state.lockedNavId) {
+      const lockedSection = document.getElementById(state.lockedNavId);
+      const lockElapsed = performance.now() - state.lockedNavAt;
+
+      if (lockedSection) {
+        const lockedTop = lockedSection.getBoundingClientRect().top;
+        const isNearTarget = Math.abs(lockedTop - probeLine) <= 28;
+        const lockExpired = lockElapsed > 1200;
+
+        if (!isNearTarget && !lockExpired) {
+          setActiveNavLink(state.lockedNavId);
+          rafPending = false;
+          return;
+        }
+      }
+
+      state.lockedNavId = null;
+      state.lockedNavAt = 0;
+    }
+
+    let activeId = els.sections[0].id;
+
+    els.sections.forEach((section) => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= probeLine) {
+        activeId = section.id;
+      }
+    });
+
+    setActiveNavLink(activeId);
+    rafPending = false;
+  };
+
+  const onViewportChange = () => {
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(updateActiveSection);
+  };
+
+  updateActiveSection();
+  window.addEventListener("scroll", onViewportChange, { passive: true });
+  window.addEventListener("resize", onViewportChange);
 }
 
 function scrollToSection(targetId) {
@@ -421,7 +458,10 @@ function bindNavigation() {
       if (!href || !href.startsWith("#")) return;
 
       event.preventDefault();
+      state.lockedNavId = href.slice(1);
+      state.lockedNavAt = performance.now();
       scrollToSection(href);
+      setActiveNavLink(href.slice(1));
       closeMobileNav();
     });
   });
