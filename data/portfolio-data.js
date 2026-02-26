@@ -322,15 +322,31 @@ window.PORTFOLIO_DATA = {
     },
     {
       id: "storybook-gardens",
-      role: "Skate Cruiser + Attractions Staff",
+      role: "Operations Team Member",
+      headingOnlyOrganization: true,
       organization: "Storybook Gardens",
       period: "Nov 2023 - Aug 2025",
       location: "London, Ontario",
       logo: "./assets/icons/Storybook-gardens-icon.png",
-      highlights: [
-        "Skate Cruiser (Nov 2023 - Mar 2025): Managed skate rentals, monitored trail activity, enforced safety rules, and delivered first-aid support when needed to keep sessions operating safely.",
-        "Attractions Staff (Apr 2024 - Aug 2025): Operated amusement rides, supervised attractions, and followed operating procedures to uphold safety and service standards.",
-        "Supported guest experience and day-to-day readiness by maintaining high-traffic facilities and coordinating with teammates to resolve operational issues quickly.",
+      companySummary:
+        "Held multiple frontline operations roles at Storybook Gardens, supporting safe daily operations and guest experience across seasonal attractions.",
+      positions: [
+        {
+          title: "Skate Cruiser",
+          period: "Nov 2023 - Mar 2025",
+          highlights: [
+            "Managed skate rentals and monitored trail conditions throughout operating hours to maintain safe flow and reduce service delays during peak periods.",
+            "Enforced rink and trail safety rules, performed proactive floor scans, and provided first-aid response support when incidents occurred.",
+          ],
+        },
+        {
+          title: "Attractions Staff",
+          period: "Apr 2024 - Aug 2025",
+          highlights: [
+            "Operated amusement rides and supervised assigned attractions using standardized safety checks and operating procedures before and during guest use.",
+            "Maintained guest-facing facilities and coordinated with team members to resolve site issues quickly, supporting a clean, safe, and positive visitor experience.",
+          ],
+        },
       ],
       fieldNotes: [
         "Built frontline operations discipline across safety, customer service, and incident response in high-volume environments.",

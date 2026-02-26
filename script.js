@@ -269,9 +269,40 @@ function renderExperience() {
 
   els.experienceTimeline.innerHTML = data.experience
     .map((item, index) => {
-      const highlights = item.highlights
+      const highlights = (item.highlights || [])
         .map((point) => `<li>${escapeHtml(point)}</li>`)
         .join("");
+      const highlightList = highlights.length ? `<ul class="timeline-highlights">${highlights}</ul>` : "";
+
+      const hasPositions = Array.isArray(item.positions) && item.positions.length > 0;
+      const positionBlocks = hasPositions
+        ? item.positions
+            .map((position) => {
+              const positionHighlights = (position.highlights || [])
+                .map((point) => `<li>${escapeHtml(point)}</li>`)
+                .join("");
+              const positionHighlightList = positionHighlights.length
+                ? `<ul class="timeline-role-highlights">${positionHighlights}</ul>`
+                : "";
+
+              return `
+                <article class="timeline-role-card">
+                  <div class="timeline-role-head">
+                    <h4>${escapeHtml(position.title)}</h4>
+                    <p class="timeline-role-period">${escapeHtml(position.period)}</p>
+                  </div>
+                  ${positionHighlightList}
+                </article>
+              `;
+            })
+            .join("")
+        : "";
+      const nestedRoles = positionBlocks.length
+        ? `<div class="timeline-role-group" aria-label="Roles at ${escapeHtml(item.organization)}">${positionBlocks}</div>`
+        : "";
+      const companySummary = item.companySummary
+        ? `<p class="timeline-company-summary">${escapeHtml(item.companySummary)}</p>`
+        : "";
 
       const notes = (item.fieldNotes || [])
         .map((note) => `<li>${escapeHtml(note)}</li>`)
@@ -279,6 +310,10 @@ function renderExperience() {
 
       const detailsId = `timeline-details-${index}`;
       const hasFieldNotes = notes.length > 0;
+      const timelineTitle =
+        item.headingOnlyOrganization || !item.role
+          ? item.organization
+          : `${item.role} · ${item.organization}`;
 
       return `
         <article class="timeline-entry reveal">
@@ -288,12 +323,14 @@ function renderExperience() {
 
           <div class="card timeline-card">
             <div class="timeline-head">
-              <h3>${escapeHtml(item.role)} · ${escapeHtml(item.organization)}</h3>
+              <h3>${escapeHtml(timelineTitle)}</h3>
               <p class="timeline-period">${escapeHtml(item.period)}</p>
             </div>
 
             <p class="timeline-location">${escapeHtml(item.location)}</p>
-            <ul class="timeline-highlights">${highlights}</ul>
+            ${companySummary}
+            ${highlightList}
+            ${nestedRoles}
 
             ${
               hasFieldNotes
