@@ -1,6 +1,6 @@
 :root {
-  --font-ui: "Manrope", sans-serif;
-  --font-display: "Cormorant Garamond", serif;
+  --font-ui: "Montserrat", sans-serif;
+  --font-display: "Montserrat", sans-serif;
 
   --bg-0: #0f1313;
   --bg-1: #141a1a;
@@ -9,11 +9,14 @@
   --panel-strong: rgba(228, 231, 223, 0.11);
   --line: rgba(220, 225, 216, 0.2);
   --line-strong: rgba(232, 236, 226, 0.34);
+  --line-soft: rgba(220, 225, 216, 0.2);
+  --line-stronger: rgba(232, 236, 226, 0.42);
   --ink: #e6e8e2;
   --ink-muted: #b1b9b3;
   --accent: #819e92;
   --accent-strong: #c7a96d;
   --accent-soft: #6a867f;
+  --active-line: rgba(208, 183, 122, 0.58);
 
   --space-1: 0.4rem;
   --space-2: 0.7rem;
@@ -507,15 +510,15 @@ h1 {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(110deg, transparent 0%, rgba(243, 245, 236, 0.08) 24%, transparent 54%);
-  transform: translateX(-118%);
-  transition: transform 520ms var(--ease-standard);
+  background: linear-gradient(115deg, rgba(243, 245, 236, 0.05), transparent 40%);
+  opacity: 0.26;
+  transition: opacity 180ms var(--ease-standard);
   pointer-events: none;
 }
 
 .card:hover::before,
 .card:focus-within::before {
-  transform: translateX(125%);
+  opacity: 0.3;
 }
 
 .about-highlights {
@@ -770,12 +773,12 @@ h1 {
 
 .project-tile:hover .project-art::before,
 .project-tile:focus-visible .project-art::before {
-  opacity: 0.78;
+  opacity: 0.92;
 }
 
 .project-tile:hover .project-art::after,
 .project-tile:focus-visible .project-art::after {
-  opacity: 0.64;
+  opacity: 0.48;
 }
 
 .project-tile:hover .project-art-label,
@@ -825,6 +828,36 @@ h1 {
   align-items: center;
   justify-content: space-between;
   gap: 0.65rem;
+}
+
+.project-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-color: color-mix(in srgb, var(--active-line) 64%, var(--line-soft));
+  background: linear-gradient(145deg, rgba(20, 31, 31, 0.82), rgba(16, 23, 24, 0.72));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+.project-back-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--line-stronger) 78%, transparent);
+  background: rgba(10, 16, 16, 0.58);
+  font-size: 0.76rem;
+  line-height: 1;
+  transform: translateX(0);
+  transition: transform 180ms var(--ease-standard), border-color 180ms var(--ease-standard);
+}
+
+.project-back-btn:hover .project-back-icon,
+.project-back-btn:focus-visible .project-back-icon {
+  transform: translateX(-2px);
+  border-color: color-mix(in srgb, var(--active-line) 72%, var(--line-soft));
 }
 
 .project-detail-meta {
@@ -1170,6 +1203,10 @@ h1 {
   object-fit: contain;
 }
 
+.connect-icon--stroke {
+  stroke: currentColor;
+}
+
 .connect-title,
 .connect-sub {
   display: block;
@@ -1477,5 +1514,179 @@ textarea:focus-visible {
 
   .hero-layer {
     transform: none !important;
+  }
+}
+
+/* Uncommon Motion + Visual Layer */
+body {
+  --cursor-x: 50%;
+  --cursor-y: 40%;
+  --page-progress: 0;
+  --section-aura: rgba(128, 165, 152, 0.2);
+}
+
+body[data-active-section="about"] {
+  --section-aura: rgba(112, 162, 134, 0.22);
+}
+
+body[data-active-section="education"] {
+  --section-aura: rgba(132, 162, 184, 0.24);
+}
+
+body[data-active-section="skills"] {
+  --section-aura: rgba(118, 141, 183, 0.23);
+}
+
+body[data-active-section="projects"] {
+  --section-aura: rgba(132, 172, 132, 0.22);
+}
+
+body[data-active-section="experience"] {
+  --section-aura: rgba(176, 138, 93, 0.23);
+}
+
+body[data-active-section="contact"] {
+  --section-aura: rgba(138, 153, 182, 0.23);
+}
+
+body::after {
+  background:
+    radial-gradient(
+      28rem 24rem at var(--cursor-x) var(--cursor-y),
+      color-mix(in srgb, var(--section-aura) 70%, transparent),
+      transparent 65%
+    ),
+    radial-gradient(
+      40rem 33rem at calc(8% + (var(--page-progress) * 78%)) 16%,
+      color-mix(in srgb, rgba(209, 174, 111, 0.15) 88%, transparent),
+      transparent 68%
+    ),
+    radial-gradient(45% 38% at 68% 30%, rgba(155, 124, 77, 0.2), transparent 68%),
+    radial-gradient(35% 32% at 24% 70%, rgba(112, 146, 136, 0.15), transparent 70%);
+}
+
+.site-header {
+  overflow: hidden;
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--section-aura) 72%, transparent) 25%,
+      transparent 52%,
+      color-mix(in srgb, var(--active-line) 65%, transparent) 72%,
+      transparent
+    );
+  opacity: 0.32;
+}
+
+.hero-content {
+  max-width: min(78ch, 92%);
+}
+
+.content-section {
+  isolation: isolate;
+}
+
+.content-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, 0.06), transparent 35%),
+    radial-gradient(circle at 90% 0%, color-mix(in srgb, var(--section-aura) 34%, transparent), transparent 52%);
+  opacity: 0.75;
+  z-index: -1;
+}
+
+.content-section h2 {
+  position: relative;
+}
+
+.content-section h2::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.35rem;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--active-line) 76%, transparent), transparent);
+  opacity: 0.8;
+}
+
+.card,
+.project-tile,
+.connect-link,
+.timeline-role-card {
+  transform-style: preserve-3d;
+  transform:
+    perspective(1000px) rotateX(var(--surface-tilt-x, 0deg)) rotateY(var(--surface-tilt-y, 0deg));
+  transition:
+    transform 260ms var(--ease-standard),
+    box-shadow 260ms var(--ease-standard),
+    border-color 220ms var(--ease-standard),
+    background 260ms var(--ease-standard);
+}
+
+.card::before {
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.045), transparent 42%);
+  opacity: 0.22;
+}
+
+.card:hover,
+.card:focus-within,
+.project-tile:hover,
+.project-tile:focus-visible,
+.connect-link:hover,
+.connect-link:focus-visible {
+  box-shadow: 0 25px 55px -32px rgba(0, 0, 0, 0.88);
+  border-color: color-mix(in srgb, var(--active-line) 66%, var(--line-soft));
+}
+
+.project-tile {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%);
+}
+
+.project-tile-title {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+}
+
+.timeline-card {
+  background:
+    linear-gradient(140deg, rgba(24, 32, 33, 0.86), rgba(16, 23, 24, 0.72)),
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--section-aura) 42%, transparent), transparent 55%);
+}
+
+.timeline-role-card {
+  border-color: color-mix(in srgb, var(--line-stronger) 82%, transparent);
+}
+
+@media (max-width: 860px) {
+  .project-tile {
+    clip-path: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .project-tile,
+  .connect-link,
+  .timeline-role-card {
+    transform: none !important;
+  }
+
+  body::after {
+    background:
+      radial-gradient(45% 38% at 68% 30%, rgba(155, 124, 77, 0.2), transparent 68%),
+      radial-gradient(35% 32% at 24% 70%, rgba(112, 146, 136, 0.15), transparent 70%);
   }
 }

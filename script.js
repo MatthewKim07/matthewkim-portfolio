@@ -52,7 +52,6 @@ function renderSkills() {
       return `
         <article class="card toolkit-card reveal">
           <h3>${escapeHtml(group.category)}</h3>
-          <p class="toolkit-summary">${escapeHtml(group.summary)}</p>
           <ul class="skill-list">${chips}</ul>
         </article>
       `;
@@ -121,7 +120,6 @@ function renderProjectTiles() {
           <div class="project-art" style="--art-a:${escapeHtml(project.palette.a)};--art-b:${escapeHtml(
             project.palette.b
           )};" aria-hidden="true">
-            <span class="project-art-label">${escapeHtml(project.category)}</span>
             ${iconBadge}
             <span class="project-tile-title">${escapeHtml(project.title)}</span>
           </div>
@@ -183,7 +181,10 @@ function renderProjectDetail(project) {
 
   els.projectDetail.innerHTML = `
     <div class="project-detail-top">
-      <button class="btn btn-ghost" type="button" data-project-back="true" id="project-back-button">Back to all projects</button>
+      <button class="btn btn-ghost project-back-btn" type="button" data-project-back="true" id="project-back-button">
+        <span class="project-back-icon" aria-hidden="true">&larr;</span>
+        <span>Back to all projects</span>
+      </button>
       <p class="project-detail-meta">${escapeHtml(project.category)} · ${escapeHtml(project.status)}</p>
     </div>
 
@@ -383,6 +384,10 @@ function setActiveNavLink(id) {
     const href = link.getAttribute("href");
     link.classList.toggle("active", href === `#${id}`);
   });
+
+  if (els.body) {
+    els.body.setAttribute("data-active-section", id || "");
+  }
 }
 
 function observeActiveSection() {
@@ -595,10 +600,156 @@ function bindContactForm() {
   });
 }
 
+function bindCursorAura() {
+  if (!els.body || prefersReducedMotion) return;
+
+  let rafPending = false;
+  let pointerX = 50;
+  let pointerY = 50;
+
+  const commit = () => {
+    els.body.style.setProperty("--cursor-x", `${pointerX.toFixed(2)}%`);
+    els.body.style.setProperty("--cursor-y", `${pointerY.toFixed(2)}%`);
+    rafPending = false;
+  };
+
+  window.addEventListener(
+    "pointermove",
+    (event) => {
+      pointerX = (event.clientX / window.innerWidth) * 100;
+      pointerY = (event.clientY / window.innerHeight) * 100;
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(commit);
+    },
+    { passive: true }
+  );
+}
+
+function bindSurfaceEffects() {
+  if (prefersReducedMotion) return;
+
+  const selector = ".card, .project-tile, .connect-link, .timeline-role-card";
+
+  const attach = () => {
+    const surfaces = Array.from(document.querySelectorAll(selector));
+
+    surfaces.forEach((surface) => {
+      if (surface.dataset.surfaceBound === "true") return;
+      surface.dataset.surfaceBound = "true";
+
+      surface.addEventListener("pointermove", (event) => {
+        const rect = surface.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
+        const x = (event.clientX - rect.left) / rect.width;
+        const y = (event.clientY - rect.top) / rect.height;
+        const tiltX = (0.5 - y) * 5.6;
+        const tiltY = (x - 0.5) * 5.6;
+
+        surface.style.setProperty("--surface-tilt-x", `${tiltX.toFixed(2)}deg`);
+        surface.style.setProperty("--surface-tilt-y", `${tiltY.toFixed(2)}deg`);
+        surface.style.setProperty("--surface-glow-x", `${(x * 100).toFixed(2)}%`);
+        surface.style.setProperty("--surface-glow-y", `${(y * 100).toFixed(2)}%`);
+      });
+
+      surface.addEventListener("pointerleave", () => {
+        surface.style.removeProperty("--surface-tilt-x");
+        surface.style.removeProperty("--surface-tilt-y");
+        surface.style.removeProperty("--surface-glow-x");
+        surface.style.removeProperty("--surface-glow-y");
+      });
+    });
+  };
+
+  attach();
+  const observer = new MutationObserver(attach);
+  observer.observe(document.body, { childList: true, subtree: true });
+}
+
+function bindGsapMotion() {
+  if (prefersReducedMotion) return;
+  if (!window.gsap) return;
+
+  const gsap = window.gsap;
+  const scrollTrigger = window.ScrollTrigger;
+  if (scrollTrigger) gsap.registerPlugin(scrollTrigger);
+
+  const heroItems = Array.from(document.querySelectorAll(".hero-content > *"));
+  if (heroItems.length) {
+    gsap.from(heroItems, {
+      y: 24,
+      autoAlpha: 0,
+      duration: 0.72,
+      ease: "power2.out",
+      stagger: 0.08,
+      clearProps: "all",
+    });
+  }
+
+  if (!scrollTrigger) return;
+
+  const sections = Array.from(document.querySelectorAll(".content-section"));
+  sections.forEach((section) => {
+    gsap.from(section, {
+      y: 28,
+      autoAlpha: 0,
+      duration: 0.65,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: section,
+        start: "top 78%",
+        once: true,
+      },
+      clearProps: "transform,opacity,visibility",
+    });
+  });
+
+  const projectTiles = Array.from(document.querySelectorAll(".project-tile"));
+  if (projectTiles.length) {
+    gsap.from(projectTiles, {
+      y: 30,
+      autoAlpha: 0,
+      duration: 0.58,
+      ease: "power2.out",
+      stagger: 0.07,
+      scrollTrigger: {
+        trigger: "#projects-grid",
+        start: "top 78%",
+        once: true,
+      },
+      clearProps: "transform,opacity,visibility",
+    });
+  }
+
+  const timelineEntries = Array.from(document.querySelectorAll(".timeline-entry"));
+  if (timelineEntries.length) {
+    gsap.from(timelineEntries, {
+      x: -16,
+      autoAlpha: 0,
+      duration: 0.5,
+      ease: "power2.out",
+      stagger: 0.08,
+      scrollTrigger: {
+        trigger: "#experience",
+        start: "top 78%",
+        once: true,
+      },
+      clearProps: "transform,opacity,visibility",
+    });
+  }
+}
+
 function bindScrollHandlers() {
   const onScroll = () => {
     updateHeaderState();
     updateTimelineProgress();
+
+    if (els.body) {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? Math.min(1, Math.max(0, window.scrollY / maxScroll)) : 0;
+      els.body.style.setProperty("--page-progress", progress.toFixed(4));
+    }
   };
 
   window.addEventListener("scroll", onScroll, { passive: true });
@@ -621,6 +772,8 @@ function init() {
   bindExperienceExpansion();
   bindHeroParallax();
   bindContactForm();
+  bindCursorAura();
+  bindGsapMotion();
   bindScrollHandlers();
 }
 
