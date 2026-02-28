@@ -256,7 +256,7 @@ window.PORTFOLIO_DATA = {
   experience: [
     {
       id: "uw-libraries",
-      role: "Web Developer (Co-op)",
+      role: "Software Developer",
       organization: "University of Waterloo Libraries",
       period: "Jan 2026 - Present",
       location: "Waterloo, Ontario",

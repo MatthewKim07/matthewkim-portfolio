@@ -1,16 +1,57 @@
 const data = window.PORTFOLIO_DATA || { skills: [], projects: [], experience: [] };
+const mapLocations = Array.isArray(window.EXPEDITION_MAP_LOCATIONS)
+  ? window.EXPEDITION_MAP_LOCATIONS
+  : [];
+const mapMeta = window.EXPEDITION_MAP_META || { width: 3000, height: 1900 };
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const VIEW = {
+  INTRO: "intro",
+  MAP: "map",
+  CONTENT: "content",
+};
 
 const state = {
   activeProjectSlug: null,
   previousProjectFocus: null,
   lockedNavId: null,
   lockedNavAt: 0,
+  view: VIEW.INTRO,
+  introTransitioning: false,
+  mapInteracted: false,
+  camera: {
+    x: 0,
+    y: 0,
+    scale: 1,
+    minScale: 0.7,
+    maxScale: 2.45,
+  },
+  drag: {
+    active: false,
+    pointerId: null,
+    startX: 0,
+    startY: 0,
+    startCamX: 0,
+    startCamY: 0,
+  },
 };
 
 const els = {
   body: document.body,
+  expeditionShell: document.getElementById("expedition-shell"),
+  introGate: document.getElementById("intro-gate"),
+  introIllustration: document.getElementById("intro-illustration"),
+  introContinue: document.getElementById("intro-continue"),
+  mapGate: document.getElementById("map-gate"),
+  mapViewport: document.getElementById("map-viewport"),
+  mapWorld: document.getElementById("map-world"),
+  mapPinsLayer: document.getElementById("map-pins-layer"),
+  mapReset: document.getElementById("map-reset"),
+  mapIntro: document.getElementById("map-intro"),
+  returnToMap: document.getElementById("return-to-map"),
+
+  siteShell: document.querySelector(".site-shell"),
   header: document.getElementById("site-header"),
   navToggle: document.getElementById("nav-toggle"),
   navLinks: Array.from(document.querySelectorAll(".main-nav a")),
@@ -34,9 +75,448 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - ((-2 * t + 2) ** 3) / 2;
+}
+
 function setReady() {
   requestAnimationFrame(() => {
     els.body.classList.add("is-ready");
+  });
+}
+
+function setViewMode(view) {
+  state.view = view;
+  if (els.body) {
+    els.body.setAttribute("data-view", view);
+  }
+
+  const introVisible = view === VIEW.INTRO;
+  const mapVisible = view === VIEW.MAP;
+  const contentVisible = view === VIEW.CONTENT;
+
+  if (els.introGate) {
+    els.introGate.hidden = !introVisible;
+  }
+
+  if (els.mapGate) {
+    els.mapGate.hidden = !mapVisible;
+  }
+
+  if (els.siteShell) {
+    els.siteShell.classList.toggle("shell-hidden", !contentVisible);
+  }
+
+  if (els.returnToMap) {
+    els.returnToMap.hidden = !contentVisible;
+  }
+
+  if (els.body) {
+    els.body.style.overflow = contentVisible ? "auto" : "hidden";
+  }
+}
+
+function setMapWorldSize() {
+  if (els.mapWorld) {
+    els.mapWorld.style.width = `${mapMeta.width}px`;
+    els.mapWorld.style.height = `${mapMeta.height}px`;
+  }
+
+  if (els.mapPinsLayer) {
+    els.mapPinsLayer.style.width = `${mapMeta.width}px`;
+    els.mapPinsLayer.style.height = `${mapMeta.height}px`;
+  }
+}
+
+function getViewportSize() {
+  if (!els.mapViewport) return { width: 1, height: 1 };
+  const rect = els.mapViewport.getBoundingClientRect();
+  return { width: Math.max(1, rect.width), height: Math.max(1, rect.height) };
+}
+
+function clampCamera(x, y, scale) {
+  const { width: viewportWidth, height: viewportHeight } = getViewportSize();
+  const worldWidth = mapMeta.width * scale;
+  const worldHeight = mapMeta.height * scale;
+  const padding = 80;
+
+  let nextX = x;
+  let nextY = y;
+
+  if (worldWidth <= viewportWidth) {
+    nextX = (viewportWidth - worldWidth) / 2;
+  } else {
+    nextX = clamp(nextX, viewportWidth - worldWidth - padding, padding);
+  }
+
+  if (worldHeight <= viewportHeight) {
+    nextY = (viewportHeight - worldHeight) / 2;
+  } else {
+    nextY = clamp(nextY, viewportHeight - worldHeight - padding, padding);
+  }
+
+  return { x: nextX, y: nextY, scale };
+}
+
+function applyCamera() {
+  if (!els.mapWorld) return;
+  const clamped = clampCamera(state.camera.x, state.camera.y, state.camera.scale);
+  state.camera.x = clamped.x;
+  state.camera.y = clamped.y;
+  state.camera.scale = clamped.scale;
+  els.mapWorld.style.transform = `translate3d(${clamped.x}px, ${clamped.y}px, 0) scale(${clamped.scale})`;
+}
+
+function fitMapToViewport() {
+  const { width, height } = getViewportSize();
+  const baseScale = Math.min(width / mapMeta.width, height / mapMeta.height) * 0.94;
+  state.camera.scale = clamp(baseScale, state.camera.minScale, state.camera.maxScale);
+  state.camera.x = (width - mapMeta.width * state.camera.scale) / 2;
+  state.camera.y = (height - mapMeta.height * state.camera.scale) / 2;
+  applyCamera();
+}
+
+function zoomAt(clientX, clientY, nextScale) {
+  if (!els.mapViewport) return;
+  const rect = els.mapViewport.getBoundingClientRect();
+  const px = clientX - rect.left;
+  const py = clientY - rect.top;
+
+  const targetScale = clamp(nextScale, state.camera.minScale, state.camera.maxScale);
+  const worldX = (px - state.camera.x) / state.camera.scale;
+  const worldY = (py - state.camera.y) / state.camera.scale;
+
+  state.camera.scale = targetScale;
+  state.camera.x = px - worldX * targetScale;
+  state.camera.y = py - worldY * targetScale;
+  applyCamera();
+}
+
+function animateCameraTo(x, y, scale, duration = 780) {
+  if (prefersReducedMotion) {
+    state.camera.x = x;
+    state.camera.y = y;
+    state.camera.scale = scale;
+    applyCamera();
+    return Promise.resolve();
+  }
+
+  const startX = state.camera.x;
+  const startY = state.camera.y;
+  const startScale = state.camera.scale;
+  const target = clampCamera(x, y, scale);
+
+  return new Promise((resolve) => {
+    const startAt = performance.now();
+
+    const tick = (now) => {
+      const t = clamp((now - startAt) / duration, 0, 1);
+      const eased = easeInOutCubic(t);
+
+      state.camera.x = startX + (target.x - startX) * eased;
+      state.camera.y = startY + (target.y - startY) * eased;
+      state.camera.scale = startScale + (target.scale - startScale) * eased;
+      applyCamera();
+
+      if (t < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        resolve();
+      }
+    };
+
+    requestAnimationFrame(tick);
+  });
+}
+
+function setActiveMapPin(sectionId) {
+  const pins = Array.from(document.querySelectorAll(".map-pin"));
+  pins.forEach((pin) => {
+    pin.classList.toggle("is-active", pin.dataset.section === sectionId);
+  });
+}
+
+function renderMapPins() {
+  if (!els.mapPinsLayer) return;
+
+  els.mapPinsLayer.innerHTML = mapLocations
+    .map((location) => {
+      return `
+        <button
+          class="map-pin"
+          type="button"
+          data-section="${escapeHtml(location.sectionId)}"
+          style="left:${location.x}px;top:${location.y}px;--pin-color:${escapeHtml(location.color || "#cba36d")};"
+          aria-label="Open ${escapeHtml(location.label)}"
+        >
+          <span class="map-pin-dot" aria-hidden="true"></span>
+          <span class="map-pin-label">${escapeHtml(location.label)}</span>
+        </button>
+      `;
+    })
+    .join("");
+}
+
+function findMapLocation(sectionId) {
+  return mapLocations.find((location) => location.sectionId === sectionId);
+}
+
+function showMapView(options = {}) {
+  const { focusPins = false } = options;
+  setViewMode(VIEW.MAP);
+  window.scrollTo({ top: 0, behavior: "auto" });
+
+  if (!state.mapInteracted) {
+    fitMapToViewport();
+  } else {
+    applyCamera();
+  }
+
+  if (focusPins) {
+    const firstPin = document.querySelector(".map-pin");
+    if (firstPin) {
+      requestAnimationFrame(() => firstPin.focus());
+    }
+  }
+}
+
+function showContentView(sectionId) {
+  setViewMode(VIEW.CONTENT);
+  const targetId = `#${sectionId}`;
+
+  if (window.history && typeof window.history.replaceState === "function") {
+    window.history.replaceState(null, "", targetId);
+  }
+
+  state.lockedNavId = sectionId;
+  state.lockedNavAt = performance.now();
+  setActiveNavLink(sectionId);
+  scrollToSection(targetId);
+}
+
+function flyToSection(sectionId) {
+  const location = findMapLocation(sectionId);
+
+  if (!location) {
+    showContentView(sectionId);
+    return;
+  }
+
+  setActiveMapPin(sectionId);
+  const { width, height } = getViewportSize();
+  const scale = clamp(location.focusScale || 1.36, state.camera.minScale, state.camera.maxScale);
+  const x = width * 0.5 - location.x * scale;
+  const y = height * 0.44 - location.y * scale;
+
+  animateCameraTo(x, y, scale).then(() => {
+    showContentView(sectionId);
+  });
+}
+
+function bindIntroExperience() {
+  if (!els.introGate) return;
+
+  const continueToMap = () => {
+    if (state.view !== VIEW.INTRO || state.introTransitioning) return;
+    state.introTransitioning = true;
+
+    if (!prefersReducedMotion) {
+      els.introGate.classList.add("is-transitioning");
+    }
+
+    window.setTimeout(
+      () => {
+        state.introTransitioning = false;
+        els.introGate.classList.remove("is-transitioning");
+        showMapView({ focusPins: true });
+      },
+      prefersReducedMotion ? 120 : 780
+    );
+  };
+
+  if (els.introContinue) {
+    els.introContinue.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      continueToMap();
+    });
+  }
+
+  els.introGate.addEventListener("click", (event) => {
+    if (event.target.closest(".intro-continue")) return;
+    continueToMap();
+  });
+
+  window.addEventListener("keydown", (event) => {
+    if (state.view !== VIEW.INTRO) return;
+    if (event.key !== "Enter") return;
+    event.preventDefault();
+    continueToMap();
+  });
+
+  if (!els.introIllustration || prefersReducedMotion) return;
+  const layers = Array.from(els.introIllustration.querySelectorAll(".intro-parallax")).filter(
+    (layer) => !layer.classList.contains("intro-clouds-layer")
+  );
+
+  let rafPending = false;
+  let nextNx = 0;
+  let nextNy = 0;
+
+  const commitParallax = () => {
+    layers.forEach((layer) => {
+      const depth = Number(layer.getAttribute("data-depth") || 0);
+      const tx = nextNx * depth * 92;
+      const ty = nextNy * depth * 64;
+      layer.style.transform = `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px)`;
+    });
+    rafPending = false;
+  };
+
+  els.introGate.addEventListener("pointermove", (event) => {
+    const rect = els.introGate.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+
+    nextNx = (event.clientX - rect.left) / rect.width - 0.5;
+    nextNy = (event.clientY - rect.top) / rect.height - 0.5;
+
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(commitParallax);
+  });
+
+  els.introGate.addEventListener("pointerleave", () => {
+    nextNx = 0;
+    nextNy = 0;
+    layers.forEach((layer) => {
+      layer.style.transform = "translate(0, 0)";
+    });
+  });
+}
+
+function bindMapInteractions() {
+  if (!els.mapViewport || !els.mapWorld) return;
+
+  renderMapPins();
+
+  if (els.mapReset) {
+    els.mapReset.addEventListener("click", () => {
+      state.mapInteracted = false;
+      fitMapToViewport();
+      setActiveMapPin("");
+    });
+  }
+
+  if (els.mapIntro) {
+    els.mapIntro.addEventListener("click", () => {
+      setViewMode(VIEW.INTRO);
+      window.scrollTo({ top: 0, behavior: "auto" });
+      if (els.introContinue) {
+        requestAnimationFrame(() => els.introContinue.focus());
+      }
+    });
+  }
+
+  if (els.returnToMap) {
+    els.returnToMap.addEventListener("click", () => {
+      showMapView({ focusPins: true });
+    });
+  }
+
+  if (els.mapPinsLayer) {
+    els.mapPinsLayer.addEventListener("click", (event) => {
+      const pin = event.target.closest(".map-pin");
+      if (!pin) return;
+      const sectionId = pin.getAttribute("data-section");
+      if (!sectionId) return;
+      state.mapInteracted = true;
+      flyToSection(sectionId);
+    });
+
+    els.mapPinsLayer.addEventListener("keydown", (event) => {
+      const pin = event.target.closest(".map-pin");
+      if (!pin) return;
+      if (event.key !== "Enter" && event.key !== " ") return;
+      event.preventDefault();
+      const sectionId = pin.getAttribute("data-section");
+      if (!sectionId) return;
+      state.mapInteracted = true;
+      flyToSection(sectionId);
+    });
+  }
+
+  els.mapViewport.addEventListener(
+    "wheel",
+    (event) => {
+      if (state.view !== VIEW.MAP) return;
+      event.preventDefault();
+      state.mapInteracted = true;
+      const factor = event.deltaY < 0 ? 1.11 : 0.89;
+      zoomAt(event.clientX, event.clientY, state.camera.scale * factor);
+    },
+    { passive: false }
+  );
+
+  els.mapViewport.addEventListener("pointerdown", (event) => {
+    if (state.view !== VIEW.MAP) return;
+    if (event.button !== 0) return;
+    if (event.target.closest(".map-pin")) return;
+
+    state.drag.active = true;
+    state.drag.pointerId = event.pointerId;
+    state.drag.startX = event.clientX;
+    state.drag.startY = event.clientY;
+    state.drag.startCamX = state.camera.x;
+    state.drag.startCamY = state.camera.y;
+    state.mapInteracted = true;
+
+    els.mapViewport.classList.add("is-dragging");
+    els.mapViewport.setPointerCapture(event.pointerId);
+  });
+
+  els.mapViewport.addEventListener("pointermove", (event) => {
+    if (!state.drag.active) return;
+    if (event.pointerId !== state.drag.pointerId) return;
+
+    const dx = event.clientX - state.drag.startX;
+    const dy = event.clientY - state.drag.startY;
+
+    state.camera.x = state.drag.startCamX + dx;
+    state.camera.y = state.drag.startCamY + dy;
+    applyCamera();
+  });
+
+  const endDrag = (event) => {
+    if (!state.drag.active) return;
+    if (event.pointerId !== state.drag.pointerId) return;
+
+    state.drag.active = false;
+    state.drag.pointerId = null;
+    els.mapViewport.classList.remove("is-dragging");
+  };
+
+  els.mapViewport.addEventListener("pointerup", endDrag);
+  els.mapViewport.addEventListener("pointercancel", endDrag);
+
+  window.addEventListener("keydown", (event) => {
+    if (state.view !== VIEW.MAP) return;
+
+    if (event.key === "+" || event.key === "=") {
+      event.preventDefault();
+      const { width, height } = getViewportSize();
+      zoomAt(width / 2, height / 2, state.camera.scale * 1.08);
+      return;
+    }
+
+    if (event.key === "-") {
+      event.preventDefault();
+      const { width, height } = getViewportSize();
+      zoomAt(width / 2, height / 2, state.camera.scale * 0.92);
+    }
   });
 }
 
@@ -137,13 +617,9 @@ function renderProjectDetail(project) {
     .map((item) => `<span class="tag project-stack-chip">${escapeHtml(item)}</span>`)
     .join("");
 
-  const approachItems = project.approach
-    .map((item) => `<li>${escapeHtml(item)}</li>`)
-    .join("");
+  const approachItems = project.approach.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
 
-  const outcomeItems = project.outcomes
-    .map((item) => `<li>${escapeHtml(item)}</li>`)
-    .join("");
+  const outcomeItems = project.outcomes.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
 
   const media =
     project.media && project.media.type === "video"
@@ -272,9 +748,7 @@ function renderExperience() {
 
   els.experienceTimeline.innerHTML = data.experience
     .map((item, index) => {
-      const highlights = (item.highlights || [])
-        .map((point) => `<li>${escapeHtml(point)}</li>`)
-        .join("");
+      const highlights = (item.highlights || []).map((point) => `<li>${escapeHtml(point)}</li>`).join("");
       const highlightList = highlights.length ? `<ul class="timeline-highlights">${highlights}</ul>` : "";
 
       const hasPositions = Array.isArray(item.positions) && item.positions.length > 0;
@@ -307,16 +781,12 @@ function renderExperience() {
         ? `<p class="timeline-company-summary">${escapeHtml(item.companySummary)}</p>`
         : "";
 
-      const notes = (item.fieldNotes || [])
-        .map((note) => `<li>${escapeHtml(note)}</li>`)
-        .join("");
+      const notes = (item.fieldNotes || []).map((note) => `<li>${escapeHtml(note)}</li>`).join("");
 
       const detailsId = `timeline-details-${index}`;
       const hasFieldNotes = notes.length > 0;
       const timelineTitle =
-        item.headingOnlyOrganization || !item.role
-          ? item.organization
-          : `${item.role} · ${item.organization}`;
+        item.headingOnlyOrganization || !item.role ? item.organization : `${item.role} · ${item.organization}`;
 
       return `
         <article class="timeline-entry reveal">
@@ -396,6 +866,11 @@ function observeActiveSection() {
   let rafPending = false;
 
   const updateActiveSection = () => {
+    if (state.view !== VIEW.CONTENT) {
+      rafPending = false;
+      return;
+    }
+
     const headerHeight = els.header ? els.header.offsetHeight : 0;
     const probeLine = headerHeight + 18;
 
@@ -463,10 +938,17 @@ function bindNavigation() {
       if (!href || !href.startsWith("#")) return;
 
       event.preventDefault();
-      state.lockedNavId = href.slice(1);
-      state.lockedNavAt = performance.now();
-      scrollToSection(href);
-      setActiveNavLink(href.slice(1));
+      const sectionId = href.slice(1);
+
+      if (state.view !== VIEW.CONTENT) {
+        showContentView(sectionId);
+      } else {
+        state.lockedNavId = sectionId;
+        state.lockedNavAt = performance.now();
+        scrollToSection(href);
+      }
+
+      setActiveNavLink(sectionId);
       closeMobileNav();
     });
   });
@@ -474,6 +956,10 @@ function bindNavigation() {
 
 function updateHeaderState() {
   if (!els.header) return;
+  if (state.view !== VIEW.CONTENT) {
+    els.header.classList.remove("is-scrolled");
+    return;
+  }
   els.header.classList.toggle("is-scrolled", window.scrollY > 20);
 }
 
@@ -530,7 +1016,7 @@ function bindExperienceExpansion() {
 }
 
 function updateTimelineProgress() {
-  if (!els.experienceTimeline) return;
+  if (!els.experienceTimeline || state.view !== VIEW.CONTENT) return;
 
   const rect = els.experienceTimeline.getBoundingClientRect();
   const viewportHeight = window.innerHeight;
@@ -555,6 +1041,7 @@ function bindHeroParallax() {
   };
 
   const heroSection = document.querySelector(".hero");
+  if (!heroSection) return;
 
   heroSection.addEventListener("pointermove", (event) => {
     const rect = heroSection.getBoundingClientRect();
@@ -616,6 +1103,7 @@ function bindCursorAura() {
   window.addEventListener(
     "pointermove",
     (event) => {
+      if (state.view !== VIEW.CONTENT) return;
       pointerX = (event.clientX / window.innerWidth) * 100;
       pointerY = (event.clientY / window.innerHeight) * 100;
       if (rafPending) return;
@@ -758,6 +1246,7 @@ function bindScrollHandlers() {
 
 function init() {
   setReady();
+  setMapWorldSize();
 
   renderSkills();
   renderProjectTiles();
@@ -766,6 +1255,8 @@ function init() {
   observeRevealElements();
   observeActiveSection();
 
+  bindIntroExperience();
+  bindMapInteractions();
   bindNavigation();
   bindMobileNav();
   bindProjectBrowser();
@@ -775,6 +1266,28 @@ function init() {
   bindCursorAura();
   bindGsapMotion();
   bindScrollHandlers();
+
+  const initialHash = window.location.hash;
+  const hasSectionHash =
+    Boolean(initialHash) &&
+    els.sections.some((section) => `#${section.id}`.toLowerCase() === initialHash.toLowerCase());
+
+  if (hasSectionHash) {
+    showContentView(initialHash.slice(1));
+  } else {
+    setViewMode(VIEW.INTRO);
+    fitMapToViewport();
+  }
+
+  window.addEventListener("resize", () => {
+    if (state.view === VIEW.MAP || state.view === VIEW.INTRO) {
+      if (!state.mapInteracted) {
+        fitMapToViewport();
+      } else {
+        applyCamera();
+      }
+    }
+  });
 }
 
 init();

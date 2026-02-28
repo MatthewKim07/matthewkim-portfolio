@@ -1,13 +1,10 @@
 # matthewkim-portfolio
 
-Personal portfolio website showcasing Matthew Kim's projects, academics, and skills.
+Personal portfolio website for Matthew Kim.
 
 ## Run Locally
 
 This is a static site with no build step.
-
-1. Open `index.html` directly in a browser, or
-2. Serve the folder with any static server:
 
 ```bash
 python3 -m http.server 8080
@@ -15,24 +12,37 @@ python3 -m http.server 8080
 
 Then open [http://localhost:8080](http://localhost:8080).
 
-## Project Structure
+## Structure
 
-- `index.html`: page structure, modal shell, and section scaffolding
-- `styles.css`: theme variables, layout system, motion, and responsive styles
-- `script.js`: rendering + interactions (filters, modal, timeline, nav, parallax)
-- `data/portfolio-data.js`: editable content source for skills, projects, and experience
-- `assets/`: resume, logos, icons, and project media
+- `index.html`: intro scene, interactive map scene, and portfolio section markup
+- `styles.css`: visual system, map/intro art styles, section UI styles, and motion
+- `script.js`: rendering logic, state machine (`intro`/`map`/`content`), map pan/zoom, pin navigation
+- `data/portfolio-data.js`: portfolio content source (skills/projects/experience)
+- `data/map-locations.js`: editable pin coordinates and camera focus settings
+- `assets/`: project/experience/education icons, resume, media
 
-## Content Editing
+## Edit Map Pins
 
-Most portfolio content is centralized in `data/portfolio-data.js`:
+Update `data/map-locations.js`:
 
-- Update `skills` to change toolkit categories and tooltips
-- Update `projects` to change cards, filters, and case-study modal content
-- Update `experience` to change the timeline and field notes
+- `sectionId`: section target id (`about`, `education`, `skills`, `projects`, `experience`, `contact`)
+- `label`: text shown beside the map pin
+- `x`, `y`: pin position in map coordinates
+- `color`: pin accent color
+- `focusScale`: camera zoom value used before opening the section
+
+Map dimensions are in `EXPEDITION_MAP_META` and currently set to `3000 x 1900`.
+
+## Edit Portfolio Content
+
+Update `data/portfolio-data.js`:
+
+- `skills`: skills groups and items
+- `projects`: project cards/details, stack, media, icon references
+- `experience`: timeline entries, logos, and highlights
 
 ## Accessibility + Motion
 
-- Keyboard focus styles are enabled throughout
-- Modal uses focus trapping and Escape-to-close
-- `prefers-reduced-motion` disables heavy motion/parallax effects
+- Keyboard support for map pins (`Tab`, `Enter`, `Space`)
+- Escape closes project detail view
+- `prefers-reduced-motion` disables heavy ambient motion/parallax
