@@ -5,9 +5,11 @@ const mapLocations = Array.isArray(window.EXPEDITION_MAP_LOCATIONS)
 const mapMeta = window.EXPEDITION_MAP_META || { width: 3000, height: 1900 };
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const DEBUG_TRANSITION = false;
 
 const VIEW = {
   INTRO: "intro",
+  TRANSITIONING: "transitioning",
   MAP: "map",
   CONTENT: "content",
 };
@@ -34,6 +36,12 @@ const state = {
     startY: 0,
     startCamX: 0,
     startCamY: 0,
+  },
+  transition: {
+    active: false,
+    rafId: 0,
+    startAt: 0,
+    duration: 1600,
   },
 };
 
@@ -95,8 +103,8 @@ function setViewMode(view) {
     els.body.setAttribute("data-view", view);
   }
 
-  const introVisible = view === VIEW.INTRO;
-  const mapVisible = view === VIEW.MAP;
+  const introVisible = view === VIEW.INTRO || view === VIEW.TRANSITIONING;
+  const mapVisible = view !== VIEW.CONTENT;
   const contentVisible = view === VIEW.CONTENT;
 
   if (els.introGate) {
@@ -118,6 +126,123 @@ function setViewMode(view) {
   if (els.body) {
     els.body.style.overflow = contentVisible ? "auto" : "hidden";
   }
+}
+
+function applyTransitionVisuals(progress, motion, shakeX, shakeY) {
+  if (!els.expeditionShell) return;
+  els.expeditionShell.style.setProperty("--fall-progress", progress.toFixed(4));
+  els.expeditionShell.style.setProperty("--fall-motion", motion.toFixed(4));
+  els.expeditionShell.style.setProperty("--fall-shake-x", `${shakeX.toFixed(3)}px`);
+  els.expeditionShell.style.setProperty("--fall-shake-y", `${shakeY.toFixed(3)}px`);
+}
+
+function resetTransitionVisuals() {
+  if (!els.expeditionShell) return;
+  els.expeditionShell.classList.remove("is-transitioning");
+  applyTransitionVisuals(0, 0, 0, 0);
+}
+
+function computeFallMotion(progress) {
+  if (progress <= 0.2) {
+    const t = progress / 0.2;
+    return 0.18 * (t ** 2.2);
+  }
+
+  if (progress <= 0.75) {
+    const t = (progress - 0.2) / 0.55;
+    return 0.18 + 0.62 * t;
+  }
+
+  const t = (progress - 0.75) / 0.25;
+  const eased = 1 - (1 - t) ** 3;
+  return 0.8 + 0.2 * eased;
+}
+
+function computeLandingShake(progress, elapsedMs) {
+  if (progress < 0.82 || progress > 0.95) return { x: 0, y: 0 };
+  const span = 0.13;
+  const center = 0.885;
+  const normalized = 1 - Math.min(1, Math.abs(progress - center) / (span / 2));
+  const amplitude = normalized * 1.15;
+  const wave = elapsedMs / 14;
+  return {
+    x: Math.sin(wave) * amplitude,
+    y: Math.cos(wave * 1.25) * amplitude * 0.72,
+  };
+}
+
+function finishTransitionToMap() {
+  state.transition.active = false;
+  state.introTransitioning = false;
+
+  if (state.transition.rafId) {
+    cancelAnimationFrame(state.transition.rafId);
+    state.transition.rafId = 0;
+  }
+
+  showMapView({ focusPins: true });
+  resetTransitionVisuals();
+}
+
+function runTransitionTimeline() {
+  if (state.transition.active) return;
+  state.transition.active = true;
+  state.transition.startAt = performance.now();
+  if (els.expeditionShell) {
+    els.expeditionShell.classList.add("is-transitioning");
+  }
+
+  const step = (now) => {
+    const elapsed = now - state.transition.startAt;
+    const progress = clamp(elapsed / state.transition.duration, 0, 1);
+    const motion = computeFallMotion(progress);
+    const shake = computeLandingShake(progress, elapsed);
+
+    applyTransitionVisuals(progress, motion, shake.x, shake.y);
+    if (DEBUG_TRANSITION) {
+      console.debug("[transition]", {
+        state: state.view,
+        progress: Number(progress.toFixed(3)),
+        mapMounted: Boolean(els.mapGate && !els.mapGate.hidden),
+      });
+    }
+
+    if (progress >= 1) {
+      finishTransitionToMap();
+      return;
+    }
+
+    state.transition.rafId = requestAnimationFrame(step);
+  };
+
+  state.transition.rafId = requestAnimationFrame(step);
+}
+
+function runReducedMotionTransition() {
+  if (state.transition.active) return;
+  state.transition.active = true;
+  state.transition.startAt = performance.now();
+  state.transition.duration = 260;
+
+  if (els.expeditionShell) {
+    els.expeditionShell.classList.add("is-transitioning");
+  }
+
+  const step = (now) => {
+    const elapsed = now - state.transition.startAt;
+    const progress = clamp(elapsed / state.transition.duration, 0, 1);
+    applyTransitionVisuals(progress, progress, 0, 0);
+
+    if (progress >= 1) {
+      state.transition.duration = 1600;
+      finishTransitionToMap();
+      return;
+    }
+
+    state.transition.rafId = requestAnimationFrame(step);
+  };
+
+  state.transition.rafId = requestAnimationFrame(step);
 }
 
 function setMapWorldSize() {
@@ -323,19 +448,14 @@ function bindIntroExperience() {
   const continueToMap = () => {
     if (state.view !== VIEW.INTRO || state.introTransitioning) return;
     state.introTransitioning = true;
+    setViewMode(VIEW.TRANSITIONING);
 
-    if (!prefersReducedMotion) {
-      els.introGate.classList.add("is-transitioning");
+    if (prefersReducedMotion) {
+      runReducedMotionTransition();
+      return;
     }
 
-    window.setTimeout(
-      () => {
-        state.introTransitioning = false;
-        els.introGate.classList.remove("is-transitioning");
-        showMapView({ focusPins: true });
-      },
-      prefersReducedMotion ? 120 : 780
-    );
+    runTransitionTimeline();
   };
 
   if (els.introContinue) {
@@ -358,43 +478,11 @@ function bindIntroExperience() {
     continueToMap();
   });
 
-  if (!els.introIllustration || prefersReducedMotion) return;
-  const layers = Array.from(els.introIllustration.querySelectorAll(".intro-parallax")).filter(
-    (layer) => !layer.classList.contains("intro-clouds-layer")
-  );
-
-  let rafPending = false;
-  let nextNx = 0;
-  let nextNy = 0;
-
-  const commitParallax = () => {
-    layers.forEach((layer) => {
-      const depth = Number(layer.getAttribute("data-depth") || 0);
-      const tx = nextNx * depth * 92;
-      const ty = nextNy * depth * 64;
-      layer.style.transform = `translate(${tx.toFixed(2)}px, ${ty.toFixed(2)}px)`;
-    });
-    rafPending = false;
-  };
-
-  els.introGate.addEventListener("pointermove", (event) => {
-    const rect = els.introGate.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-
-    nextNx = (event.clientX - rect.left) / rect.width - 0.5;
-    nextNy = (event.clientY - rect.top) / rect.height - 0.5;
-
-    if (rafPending) return;
-    rafPending = true;
-    requestAnimationFrame(commitParallax);
-  });
-
-  els.introGate.addEventListener("pointerleave", () => {
-    nextNx = 0;
-    nextNy = 0;
-    layers.forEach((layer) => {
-      layer.style.transform = "translate(0, 0)";
-    });
+  if (!els.introIllustration) return;
+  const layers = Array.from(els.introIllustration.querySelectorAll(".intro-parallax"));
+  layers.forEach((layer) => {
+    const depth = clamp(Number(layer.getAttribute("data-depth") || 0.1), 0.04, 0.42);
+    layer.style.setProperty("--depth", depth.toFixed(3));
   });
 }
 
@@ -405,6 +493,7 @@ function bindMapInteractions() {
 
   if (els.mapReset) {
     els.mapReset.addEventListener("click", () => {
+      if (state.view !== VIEW.MAP) return;
       state.mapInteracted = false;
       fitMapToViewport();
       setActiveMapPin("");
@@ -413,6 +502,14 @@ function bindMapInteractions() {
 
   if (els.mapIntro) {
     els.mapIntro.addEventListener("click", () => {
+      if (state.view !== VIEW.MAP) return;
+      state.introTransitioning = false;
+      state.transition.active = false;
+      if (state.transition.rafId) {
+        cancelAnimationFrame(state.transition.rafId);
+        state.transition.rafId = 0;
+      }
+      resetTransitionVisuals();
       setViewMode(VIEW.INTRO);
       window.scrollTo({ top: 0, behavior: "auto" });
       if (els.introContinue) {
@@ -429,6 +526,7 @@ function bindMapInteractions() {
 
   if (els.mapPinsLayer) {
     els.mapPinsLayer.addEventListener("click", (event) => {
+      if (state.view !== VIEW.MAP) return;
       const pin = event.target.closest(".map-pin");
       if (!pin) return;
       const sectionId = pin.getAttribute("data-section");
@@ -438,6 +536,7 @@ function bindMapInteractions() {
     });
 
     els.mapPinsLayer.addEventListener("keydown", (event) => {
+      if (state.view !== VIEW.MAP) return;
       const pin = event.target.closest(".map-pin");
       if (!pin) return;
       if (event.key !== "Enter" && event.key !== " ") return;
@@ -1247,6 +1346,7 @@ function bindScrollHandlers() {
 function init() {
   setReady();
   setMapWorldSize();
+  resetTransitionVisuals();
 
   renderSkills();
   renderProjectTiles();

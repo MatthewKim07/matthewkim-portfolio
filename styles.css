@@ -1693,18 +1693,22 @@ body::after {
 
 /* Expedition Intro + Illustrated Map */
 body[data-view="intro"],
+body[data-view="transitioning"],
 body[data-view="map"] {
   overflow: hidden;
 }
 
 body[data-view="intro"]::before,
 body[data-view="intro"]::after,
+body[data-view="transitioning"]::before,
+body[data-view="transitioning"]::after,
 body[data-view="map"]::before,
 body[data-view="map"]::after {
   display: none;
 }
 
 body[data-view="intro"] .site-shell,
+body[data-view="transitioning"] .site-shell,
 body[data-view="map"] .site-shell {
   display: none;
 }
@@ -1721,6 +1725,10 @@ body[data-view="content"] .expedition-shell {
   position: fixed;
   inset: 0;
   z-index: 40;
+  --fall-progress: 0;
+  --fall-motion: 0;
+  --fall-shake-x: 0px;
+  --fall-shake-y: 0px;
 }
 
 .intro-gate,
@@ -1735,9 +1743,11 @@ body[data-view="content"] .expedition-shell {
 }
 
 .intro-gate {
-  background: linear-gradient(180deg, #b9e2f2 0%, #cdebe4 54%, #9fc78c 100%);
+  z-index: 2;
+  background: linear-gradient(180deg, #b7d9ea 0%, #9ec8d3 44%, #8db5be 100%);
   overflow: hidden;
   isolation: isolate;
+  opacity: 1;
 }
 
 .intro-illustration {
@@ -1745,18 +1755,68 @@ body[data-view="content"] .expedition-shell {
   inset: 0;
   width: 100%;
   height: 100%;
+  will-change: transform, opacity, filter;
 }
 
-.intro-clouds-layer {
-  animation: introCloudDrift 36s linear infinite;
+.intro-parallax {
+  --depth: 0.1;
+  transform: translate3d(0, 0, 0) scale(1);
+  transform-origin: center;
+  will-change: transform;
 }
 
-.intro-fog-band {
-  animation: introFogSweep 22s ease-in-out infinite alternate;
+.intro-cloud-drift--far {
+  animation: introCloudDriftFar 44s linear infinite alternate;
+  will-change: transform, opacity;
 }
 
-.intro-gate.is-transitioning {
-  animation: introGateExit 0.78s var(--ease-standard) forwards;
+.intro-cloud-drift--mid {
+  animation: introCloudDriftMid 30s linear infinite alternate;
+  will-change: transform, opacity;
+}
+
+.intro-cloud-drift--front {
+  animation: introCloudDriftFront 19s linear infinite alternate;
+  will-change: transform, opacity;
+}
+
+.intro-fog-layer {
+  animation: introFogSweep 18s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+.expedition-shell.is-transitioning .intro-illustration {
+  transform:
+    translate3d(var(--fall-shake-x), var(--fall-shake-y), 0)
+    scale(calc(1 + var(--fall-motion) * 0.18));
+  filter: blur(calc(var(--fall-motion) * 0.85px));
+  opacity: clamp(0, calc(1 - (var(--fall-progress) - 0.72) * 4), 1);
+}
+
+.expedition-shell.is-transitioning .intro-parallax {
+  transform:
+    translate3d(
+      calc(var(--fall-shake-x) * var(--depth) * 0.95),
+      calc(var(--fall-motion) * (var(--depth) * -1400px) + var(--fall-shake-y) * var(--depth) * 0.6),
+      0
+    )
+    scale(calc(1 + var(--fall-motion) * (var(--depth) * 0.44)));
+}
+
+.expedition-shell.is-transitioning .intro-content {
+  opacity: clamp(0, calc(1 - var(--fall-progress) * 4.4), 1);
+  transform:
+    translate3d(
+      calc(var(--fall-shake-x) * 0.45),
+      calc(-18px * var(--fall-motion) + var(--fall-shake-y) * 0.35),
+      0
+    )
+    scale(calc(1 - var(--fall-progress) * 0.06));
+}
+
+.expedition-shell.is-transitioning .intro-fog-layer {
+  opacity: clamp(0, calc(1 - var(--fall-progress) * 2.4), 1);
+  transform: translateY(calc(var(--fall-motion) * -45%));
 }
 
 .intro-content {
@@ -1768,6 +1828,7 @@ body[data-view="content"] .expedition-shell {
   z-index: 3;
   padding: 1.25rem;
   text-align: center;
+  will-change: transform, opacity;
 }
 
 .intro-name {
@@ -1800,11 +1861,41 @@ body[data-view="content"] .expedition-shell {
 }
 
 .map-gate {
+  z-index: 1;
   background:
     radial-gradient(120% 65% at 50% -8%, rgba(243, 239, 213, 0.32), transparent 70%),
     linear-gradient(180deg, #d2d0a7 0%, #b5b986 100%);
   display: grid;
   grid-template-rows: auto 1fr;
+  opacity: 1;
+  transform: none;
+  will-change: transform, opacity;
+}
+
+body[data-view="intro"] .map-gate {
+  opacity: 0.001;
+  pointer-events: none;
+  transform: scale(1.02) translateY(-2%);
+}
+
+body[data-view="transitioning"] .map-gate {
+  pointer-events: none;
+}
+
+.expedition-shell.is-transitioning .map-gate {
+  opacity: clamp(0, calc((var(--fall-progress) - 0.58) * 3.1), 1);
+  transform:
+    translate3d(
+      calc(var(--fall-shake-x) * 0.2),
+      calc((1 - var(--fall-motion)) * -7% + var(--fall-shake-y) * 0.2),
+      0
+    )
+    scale(calc(1.1 - var(--fall-motion) * 0.1));
+}
+
+.expedition-shell.is-transitioning .map-hud {
+  opacity: clamp(0, calc((var(--fall-progress) - 0.7) * 4.2), 1);
+  transform: translateY(calc((1 - var(--fall-motion)) * -8px));
 }
 
 .map-hud {
@@ -1943,40 +2034,52 @@ body[data-view="content"] .expedition-shell {
 }
 
 body[data-view="intro"] .map-return-btn,
+body[data-view="transitioning"] .map-return-btn,
 body[data-view="map"] .map-return-btn {
   display: none;
 }
 
-@keyframes introCloudDrift {
+@keyframes introCloudDriftFar {
   from {
-    transform: translateX(-1.2%);
+    transform: translateX(-1.2%) translateY(-0.5%) scale(0.99);
+    opacity: 0.7;
   }
   to {
-    transform: translateX(1.2%);
+    transform: translateX(1.2%) translateY(0.45%) scale(1.02);
+    opacity: 0.78;
+  }
+}
+
+@keyframes introCloudDriftMid {
+  from {
+    transform: translateX(1%) translateY(0.35%) scale(0.98);
+    opacity: 0.84;
+  }
+  to {
+    transform: translateX(-1.5%) translateY(-0.45%) scale(1.04);
+    opacity: 0.94;
+  }
+}
+
+@keyframes introCloudDriftFront {
+  from {
+    transform: translateX(-1.6%) translateY(-0.25%) scale(0.97);
+    opacity: 0.9;
+  }
+  to {
+    transform: translateX(1.8%) translateY(0.5%) scale(1.07);
+    opacity: 1;
   }
 }
 
 @keyframes introFogSweep {
   from {
     transform: translateX(-1.2%);
-    opacity: 0.14;
+    opacity: 0.19;
   }
   to {
-    transform: translateX(1.4%);
-    opacity: 0.24;
-  }
-}
-
-@keyframes introGateExit {
-  from {
-    opacity: 1;
-    transform: scale(1);
-    filter: blur(0px);
-  }
-  to {
-    opacity: 0;
-    transform: scale(1.045);
-    filter: blur(7px);
+    transform: translateX(1.6%);
+    opacity: 0.3;
   }
 }
 
@@ -2027,14 +2130,31 @@ body[data-view="map"] .map-return-btn {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .intro-clouds-layer,
-  .intro-fog-band,
+  .intro-cloud-drift--far,
+  .intro-cloud-drift--mid,
+  .intro-cloud-drift--front,
+  .intro-fog-layer,
   .map-pin-dot {
     animation: none !important;
   }
 
-  .intro-gate.is-transitioning {
-    animation: none !important;
-    opacity: 0;
+  .intro-parallax,
+  .intro-illustration {
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .expedition-shell.is-transitioning .intro-illustration,
+  .expedition-shell.is-transitioning .intro-content {
+    transition: none !important;
+  }
+
+  .expedition-shell.is-transitioning .intro-gate {
+    opacity: calc(1 - var(--fall-progress)) !important;
+  }
+
+  .expedition-shell.is-transitioning .map-gate {
+    opacity: var(--fall-progress) !important;
+    transform: none !important;
   }
 }
