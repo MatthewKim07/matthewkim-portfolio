@@ -15,7 +15,7 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260302-map-fix13" />
   </head>
   <body>
     <a class="skip-link" href="#about">Skip to content</a>
@@ -128,7 +128,7 @@
         </div>
       </section>
 
-      <section class="map-gate" id="map-gate" aria-label="Interactive portfolio map" hidden>
+      <section class="map-gate" id="map-gate" aria-label="Interactive portfolio map">
         <div class="map-hud">
           <p class="map-hud-title">Portfolio Atlas</p>
           <div class="map-hud-actions">
@@ -139,114 +139,20 @@
 
         <div class="map-viewport" id="map-viewport" tabindex="0" aria-label="Drag to pan. Scroll to zoom.">
           <div class="map-world" id="map-world">
-            <svg class="map-illustration" id="map-illustration" viewBox="0 0 3000 1900" role="img" aria-label="Illustrated fantasy map">
-              <defs>
-                <linearGradient id="mapPaper" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#d6d2af" />
-                  <stop offset="100%" stop-color="#b8ba8b" />
-                </linearGradient>
-                <radialGradient id="mapVignette" cx="0.5" cy="0.5" r="0.68">
-                  <stop offset="75%" stop-color="rgba(0,0,0,0)" />
-                  <stop offset="100%" stop-color="rgba(44,33,20,0.38)" />
-                </radialGradient>
-                <linearGradient id="mapWater" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#8ac8d2" />
-                  <stop offset="100%" stop-color="#5fa0b0" />
-                </linearGradient>
-                <linearGradient id="mapMountainLight" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stop-color="#d8d8d2" />
-                  <stop offset="100%" stop-color="#949089" />
-                </linearGradient>
-                <filter id="mapPaperNoise" x="-20%" y="-20%" width="140%" height="140%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="23" result="noise" />
-                  <feColorMatrix in="noise" type="saturate" values="0" result="mono" />
-                  <feComponentTransfer in="mono" result="faint">
-                    <feFuncA type="table" tableValues="0 0.09" />
-                  </feComponentTransfer>
-                  <feBlend in="SourceGraphic" in2="faint" mode="multiply" />
-                </filter>
-                <pattern id="mapGrid" width="72" height="72" patternUnits="userSpaceOnUse">
-                  <path d="M72 0H0V72" fill="none" stroke="rgba(84,62,39,0.16)" stroke-width="1" />
-                </pattern>
-                <symbol id="mapTree" viewBox="0 0 24 34">
-                  <path d="M12 0L4 11H8L2 19H7L0 27H24L17 19H22L16 11H20Z" fill="#4f6f44" />
-                  <rect x="10" y="26.2" width="4" height="7.8" fill="#6d4e32" />
-                </symbol>
-                <symbol id="mapMountain" viewBox="0 0 90 64">
-                  <path d="M4 58L32 12L45 24L58 8L86 58Z" fill="#8f8b84" />
-                  <path d="M32 12L45 24L41 58H4Z" fill="url(#mapMountainLight)" />
-                  <path d="M45 24L58 8L86 58H41Z" fill="#74716b" />
-                  <path d="M56 12L60 18L54 18Z" fill="#f3f1ec" />
-                  <path d="M30 16L34 22L28 22Z" fill="#f4f2ed" />
-                </symbol>
-              </defs>
-
-              <rect width="3000" height="1900" fill="url(#mapPaper)" />
-              <path d="M0 1460C400 1260 820 1220 1220 1320C1520 1400 1800 1390 2140 1270C2460 1160 2720 1160 3000 1220V1900H0Z" fill="#9db17b" opacity="0.62" />
-              <path d="M0 520C420 460 730 520 980 680C1220 834 1500 876 1840 764C2120 674 2470 706 3000 860V1900H0Z" fill="#8ca26f" opacity="0.23" />
-
-              <g opacity="0.9">
-                <path d="M210 970C560 760 760 740 1010 816C1240 886 1460 888 1750 760C2020 642 2280 652 2820 900" fill="none" stroke="url(#mapWater)" stroke-width="84" stroke-linecap="round" />
-                <path d="M1120 820C1086 970 1020 1110 884 1290" fill="none" stroke="url(#mapWater)" stroke-width="48" stroke-linecap="round" />
-                <ellipse cx="2230" cy="1120" rx="260" ry="195" fill="url(#mapWater)" opacity="0.9" />
-              </g>
-              <g opacity="0.5">
-                <path d="M210 970C560 760 760 740 1010 816C1240 886 1460 888 1750 760C2020 642 2280 652 2820 900" fill="none" stroke="#d6e9eb" stroke-width="18" stroke-linecap="round" />
-                <ellipse cx="2230" cy="1120" rx="220" ry="160" fill="none" stroke="#d6ebe9" stroke-width="10" />
-              </g>
-
-              <g opacity="0.62">
-                <path d="M300 1460C520 1360 800 1360 1020 1470" fill="none" stroke="#c9ac75" stroke-width="18" stroke-linecap="round" />
-                <path d="M1020 1470C1240 1580 1530 1605 1770 1510" fill="none" stroke="#c9ac75" stroke-width="18" stroke-linecap="round" />
-                <path d="M1770 1510C2010 1418 2310 1408 2610 1510" fill="none" stroke="#c9ac75" stroke-width="18" stroke-linecap="round" />
-              </g>
-
-              <g>
-                <use href="#mapMountain" x="280" y="310" width="130" height="96" />
-                <use href="#mapMountain" x="410" y="260" width="150" height="110" />
-                <use href="#mapMountain" x="560" y="300" width="136" height="100" />
-                <use href="#mapMountain" x="710" y="250" width="160" height="116" />
-                <use href="#mapMountain" x="890" y="300" width="148" height="108" />
-                <use href="#mapMountain" x="1060" y="248" width="156" height="114" />
-                <use href="#mapMountain" x="1240" y="302" width="140" height="102" />
-                <use href="#mapMountain" x="1400" y="262" width="154" height="110" />
-                <use href="#mapMountain" x="1575" y="308" width="140" height="100" />
-                <use href="#mapMountain" x="1740" y="258" width="152" height="110" />
-                <use href="#mapMountain" x="1918" y="304" width="138" height="100" />
-                <use href="#mapMountain" x="2080" y="250" width="162" height="116" />
-                <use href="#mapMountain" x="2268" y="302" width="140" height="100" />
-                <use href="#mapMountain" x="2428" y="264" width="152" height="110" />
-              </g>
-
-              <g opacity="0.88">
-                <use href="#mapTree" x="520" y="740" width="38" height="54" />
-                <use href="#mapTree" x="560" y="770" width="36" height="52" />
-                <use href="#mapTree" x="610" y="726" width="40" height="58" />
-                <use href="#mapTree" x="650" y="768" width="34" height="50" />
-                <use href="#mapTree" x="700" y="732" width="38" height="56" />
-                <use href="#mapTree" x="1160" y="900" width="38" height="54" />
-                <use href="#mapTree" x="1208" y="934" width="34" height="50" />
-                <use href="#mapTree" x="1260" y="896" width="40" height="56" />
-                <use href="#mapTree" x="1310" y="938" width="34" height="50" />
-                <use href="#mapTree" x="1360" y="902" width="38" height="54" />
-                <use href="#mapTree" x="1860" y="760" width="40" height="58" />
-                <use href="#mapTree" x="1914" y="804" width="34" height="50" />
-                <use href="#mapTree" x="1962" y="758" width="40" height="58" />
-                <use href="#mapTree" x="2014" y="812" width="33" height="48" />
-                <use href="#mapTree" x="2060" y="770" width="38" height="54" />
-                <use href="#mapTree" x="2360" y="1280" width="40" height="58" />
-                <use href="#mapTree" x="2416" y="1320" width="33" height="48" />
-                <use href="#mapTree" x="2460" y="1274" width="38" height="54" />
-                <use href="#mapTree" x="2510" y="1322" width="32" height="46" />
-                <use href="#mapTree" x="2550" y="1284" width="38" height="54" />
-              </g>
-
-              <rect width="3000" height="1900" fill="url(#mapGrid)" opacity="0.45" />
-              <rect x="30" y="30" width="2940" height="1840" rx="26" fill="none" stroke="#765638" stroke-opacity="0.78" stroke-width="26" />
-              <rect x="50" y="50" width="2900" height="1800" rx="16" fill="none" stroke="#d5b37f" stroke-opacity="0.62" stroke-width="4" />
-              <rect width="3000" height="1900" fill="url(#mapVignette)" />
-              <rect width="3000" height="1900" fill="url(#mapPaper)" opacity="0.06" filter="url(#mapPaperNoise)" />
-            </svg>
+            <div class="map-image-shell" id="map-image-shell">
+              <img
+                class="map-base-image"
+                id="map-base-image"
+                src="./assets/map/world-map.png"
+                alt="Illustrated world map"
+                draggable="false"
+              />
+              <div class="map-cloud-overlay" id="map-cloud-overlay" aria-hidden="true">
+                <span class="map-cloud-shadow map-cloud-shadow--one"></span>
+                <span class="map-cloud-shadow map-cloud-shadow--two"></span>
+              </div>
+              <div class="map-water-overlay" id="map-water-overlay" aria-hidden="true"></div>
+            </div>
 
             <div class="map-pins-layer" id="map-pins-layer" aria-label="Map locations"></div>
           </div>
@@ -536,8 +442,8 @@
       </main>
     </div>
 
-    <script src="./data/portfolio-data.js"></script>
-    <script src="./data/map-locations.js"></script>
-    <script src="./script.js"></script>
+    <script src="./data/portfolio-data.js?v=20260302-map-fix13"></script>
+    <script src="./data/map-pins.js?v=20260302-map-fix13"></script>
+    <script src="./script.js?v=20260302-map-fix13"></script>
   </body>
 </html>

@@ -1,11 +1,30 @@
 const data = window.PORTFOLIO_DATA || { skills: [], projects: [], experience: [] };
-const mapLocations = Array.isArray(window.EXPEDITION_MAP_LOCATIONS)
+const mapMeta = window.EXPEDITION_MAP_META || { width: 1536, height: 1024 };
+const mapLocationSource = Array.isArray(window.EXPEDITION_MAP_PINS)
+  ? window.EXPEDITION_MAP_PINS
+  : Array.isArray(window.EXPEDITION_MAP_LOCATIONS)
   ? window.EXPEDITION_MAP_LOCATIONS
   : [];
-const mapMeta = window.EXPEDITION_MAP_META || { width: 3000, height: 1900 };
+const mapLocations = mapLocationSource.map((location) => {
+  const id = location.id || location.sectionId;
+  return {
+    id,
+    sectionId: id,
+    label:
+      location.label ||
+      String(id)
+        .replace(/[-_]/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase()),
+    x: Number(location.x) || 0,
+    y: Number(location.y) || 0,
+    zoomLevel: Number(location.zoomLevel || location.focusScale || 1.4),
+    color: location.color || "#cba36d",
+  };
+});
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const DEBUG_TRANSITION = false;
+const ENABLE_FALL_TRANSITION = true;
 
 const VIEW = {
   INTRO: "intro",
@@ -26,8 +45,16 @@ const state = {
     x: 0,
     y: 0,
     scale: 1,
+    targetX: 0,
+    targetY: 0,
+    targetScale: 1,
     minScale: 0.7,
     maxScale: 2.45,
+    rafId: 0,
+    lastFrameAt: 0,
+    manualAnimation: false,
+    viewportWidth: 1,
+    viewportHeight: 1,
   },
   drag: {
     active: false,
@@ -54,6 +81,8 @@ const els = {
   mapGate: document.getElementById("map-gate"),
   mapViewport: document.getElementById("map-viewport"),
   mapWorld: document.getElementById("map-world"),
+  mapImageShell: document.getElementById("map-image-shell"),
+  mapBaseImage: document.getElementById("map-base-image"),
   mapPinsLayer: document.getElementById("map-pins-layer"),
   mapReset: document.getElementById("map-reset"),
   mapIntro: document.getElementById("map-intro"),
@@ -101,6 +130,7 @@ function setViewMode(view) {
   state.view = view;
   if (els.body) {
     els.body.setAttribute("data-view", view);
+    els.body.classList.toggle("expedition-mode", view !== VIEW.CONTENT);
   }
 
   const introVisible = view === VIEW.INTRO || view === VIEW.TRANSITIONING;
@@ -108,15 +138,47 @@ function setViewMode(view) {
   const contentVisible = view === VIEW.CONTENT;
 
   if (els.introGate) {
-    els.introGate.hidden = !introVisible;
+    els.introGate.classList.toggle("is-visible", introVisible);
+    els.introGate.style.display = introVisible ? "block" : "none";
+    els.introGate.style.opacity = introVisible ? "1" : "0";
+    els.introGate.style.pointerEvents = view === VIEW.INTRO ? "auto" : "none";
   }
 
   if (els.mapGate) {
-    els.mapGate.hidden = !mapVisible;
+    els.mapGate.classList.toggle("is-visible", mapVisible);
+    els.mapGate.style.display = mapVisible ? "block" : "none";
+    if (view === VIEW.INTRO) {
+      els.mapGate.style.opacity = "0.001";
+      els.mapGate.style.pointerEvents = "none";
+    } else if (view === VIEW.TRANSITIONING) {
+      els.mapGate.style.opacity = "";
+      els.mapGate.style.pointerEvents = "none";
+    } else if (view === VIEW.MAP) {
+      els.mapGate.style.opacity = "1";
+      els.mapGate.style.pointerEvents = "auto";
+    } else {
+      els.mapGate.style.opacity = "";
+      els.mapGate.style.pointerEvents = "none";
+    }
+    els.mapGate.style.position = "absolute";
+    els.mapGate.style.inset = "0";
+    els.mapGate.style.width = "100%";
+    els.mapGate.style.height = "100%";
+    els.mapGate.style.minHeight = "100vh";
   }
 
   if (els.siteShell) {
     els.siteShell.classList.toggle("shell-hidden", !contentVisible);
+    els.siteShell.style.display = contentVisible ? "block" : "none";
+  }
+
+  if (els.expeditionShell) {
+    const expeditionVisible = introVisible || mapVisible;
+    els.expeditionShell.style.display = expeditionVisible ? "block" : "none";
+    if (view === VIEW.MAP) {
+      els.expeditionShell.classList.remove("is-transitioning");
+      applyTransitionVisuals(1, 1, 0, 0);
+    }
   }
 
   if (els.returnToMap) {
@@ -184,6 +246,27 @@ function finishTransitionToMap() {
   resetTransitionVisuals();
 }
 
+function forceMapReveal() {
+  state.transition.active = false;
+  state.introTransitioning = false;
+
+  if (state.transition.rafId) {
+    cancelAnimationFrame(state.transition.rafId);
+    state.transition.rafId = 0;
+  }
+
+  resetTransitionVisuals();
+  setViewMode(VIEW.MAP);
+  syncMapImageDimensions();
+  cacheViewportSize();
+
+  if (!state.mapInteracted) {
+    fitMapToViewport();
+  } else {
+    setCameraTarget(state.camera.targetX, state.camera.targetY, state.camera.targetScale);
+  }
+}
+
 function runTransitionTimeline() {
   if (state.transition.active) return;
   state.transition.active = true;
@@ -245,29 +328,53 @@ function runReducedMotionTransition() {
   state.transition.rafId = requestAnimationFrame(step);
 }
 
-function setMapWorldSize() {
+function setMapWorldSize(width = mapMeta.width, height = mapMeta.height) {
+  const nextWidth = Math.max(1, Math.round(Number(width) || mapMeta.width || 1));
+  const nextHeight = Math.max(1, Math.round(Number(height) || mapMeta.height || 1));
+  mapMeta.width = nextWidth;
+  mapMeta.height = nextHeight;
+
   if (els.mapWorld) {
-    els.mapWorld.style.width = `${mapMeta.width}px`;
-    els.mapWorld.style.height = `${mapMeta.height}px`;
+    els.mapWorld.style.width = `${nextWidth}px`;
+    els.mapWorld.style.height = `${nextHeight}px`;
+  }
+
+  if (els.mapImageShell) {
+    els.mapImageShell.style.width = `${nextWidth}px`;
+    els.mapImageShell.style.height = `${nextHeight}px`;
   }
 
   if (els.mapPinsLayer) {
-    els.mapPinsLayer.style.width = `${mapMeta.width}px`;
-    els.mapPinsLayer.style.height = `${mapMeta.height}px`;
+    els.mapPinsLayer.style.width = `${nextWidth}px`;
+    els.mapPinsLayer.style.height = `${nextHeight}px`;
   }
+}
+
+function cacheViewportSize() {
+  if (!els.mapViewport) return { width: 1, height: 1 };
+  const rect = els.mapViewport.getBoundingClientRect();
+  state.camera.viewportWidth = Math.max(1, rect.width);
+  state.camera.viewportHeight = Math.max(1, rect.height);
+  return { width: state.camera.viewportWidth, height: state.camera.viewportHeight };
 }
 
 function getViewportSize() {
   if (!els.mapViewport) return { width: 1, height: 1 };
-  const rect = els.mapViewport.getBoundingClientRect();
-  return { width: Math.max(1, rect.width), height: Math.max(1, rect.height) };
+  if (state.camera.viewportWidth <= 1 || state.camera.viewportHeight <= 1) {
+    return cacheViewportSize();
+  }
+  return {
+    width: state.camera.viewportWidth,
+    height: state.camera.viewportHeight,
+  };
 }
 
 function clampCamera(x, y, scale) {
   const { width: viewportWidth, height: viewportHeight } = getViewportSize();
-  const worldWidth = mapMeta.width * scale;
-  const worldHeight = mapMeta.height * scale;
-  const padding = 80;
+  const safeScale = clamp(scale, state.camera.minScale, state.camera.maxScale);
+  const worldWidth = mapMeta.width * safeScale;
+  const worldHeight = mapMeta.height * safeScale;
+  const padding = 0;
 
   let nextX = x;
   let nextY = y;
@@ -284,25 +391,112 @@ function clampCamera(x, y, scale) {
     nextY = clamp(nextY, viewportHeight - worldHeight - padding, padding);
   }
 
-  return { x: nextX, y: nextY, scale };
+  return { x: nextX, y: nextY, scale: safeScale };
 }
 
-function applyCamera() {
+function applyCameraTransform() {
   if (!els.mapWorld) return;
-  const clamped = clampCamera(state.camera.x, state.camera.y, state.camera.scale);
+  if (
+    !Number.isFinite(state.camera.x) ||
+    !Number.isFinite(state.camera.y) ||
+    !Number.isFinite(state.camera.scale) ||
+    state.camera.scale <= 0
+  ) {
+    state.camera.x = 0;
+    state.camera.y = 0;
+    state.camera.scale = Math.max(1, state.camera.minScale || 1);
+    state.camera.targetX = state.camera.x;
+    state.camera.targetY = state.camera.y;
+    state.camera.targetScale = state.camera.scale;
+  }
+  els.mapWorld.style.transform = `translate3d(${state.camera.x}px, ${state.camera.y}px, 0) scale(${state.camera.scale})`;
+}
+
+function stopCameraLoop() {
+  if (!state.camera.rafId) return;
+  cancelAnimationFrame(state.camera.rafId);
+  state.camera.rafId = 0;
+  state.camera.lastFrameAt = 0;
+}
+
+function stepCamera(now) {
+  state.camera.rafId = 0;
+  if (state.camera.manualAnimation) return;
+
+  const dt = state.camera.lastFrameAt ? Math.min(48, now - state.camera.lastFrameAt) : 16;
+  state.camera.lastFrameAt = now;
+  const target = clampCamera(state.camera.targetX, state.camera.targetY, state.camera.targetScale);
+  state.camera.targetX = target.x;
+  state.camera.targetY = target.y;
+  state.camera.targetScale = target.scale;
+
+  const smoothing = state.drag.active ? 0.82 : 1 - Math.exp(-dt * 0.018);
+
+  state.camera.x += (target.x - state.camera.x) * smoothing;
+  state.camera.y += (target.y - state.camera.y) * smoothing;
+  state.camera.scale += (target.scale - state.camera.scale) * smoothing;
+  applyCameraTransform();
+
+  const done =
+    Math.abs(target.x - state.camera.x) < 0.06 &&
+    Math.abs(target.y - state.camera.y) < 0.06 &&
+    Math.abs(target.scale - state.camera.scale) < 0.0008 &&
+    !state.drag.active;
+
+  if (done) {
+    state.camera.x = target.x;
+    state.camera.y = target.y;
+    state.camera.scale = target.scale;
+    applyCameraTransform();
+    state.camera.lastFrameAt = 0;
+    return;
+  }
+
+  state.camera.rafId = requestAnimationFrame(stepCamera);
+}
+
+function ensureCameraLoop() {
+  if (state.camera.manualAnimation) return;
+  if (state.camera.rafId) return;
+  state.camera.rafId = requestAnimationFrame(stepCamera);
+}
+
+function setCameraInstant(x, y, scale) {
+  stopCameraLoop();
+  const clamped = clampCamera(x, y, scale);
   state.camera.x = clamped.x;
   state.camera.y = clamped.y;
   state.camera.scale = clamped.scale;
-  els.mapWorld.style.transform = `translate3d(${clamped.x}px, ${clamped.y}px, 0) scale(${clamped.scale})`;
+  state.camera.targetX = clamped.x;
+  state.camera.targetY = clamped.y;
+  state.camera.targetScale = clamped.scale;
+  applyCameraTransform();
 }
 
-function fitMapToViewport() {
-  const { width, height } = getViewportSize();
-  const baseScale = Math.min(width / mapMeta.width, height / mapMeta.height) * 0.94;
-  state.camera.scale = clamp(baseScale, state.camera.minScale, state.camera.maxScale);
-  state.camera.x = (width - mapMeta.width * state.camera.scale) / 2;
-  state.camera.y = (height - mapMeta.height * state.camera.scale) / 2;
-  applyCamera();
+function setCameraTarget(x, y, scale) {
+  const clamped = clampCamera(x, y, scale);
+  state.camera.targetX = clamped.x;
+  state.camera.targetY = clamped.y;
+  state.camera.targetScale = clamped.scale;
+  ensureCameraLoop();
+}
+
+function fitMapToViewport(options = {}) {
+  const { animate = false, duration = 740 } = options;
+  const { width, height } = cacheViewportSize();
+  const coverScale = Math.max(width / mapMeta.width, height / mapMeta.height);
+  const minDynamic = clamp(coverScale * 1.01, 0.62, 2.1);
+  state.camera.minScale = minDynamic;
+  const scale = clamp(coverScale * 1.02, state.camera.minScale, state.camera.maxScale);
+  const x = (width - mapMeta.width * scale) / 2;
+  const y = (height - mapMeta.height * scale) / 2;
+
+  if (animate) {
+    return animateCameraTo(x, y, scale, duration);
+  }
+
+  setCameraInstant(x, y, scale);
+  return Promise.resolve();
 }
 
 function zoomAt(clientX, clientY, nextScale) {
@@ -311,25 +505,23 @@ function zoomAt(clientX, clientY, nextScale) {
   const px = clientX - rect.left;
   const py = clientY - rect.top;
 
+  const startScale = state.camera.targetScale;
   const targetScale = clamp(nextScale, state.camera.minScale, state.camera.maxScale);
-  const worldX = (px - state.camera.x) / state.camera.scale;
-  const worldY = (py - state.camera.y) / state.camera.scale;
-
-  state.camera.scale = targetScale;
-  state.camera.x = px - worldX * targetScale;
-  state.camera.y = py - worldY * targetScale;
-  applyCamera();
+  const worldX = (px - state.camera.targetX) / startScale;
+  const worldY = (py - state.camera.targetY) / startScale;
+  const x = px - worldX * targetScale;
+  const y = py - worldY * targetScale;
+  setCameraTarget(x, y, targetScale);
 }
 
 function animateCameraTo(x, y, scale, duration = 780) {
   if (prefersReducedMotion) {
-    state.camera.x = x;
-    state.camera.y = y;
-    state.camera.scale = scale;
-    applyCamera();
+    setCameraInstant(x, y, scale);
     return Promise.resolve();
   }
 
+  stopCameraLoop();
+  state.camera.manualAnimation = true;
   const startX = state.camera.x;
   const startY = state.camera.y;
   const startScale = state.camera.scale;
@@ -345,16 +537,24 @@ function animateCameraTo(x, y, scale, duration = 780) {
       state.camera.x = startX + (target.x - startX) * eased;
       state.camera.y = startY + (target.y - startY) * eased;
       state.camera.scale = startScale + (target.scale - startScale) * eased;
-      applyCamera();
+      state.camera.targetX = state.camera.x;
+      state.camera.targetY = state.camera.y;
+      state.camera.targetScale = state.camera.scale;
+      applyCameraTransform();
 
       if (t < 1) {
-        requestAnimationFrame(tick);
-      } else {
-        resolve();
+        state.camera.rafId = requestAnimationFrame(tick);
+        return;
       }
+
+      state.camera.manualAnimation = false;
+      state.camera.rafId = 0;
+      state.camera.lastFrameAt = 0;
+      setCameraTarget(target.x, target.y, target.scale);
+      resolve();
     };
 
-    requestAnimationFrame(tick);
+    state.camera.rafId = requestAnimationFrame(tick);
   });
 }
 
@@ -362,6 +562,15 @@ function setActiveMapPin(sectionId) {
   const pins = Array.from(document.querySelectorAll(".map-pin"));
   pins.forEach((pin) => {
     pin.classList.toggle("is-active", pin.dataset.section === sectionId);
+  });
+}
+
+function triggerMapPinPing(pin) {
+  if (!pin) return;
+  pin.classList.remove("is-pinged");
+  requestAnimationFrame(() => {
+    pin.classList.add("is-pinged");
+    window.setTimeout(() => pin.classList.remove("is-pinged"), 560);
   });
 }
 
@@ -390,16 +599,51 @@ function findMapLocation(sectionId) {
   return mapLocations.find((location) => location.sectionId === sectionId);
 }
 
+function syncMapImageDimensions() {
+  if (!els.mapBaseImage) return;
+  const width = Number(els.mapBaseImage.naturalWidth) || mapMeta.width;
+  const height = Number(els.mapBaseImage.naturalHeight) || mapMeta.height;
+  if (width && height) {
+    setMapWorldSize(width, height);
+  }
+}
+
 function showMapView(options = {}) {
-  const { focusPins = false } = options;
+  const { focusPins = false, resetCamera = false } = options;
   setViewMode(VIEW.MAP);
   window.scrollTo({ top: 0, behavior: "auto" });
+  syncMapImageDimensions();
+  cacheViewportSize();
 
-  if (!state.mapInteracted) {
+  if (els.mapViewport) {
+    els.mapViewport.style.width = "100%";
+    els.mapViewport.style.height = "100%";
+    els.mapViewport.style.minHeight = "100vh";
+  }
+
+  const hasValidCamera =
+    Number.isFinite(state.camera.targetX) &&
+    Number.isFinite(state.camera.targetY) &&
+    Number.isFinite(state.camera.targetScale) &&
+    state.camera.targetScale > 0;
+
+  if (resetCamera || !state.mapInteracted || !hasValidCamera) {
     fitMapToViewport();
   } else {
-    applyCamera();
+    setCameraTarget(state.camera.targetX, state.camera.targetY, state.camera.targetScale);
   }
+
+  requestAnimationFrame(() => {
+    const { width, height } = getViewportSize();
+    if (width < 8 || height < 8) {
+      cacheViewportSize();
+      fitMapToViewport();
+      return;
+    }
+    if (!Number.isFinite(state.camera.scale) || state.camera.scale <= 0) {
+      fitMapToViewport();
+    }
+  });
 
   if (focusPins) {
     const firstPin = document.querySelector(".map-pin");
@@ -433,11 +677,11 @@ function flyToSection(sectionId) {
 
   setActiveMapPin(sectionId);
   const { width, height } = getViewportSize();
-  const scale = clamp(location.focusScale || 1.36, state.camera.minScale, state.camera.maxScale);
+  const scale = clamp(location.zoomLevel || 1.36, state.camera.minScale, state.camera.maxScale);
   const x = width * 0.5 - location.x * scale;
   const y = height * 0.44 - location.y * scale;
 
-  animateCameraTo(x, y, scale).then(() => {
+  animateCameraTo(x, y, scale, 860).then(() => {
     showContentView(sectionId);
   });
 }
@@ -448,7 +692,19 @@ function bindIntroExperience() {
   const continueToMap = () => {
     if (state.view !== VIEW.INTRO || state.introTransitioning) return;
     state.introTransitioning = true;
+
+    if (!ENABLE_FALL_TRANSITION) {
+      showMapView({ focusPins: true });
+      state.introTransitioning = false;
+      return;
+    }
+
     setViewMode(VIEW.TRANSITIONING);
+    window.setTimeout(() => {
+      if (state.view !== VIEW.MAP && state.view !== VIEW.CONTENT) {
+        forceMapReveal();
+      }
+    }, state.transition.duration + 220);
 
     if (prefersReducedMotion) {
       runReducedMotionTransition();
@@ -489,13 +745,30 @@ function bindIntroExperience() {
 function bindMapInteractions() {
   if (!els.mapViewport || !els.mapWorld) return;
 
+  syncMapImageDimensions();
   renderMapPins();
+
+  if (els.mapBaseImage && !els.mapBaseImage.complete) {
+    els.mapBaseImage.addEventListener(
+      "load",
+      () => {
+        syncMapImageDimensions();
+        cacheViewportSize();
+        if (!state.mapInteracted) {
+          fitMapToViewport();
+        } else {
+          setCameraTarget(state.camera.targetX, state.camera.targetY, state.camera.targetScale);
+        }
+      },
+      { once: true }
+    );
+  }
 
   if (els.mapReset) {
     els.mapReset.addEventListener("click", () => {
       if (state.view !== VIEW.MAP) return;
       state.mapInteracted = false;
-      fitMapToViewport();
+      fitMapToViewport({ animate: true, duration: 780 });
       setActiveMapPin("");
     });
   }
@@ -510,6 +783,7 @@ function bindMapInteractions() {
         state.transition.rafId = 0;
       }
       resetTransitionVisuals();
+      setActiveMapPin("");
       setViewMode(VIEW.INTRO);
       window.scrollTo({ top: 0, behavior: "auto" });
       if (els.introContinue) {
@@ -531,6 +805,7 @@ function bindMapInteractions() {
       if (!pin) return;
       const sectionId = pin.getAttribute("data-section");
       if (!sectionId) return;
+      triggerMapPinPing(pin);
       state.mapInteracted = true;
       flyToSection(sectionId);
     });
@@ -543,6 +818,7 @@ function bindMapInteractions() {
       event.preventDefault();
       const sectionId = pin.getAttribute("data-section");
       if (!sectionId) return;
+      triggerMapPinPing(pin);
       state.mapInteracted = true;
       flyToSection(sectionId);
     });
@@ -554,8 +830,8 @@ function bindMapInteractions() {
       if (state.view !== VIEW.MAP) return;
       event.preventDefault();
       state.mapInteracted = true;
-      const factor = event.deltaY < 0 ? 1.11 : 0.89;
-      zoomAt(event.clientX, event.clientY, state.camera.scale * factor);
+      const factor = event.deltaY < 0 ? 1.16 : 0.86;
+      zoomAt(event.clientX, event.clientY, state.camera.targetScale * factor);
     },
     { passive: false }
   );
@@ -569,8 +845,8 @@ function bindMapInteractions() {
     state.drag.pointerId = event.pointerId;
     state.drag.startX = event.clientX;
     state.drag.startY = event.clientY;
-    state.drag.startCamX = state.camera.x;
-    state.drag.startCamY = state.camera.y;
+    state.drag.startCamX = state.camera.targetX;
+    state.drag.startCamY = state.camera.targetY;
     state.mapInteracted = true;
 
     els.mapViewport.classList.add("is-dragging");
@@ -584,9 +860,7 @@ function bindMapInteractions() {
     const dx = event.clientX - state.drag.startX;
     const dy = event.clientY - state.drag.startY;
 
-    state.camera.x = state.drag.startCamX + dx;
-    state.camera.y = state.drag.startCamY + dy;
-    applyCamera();
+    setCameraTarget(state.drag.startCamX + dx, state.drag.startCamY + dy, state.camera.targetScale);
   });
 
   const endDrag = (event) => {
@@ -596,6 +870,9 @@ function bindMapInteractions() {
     state.drag.active = false;
     state.drag.pointerId = null;
     els.mapViewport.classList.remove("is-dragging");
+    if (els.mapViewport.hasPointerCapture(event.pointerId)) {
+      els.mapViewport.releasePointerCapture(event.pointerId);
+    }
   };
 
   els.mapViewport.addEventListener("pointerup", endDrag);
@@ -607,14 +884,14 @@ function bindMapInteractions() {
     if (event.key === "+" || event.key === "=") {
       event.preventDefault();
       const { width, height } = getViewportSize();
-      zoomAt(width / 2, height / 2, state.camera.scale * 1.08);
+      zoomAt(width / 2, height / 2, state.camera.targetScale * 1.08);
       return;
     }
 
     if (event.key === "-") {
       event.preventDefault();
       const { width, height } = getViewportSize();
-      zoomAt(width / 2, height / 2, state.camera.scale * 0.92);
+      zoomAt(width / 2, height / 2, state.camera.targetScale * 0.92);
     }
   });
 }
@@ -1258,72 +1535,76 @@ function bindGsapMotion() {
   if (prefersReducedMotion) return;
   if (!window.gsap) return;
 
-  const gsap = window.gsap;
-  const scrollTrigger = window.ScrollTrigger;
-  if (scrollTrigger) gsap.registerPlugin(scrollTrigger);
+  try {
+    const gsap = window.gsap;
+    const scrollTrigger = window.ScrollTrigger;
+    if (scrollTrigger) gsap.registerPlugin(scrollTrigger);
 
-  const heroItems = Array.from(document.querySelectorAll(".hero-content > *"));
-  if (heroItems.length) {
-    gsap.from(heroItems, {
-      y: 24,
-      autoAlpha: 0,
-      duration: 0.72,
-      ease: "power2.out",
-      stagger: 0.08,
-      clearProps: "all",
+    const heroItems = Array.from(document.querySelectorAll(".hero-content > *"));
+    if (heroItems.length) {
+      gsap.from(heroItems, {
+        y: 24,
+        autoAlpha: 0,
+        duration: 0.72,
+        ease: "power2.out",
+        stagger: 0.08,
+        clearProps: "all",
+      });
+    }
+
+    if (!scrollTrigger) return;
+
+    const sections = Array.from(document.querySelectorAll(".content-section"));
+    sections.forEach((section) => {
+      gsap.from(section, {
+        y: 28,
+        autoAlpha: 0,
+        duration: 0.65,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: section,
+          start: "top 78%",
+          once: true,
+        },
+        clearProps: "transform,opacity,visibility",
+      });
     });
-  }
 
-  if (!scrollTrigger) return;
+    const projectTiles = Array.from(document.querySelectorAll(".project-tile"));
+    if (projectTiles.length) {
+      gsap.from(projectTiles, {
+        y: 30,
+        autoAlpha: 0,
+        duration: 0.58,
+        ease: "power2.out",
+        stagger: 0.07,
+        scrollTrigger: {
+          trigger: "#projects-grid",
+          start: "top 78%",
+          once: true,
+        },
+        clearProps: "transform,opacity,visibility",
+      });
+    }
 
-  const sections = Array.from(document.querySelectorAll(".content-section"));
-  sections.forEach((section) => {
-    gsap.from(section, {
-      y: 28,
-      autoAlpha: 0,
-      duration: 0.65,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: section,
-        start: "top 78%",
-        once: true,
-      },
-      clearProps: "transform,opacity,visibility",
-    });
-  });
-
-  const projectTiles = Array.from(document.querySelectorAll(".project-tile"));
-  if (projectTiles.length) {
-    gsap.from(projectTiles, {
-      y: 30,
-      autoAlpha: 0,
-      duration: 0.58,
-      ease: "power2.out",
-      stagger: 0.07,
-      scrollTrigger: {
-        trigger: "#projects-grid",
-        start: "top 78%",
-        once: true,
-      },
-      clearProps: "transform,opacity,visibility",
-    });
-  }
-
-  const timelineEntries = Array.from(document.querySelectorAll(".timeline-entry"));
-  if (timelineEntries.length) {
-    gsap.from(timelineEntries, {
-      x: -16,
-      autoAlpha: 0,
-      duration: 0.5,
-      ease: "power2.out",
-      stagger: 0.08,
-      scrollTrigger: {
-        trigger: "#experience",
-        start: "top 78%",
-        once: true,
-      },
-      clearProps: "transform,opacity,visibility",
-    });
+    const timelineEntries = Array.from(document.querySelectorAll(".timeline-entry"));
+    if (timelineEntries.length) {
+      gsap.from(timelineEntries, {
+        x: -16,
+        autoAlpha: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        stagger: 0.08,
+        scrollTrigger: {
+          trigger: "#experience",
+          start: "top 78%",
+          once: true,
+        },
+        clearProps: "transform,opacity,visibility",
+      });
+    }
+  } catch (error) {
+    console.warn("[gsap] motion hooks disabled:", error);
   }
 }
 
@@ -1347,6 +1628,8 @@ function init() {
   setReady();
   setMapWorldSize();
   resetTransitionVisuals();
+  setViewMode(VIEW.INTRO);
+  fitMapToViewport();
 
   renderSkills();
   renderProjectTiles();
@@ -1374,17 +1657,15 @@ function init() {
 
   if (hasSectionHash) {
     showContentView(initialHash.slice(1));
-  } else {
-    setViewMode(VIEW.INTRO);
-    fitMapToViewport();
   }
 
   window.addEventListener("resize", () => {
+    cacheViewportSize();
     if (state.view === VIEW.MAP || state.view === VIEW.INTRO) {
       if (!state.mapInteracted) {
         fitMapToViewport();
       } else {
-        applyCamera();
+        setCameraTarget(state.camera.targetX, state.camera.targetY, state.camera.targetScale);
       }
     }
   });
