@@ -161,12 +161,13 @@
     </div>
 
     <button class="map-return-btn" id="return-to-map" type="button" hidden>
-      Back to map
+      <span class="map-return-icon" aria-hidden="true">&larr;</span>
+      <span>Back to map</span>
     </button>
 
     <div class="site-shell shell-hidden" id="top">
       <header class="site-header" id="site-header">
-        <a class="brand" href="#top" aria-label="Matthew Kim home">MK</a>
+        <a class="brand" href="#about" aria-label="Matthew Kim home">MK</a>
 
         <button
           class="nav-toggle"
@@ -201,26 +202,26 @@
           </div>
 
           <div class="hero-content">
-            <p class="eyebrow">Software Engineering Portfolio</p>
+            <p class="eyebrow" id="page-eyebrow">Software Engineering Portfolio</p>
             <h1 id="hero-title">Matthew Kim</h1>
-            <p class="headline">
+            <p class="headline" id="page-headline">
               Mechatronics Engineering student at the University of Waterloo.
             </p>
-            <p class="hero-subline">
+            <p class="hero-subline" id="page-subline">
               Focused on software development and robotics with a strong
               programming and systems engineering foundation.
             </p>
 
-            <div class="hero-tags" aria-label="Focus areas">
+            <div class="hero-tags" id="page-tags" aria-label="Focus areas">
               <span>Software Engineering</span>
               <span>Full-Stack Development</span>
               <span>Robotics + AI</span>
               <span>Embedded Systems</span>
             </div>
 
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="#projects">View Projects</a>
-              <a class="btn btn-ghost" href="#experience">View Experience</a>
+            <div class="hero-actions" id="page-actions">
+              <a class="btn btn-primary" href="#projects" data-content-target="projects">View Projects</a>
+              <a class="btn btn-ghost" href="#experience" data-content-target="experience">View Experience</a>
               <a
                 class="btn btn-ghost"
                 href="./assets/Matthew-Kim-Software-Engineer.pdf"
@@ -233,34 +234,6 @@
 
         <section class="content-section reveal" id="about" aria-labelledby="about-title">
           <h2 id="about-title">About</h2>
-          <div class="section-intro">
-            <p>
-              I build software and systems across web, embedded, and engineering
-              workflows. I am currently focused on learning backend and full-stack
-              development while applying my mechatronics background to real-world
-              product, robotics, and interdisciplinary projects.
-            </p>
-            <p>
-              This portfolio highlights software, firmware, and engineering work that
-              reflects how I approach problems: practical, collaborative, and
-              detail-oriented.
-            </p>
-          </div>
-
-          <div class="about-highlights" aria-label="Profile highlights">
-            <article class="card stat-card">
-              <p class="stat-label">Current Program</p>
-              <p class="stat-value">Mechatronics Engineering, University of Waterloo</p>
-            </article>
-            <article class="card stat-card">
-              <p class="stat-label">Most Recent Role</p>
-              <p class="stat-value">Software Developer, UW Libraries</p>
-            </article>
-            <article class="card stat-card">
-              <p class="stat-label">Core Interests</p>
-              <p class="stat-value">Software Engineering, Robotics, AI</p>
-            </article>
-          </div>
         </section>
 
         <section class="content-section reveal" id="education" aria-labelledby="education-title">

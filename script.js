@@ -1,10 +1,6 @@
 const data = window.PORTFOLIO_DATA || { skills: [], projects: [], experience: [] };
 const mapMeta = window.EXPEDITION_MAP_META || { width: 1536, height: 1024 };
-const mapLocationSource = Array.isArray(window.EXPEDITION_MAP_PINS)
-  ? window.EXPEDITION_MAP_PINS
-  : Array.isArray(window.EXPEDITION_MAP_LOCATIONS)
-  ? window.EXPEDITION_MAP_LOCATIONS
-  : [];
+const mapLocationSource = Array.isArray(window.EXPEDITION_MAP_PINS) ? window.EXPEDITION_MAP_PINS : [];
 const mapLocations = mapLocationSource.map((location) => {
   const id = location.id || location.sectionId;
   return {
@@ -33,8 +29,74 @@ const VIEW = {
   CONTENT: "content",
 };
 
+const SECTION_PAGE_CONTENT = {
+  about: {
+    eyebrow: "Software Engineering Portfolio",
+    title: "Matthew Kim",
+    headline: "Mechatronics Engineering student at the University of Waterloo.",
+    subline:
+      "Focused on software development and robotics with a strong programming and systems engineering foundation.",
+    tags: ["Software Engineering", "Full-Stack Development", "Robotics + AI", "Embedded Systems"],
+    actions: [
+      { label: "Download Resume", variant: "ghost", href: "./assets/Matthew-Kim-Software-Engineer.pdf", download: true },
+      { label: "Email Matthew", variant: "primary", href: "mailto:m398kim@uwaterloo.ca" },
+    ],
+  },
+  education: {
+    eyebrow: "Education",
+    title: "University of Waterloo",
+    headline: "Mechatronics Engineering with a software-first, systems-minded focus.",
+    subline:
+      "This page covers academic foundation, technical training, and the coursework context behind the projects and experience shown across the portfolio.",
+    tags: ["BASc Mechatronics", "Expected 2030", "Systems Thinking", "Engineering Fundamentals"],
+    actions: [{ label: "Download Resume", variant: "ghost", href: "./assets/Matthew-Kim-Software-Engineer.pdf", download: true }],
+  },
+  skills: {
+    eyebrow: "Skills",
+    title: "Technical Toolkit",
+    headline: "Languages, frameworks, and engineering tools used to ship practical software.",
+    subline:
+      "This page groups the stack I use most often across product builds, backend work, frontend implementation, and interdisciplinary engineering projects.",
+    tags: ["TypeScript", "Python", "React", "Systems Engineering"],
+    actions: [],
+  },
+  projects: {
+    eyebrow: "Projects",
+    title: "Selected Builds",
+    headline: "A focused view of shipped work, active builds, and technical experiments.",
+    subline:
+      "Open any project card for its dedicated detail state with approach, stack, outcomes, and media where available.",
+    tags: ["Frontend", "Backend", "Product Thinking", "Interactive Systems"],
+    actions: [],
+  },
+  experience: {
+    eyebrow: "Experience",
+    title: "Work Experience",
+    headline: "Co-op, research, and team-based work across software and engineering contexts.",
+    subline:
+      "This page highlights the environments where I have built, collaborated, and grown through real delivery work.",
+    tags: ["Co-op", "Research", "Team Collaboration", "Execution"],
+    actions: [],
+  },
+  contact: {
+    eyebrow: "Contact",
+    title: "Let’s Connect",
+    headline: "Best for software engineering opportunities, project collaboration, and product conversations.",
+    subline:
+      "Use the contact options on this page to reach out directly, connect professionally, or download my current resume.",
+    tags: ["Email", "GitHub", "LinkedIn", "Resume"],
+    actions: [
+      { label: "Email Matthew", variant: "primary", href: "mailto:m398kim@uwaterloo.ca" },
+      { label: "Download Resume", variant: "ghost", href: "./assets/Matthew-Kim-Software-Engineer.pdf", download: true },
+    ],
+  },
+};
+
 const state = {
   activeProjectSlug: null,
+  activeSectionId: "about",
+  activeSectionCamera: null,
+  defaultMapCamera: null,
   previousProjectFocus: null,
   lockedNavId: null,
   lockedNavAt: 0,
@@ -89,11 +151,19 @@ const els = {
   returnToMap: document.getElementById("return-to-map"),
 
   siteShell: document.querySelector(".site-shell"),
+  brand: document.querySelector(".brand"),
   header: document.getElementById("site-header"),
   navToggle: document.getElementById("nav-toggle"),
   navLinks: Array.from(document.querySelectorAll(".main-nav a")),
   sections: Array.from(document.querySelectorAll("main section[id]")),
+  heroSection: document.querySelector(".hero"),
   heroScene: document.querySelector(".hero-scene"),
+  heroEyebrow: document.getElementById("page-eyebrow"),
+  heroTitle: document.getElementById("hero-title"),
+  heroHeadline: document.getElementById("page-headline"),
+  heroSubline: document.getElementById("page-subline"),
+  heroTags: document.getElementById("page-tags"),
+  heroActions: document.getElementById("page-actions"),
   skillsGrid: document.getElementById("skills-grid"),
   projectsBrowser: document.getElementById("projects-browser"),
   projectsGrid: document.getElementById("projects-grid"),
@@ -369,6 +439,10 @@ function getViewportSize() {
   };
 }
 
+function canDragMap(scale = state.camera.targetScale) {
+  return scale > state.camera.minScale + 0.01;
+}
+
 function clampCamera(x, y, scale) {
   const { width: viewportWidth, height: viewportHeight } = getViewportSize();
   const safeScale = clamp(scale, state.camera.minScale, state.camera.maxScale);
@@ -481,21 +555,28 @@ function setCameraTarget(x, y, scale) {
   ensureCameraLoop();
 }
 
-function fitMapToViewport(options = {}) {
-  const { animate = false, duration = 740 } = options;
+function getFitMapCameraTarget() {
   const { width, height } = cacheViewportSize();
-  const coverScale = Math.max(width / mapMeta.width, height / mapMeta.height);
-  const minDynamic = clamp(coverScale * 1.01, 0.62, 2.1);
+  const fitScale = Math.max(width / mapMeta.width, height / mapMeta.height);
+  const minDynamic = clamp(fitScale, 0.05, 2.1);
   state.camera.minScale = minDynamic;
-  const scale = clamp(coverScale * 1.02, state.camera.minScale, state.camera.maxScale);
+  const scale = clamp(fitScale, state.camera.minScale, state.camera.maxScale);
   const x = (width - mapMeta.width * scale) / 2;
   const y = (height - mapMeta.height * scale) / 2;
+  const target = clampCamera(x, y, scale);
+  state.defaultMapCamera = { ...target };
+  return target;
+}
+
+function fitMapToViewport(options = {}) {
+  const { animate = false, duration = 740 } = options;
+  const target = getFitMapCameraTarget();
 
   if (animate) {
-    return animateCameraTo(x, y, scale, duration);
+    return animateCameraTo(target.x, target.y, target.scale, duration);
   }
 
-  setCameraInstant(x, y, scale);
+  setCameraInstant(target.x, target.y, target.scale);
   return Promise.resolve();
 }
 
@@ -609,8 +690,11 @@ function syncMapImageDimensions() {
 }
 
 function showMapView(options = {}) {
-  const { focusPins = false, resetCamera = false } = options;
+  const { focusPins = false, resetCamera = false, animateReset = false } = options;
   setViewMode(VIEW.MAP);
+  if (window.history && typeof window.history.replaceState === "function") {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
   window.scrollTo({ top: 0, behavior: "auto" });
   syncMapImageDimensions();
   cacheViewportSize();
@@ -628,7 +712,7 @@ function showMapView(options = {}) {
     state.camera.targetScale > 0;
 
   if (resetCamera || !state.mapInteracted || !hasValidCamera) {
-    fitMapToViewport();
+    fitMapToViewport({ animate: animateReset });
   } else {
     setCameraTarget(state.camera.targetX, state.camera.targetY, state.camera.targetScale);
   }
@@ -654,34 +738,46 @@ function showMapView(options = {}) {
 }
 
 function showContentView(sectionId) {
+  const nextId = els.sections.some((section) => section.id === sectionId) ? sectionId : "about";
   setViewMode(VIEW.CONTENT);
-  const targetId = `#${sectionId}`;
+  const targetId = `#${nextId}`;
 
   if (window.history && typeof window.history.replaceState === "function") {
     window.history.replaceState(null, "", targetId);
   }
 
-  state.lockedNavId = sectionId;
-  state.lockedNavAt = performance.now();
-  setActiveNavLink(sectionId);
-  scrollToSection(targetId);
+  state.lockedNavId = null;
+  state.lockedNavAt = 0;
+  setActiveNavLink(nextId);
+  setActiveContentSection(nextId);
+  closeMobileNav();
+  window.scrollTo({ top: 0, behavior: "auto" });
 }
 
-function flyToSection(sectionId) {
+function getSectionCameraTarget(sectionId) {
   const location = findMapLocation(sectionId);
+  if (!location) return null;
 
-  if (!location) {
-    showContentView(sectionId);
-    return;
-  }
-
-  setActiveMapPin(sectionId);
   const { width, height } = getViewportSize();
   const scale = clamp(location.zoomLevel || 1.36, state.camera.minScale, state.camera.maxScale);
   const x = width * 0.5 - location.x * scale;
   const y = height * 0.44 - location.y * scale;
 
-  animateCameraTo(x, y, scale, 860).then(() => {
+  return { x, y, scale };
+}
+
+function flyToSection(sectionId) {
+  const rawTarget = getSectionCameraTarget(sectionId);
+
+  if (!rawTarget) {
+    showContentView(sectionId);
+    return;
+  }
+
+  const target = clampCamera(rawTarget.x, rawTarget.y, rawTarget.scale);
+  state.activeSectionCamera = target;
+  setActiveMapPin(sectionId);
+  animateCameraTo(target.x, target.y, target.scale, 860).then(() => {
     showContentView(sectionId);
   });
 }
@@ -794,7 +890,39 @@ function bindMapInteractions() {
 
   if (els.returnToMap) {
     els.returnToMap.addEventListener("click", () => {
-      showMapView({ focusPins: true });
+      const sectionTarget = state.activeSectionCamera || getSectionCameraTarget(state.activeSectionId);
+
+      setViewMode(VIEW.MAP);
+      if (window.history && typeof window.history.replaceState === "function") {
+        window.history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+      window.scrollTo({ top: 0, behavior: "auto" });
+      state.mapInteracted = false;
+      setActiveMapPin("");
+      if (els.mapViewport) {
+        els.mapViewport.style.width = "100%";
+        els.mapViewport.style.height = "100%";
+        els.mapViewport.style.minHeight = "100vh";
+      }
+
+      requestAnimationFrame(() => {
+        syncMapImageDimensions();
+        const defaultTarget = getFitMapCameraTarget();
+
+        if (sectionTarget) {
+          setCameraInstant(sectionTarget.x, sectionTarget.y, sectionTarget.scale);
+        } else {
+          setCameraInstant(defaultTarget.x, defaultTarget.y, defaultTarget.scale);
+        }
+
+        animateCameraTo(defaultTarget.x, defaultTarget.y, defaultTarget.scale, 860).then(() => {
+          setCameraInstant(defaultTarget.x, defaultTarget.y, defaultTarget.scale);
+          const firstPin = document.querySelector(".map-pin");
+          if (firstPin) {
+            requestAnimationFrame(() => firstPin.focus());
+          }
+        });
+      });
     });
   }
 
@@ -840,6 +968,7 @@ function bindMapInteractions() {
     if (state.view !== VIEW.MAP) return;
     if (event.button !== 0) return;
     if (event.target.closest(".map-pin")) return;
+    if (!canDragMap()) return;
 
     state.drag.active = true;
     state.drag.pointerId = event.pointerId;
@@ -1236,6 +1365,76 @@ function setActiveNavLink(id) {
   }
 }
 
+function renderSectionHero(sectionId) {
+  const page = SECTION_PAGE_CONTENT[sectionId] || SECTION_PAGE_CONTENT.about;
+
+  if (els.heroEyebrow) {
+    els.heroEyebrow.textContent = page.eyebrow;
+  }
+
+  if (els.heroTitle) {
+    els.heroTitle.textContent = page.title;
+  }
+
+  if (els.heroHeadline) {
+    els.heroHeadline.textContent = page.headline;
+  }
+
+  if (els.heroSubline) {
+    els.heroSubline.textContent = page.subline;
+  }
+
+  if (els.heroTags) {
+    els.heroTags.setAttribute("aria-label", `${page.title} focus areas`);
+    els.heroTags.innerHTML = page.tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
+  }
+
+  if (els.heroActions) {
+    els.heroActions.hidden = page.actions.length === 0;
+    els.heroActions.innerHTML = page.actions
+      .map((action) => {
+        const className = action.variant === "primary" ? "btn btn-primary" : "btn btn-ghost";
+
+        if (action.target) {
+          return `<a class="${className}" href="#${escapeHtml(action.target)}" data-content-target="${escapeHtml(
+            action.target
+          )}">${escapeHtml(action.label)}</a>`;
+        }
+
+        const downloadAttr = action.download ? " download" : "";
+        return `<a class="${className}" href="${escapeHtml(action.href)}"${downloadAttr}>${escapeHtml(
+          action.label
+        )}</a>`;
+      })
+      .join("");
+  }
+}
+
+function setActiveContentSection(sectionId) {
+  const nextId = els.sections.some((section) => section.id === sectionId) ? sectionId : "about";
+  state.activeSectionId = nextId;
+  renderSectionHero(nextId);
+
+  els.sections.forEach((section) => {
+    const isActive = section.id === nextId;
+    section.hidden = !isActive;
+    section.classList.toggle("content-section--active", isActive);
+    if (isActive) {
+      section.classList.add("visible");
+    }
+  });
+
+  if (els.heroSection) {
+    els.heroSection.classList.add("visible");
+  }
+
+  if (nextId !== "projects" && state.activeProjectSlug) {
+    closeProjectDetail();
+  }
+
+  updateTimelineProgress();
+}
+
 function observeActiveSection() {
   if (!els.sections.length) return;
 
@@ -1315,18 +1514,29 @@ function bindNavigation() {
 
       event.preventDefault();
       const sectionId = href.slice(1);
-
-      if (state.view !== VIEW.CONTENT) {
-        showContentView(sectionId);
-      } else {
-        state.lockedNavId = sectionId;
-        state.lockedNavAt = performance.now();
-        scrollToSection(href);
-      }
-
-      setActiveNavLink(sectionId);
-      closeMobileNav();
+      showContentView(sectionId);
     });
+  });
+
+  if (els.brand) {
+    els.brand.addEventListener("click", (event) => {
+      if (state.view !== VIEW.CONTENT) return;
+      event.preventDefault();
+      showContentView("about");
+    });
+  }
+}
+
+function bindContentRouteLinks() {
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest("[data-content-target]");
+    if (!link) return;
+
+    const sectionId = link.getAttribute("data-content-target");
+    if (!sectionId) return;
+
+    event.preventDefault();
+    showContentView(sectionId);
   });
 }
 
@@ -1416,7 +1626,7 @@ function bindHeroParallax() {
     els.heroScene.style.setProperty("--pointer-y", y.toFixed(3));
   };
 
-  const heroSection = document.querySelector(".hero");
+  const heroSection = els.heroSection;
   if (!heroSection) return;
 
   heroSection.addEventListener("pointermove", (event) => {
@@ -1634,13 +1844,14 @@ function init() {
   renderSkills();
   renderProjectTiles();
   renderExperience();
+  setActiveContentSection("about");
 
   observeRevealElements();
-  observeActiveSection();
 
   bindIntroExperience();
   bindMapInteractions();
   bindNavigation();
+  bindContentRouteLinks();
   bindMobileNav();
   bindProjectBrowser();
   bindExperienceExpansion();
