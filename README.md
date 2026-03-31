@@ -18,20 +18,19 @@ Then open [http://localhost:8080](http://localhost:8080).
 - `styles.css`: visual system, map/intro art styles, section UI styles, and motion
 - `script.js`: rendering logic, state machine (`intro`/`map`/`content`), map pan/zoom, pin navigation
 - `data/portfolio-data.js`: portfolio content source (skills/projects/experience)
-- `data/map-locations.js`: editable pin coordinates and camera focus settings
+- `data/map-pins.js`: editable pin coordinates and camera focus settings
 - `assets/`: project/experience/education icons, resume, media
 
 ## Edit Map Pins
 
-Update `data/map-locations.js`:
+Update `data/map-pins.js`:
 
-- `sectionId`: section target id (`about`, `education`, `skills`, `projects`, `experience`, `contact`)
-- `label`: text shown beside the map pin
+- `id`: section target id (`about`, `education`, `skills`, `projects`, `experience`, `contact`)
 - `x`, `y`: pin position in map coordinates
 - `color`: pin accent color
-- `focusScale`: camera zoom value used before opening the section
+- `zoomLevel`: camera zoom value used before opening the section
 
-Map dimensions are in `EXPEDITION_MAP_META` and currently set to `3000 x 1900`.
+Map dimensions are in `EXPEDITION_MAP_META` and currently set to `1536 x 1024`.
 
 ## Edit Portfolio Content
 
