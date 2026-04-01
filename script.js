@@ -130,7 +130,7 @@ const state = {
     active: false,
     rafId: 0,
     startAt: 0,
-    duration: 1600,
+    duration: 2000,
   },
 };
 
@@ -210,7 +210,13 @@ function setViewMode(view) {
   if (els.introGate) {
     els.introGate.classList.toggle("is-visible", introVisible);
     els.introGate.style.display = introVisible ? "block" : "none";
-    els.introGate.style.opacity = introVisible ? "1" : "0";
+    // During transition, CSS drives the gate opacity via --fall-progress; only
+    // lock it in stable states so the inline style doesn't override the animation.
+    if (view !== VIEW.TRANSITIONING) {
+      els.introGate.style.opacity = introVisible ? "1" : "0";
+    } else {
+      els.introGate.style.opacity = "";
+    }
     els.introGate.style.pointerEvents = view === VIEW.INTRO ? "auto" : "none";
   }
 
@@ -349,9 +355,9 @@ function runTransitionTimeline() {
     const elapsed = now - state.transition.startAt;
     const progress = clamp(elapsed / state.transition.duration, 0, 1);
     const motion = computeFallMotion(progress);
-    const shake = computeLandingShake(progress, elapsed);
 
-    applyTransitionVisuals(progress, motion, shake.x, shake.y);
+    // No shake — cinematic cloud-reveal calls for calm, continuous motion
+    applyTransitionVisuals(progress, motion, 0, 0);
     if (DEBUG_TRANSITION) {
       console.debug("[transition]", {
         state: state.view,
@@ -387,7 +393,7 @@ function runReducedMotionTransition() {
     applyTransitionVisuals(progress, progress, 0, 0);
 
     if (progress >= 1) {
-      state.transition.duration = 1600;
+      state.transition.duration = 2000;
       finishTransitionToMap();
       return;
     }
@@ -666,9 +672,13 @@ function renderMapPins() {
           type="button"
           data-section="${escapeHtml(location.sectionId)}"
           style="left:${location.x}px;top:${location.y}px;--pin-color:${escapeHtml(location.color || "#cba36d")};"
-          aria-label="Open ${escapeHtml(location.label)}"
+          aria-label="Explore ${escapeHtml(location.label)}"
         >
-          <span class="map-pin-dot" aria-hidden="true"></span>
+          <span class="map-pin-head" aria-hidden="true">
+            <span class="map-pin-ring"></span>
+            <span class="map-pin-dot"></span>
+          </span>
+          <span class="map-pin-stem" aria-hidden="true"></span>
           <span class="map-pin-label">${escapeHtml(location.label)}</span>
         </button>
       `;
