@@ -41,4 +41,5 @@ coverage/
 # Local AI assistant context
 CLAUDE.md
 .agents/
+.claude/
 skills-lock.json
