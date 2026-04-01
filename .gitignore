@@ -37,3 +37,8 @@ coverage/
 
 # Platform metadata
 .vercel/
+
+# Local AI assistant context
+CLAUDE.md
+.agents/
+skills-lock.json
