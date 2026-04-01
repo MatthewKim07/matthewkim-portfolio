@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="220" viewBox="0 0 500 220" fill="none">
+  <defs>
+    <linearGradient id="c7a" x1="0.3" y1="0" x2="0.7" y2="1">
+      <stop offset="0%" stop-color="#ecf0e6" stop-opacity="0.86"/>
+      <stop offset="100%" stop-color="#d9e1cf" stop-opacity="0.45"/>
+    </linearGradient>
+    <filter id="c7s" x="-10%" y="-16%" width="120%" height="140%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+    <filter id="c7soft" x="-16%" y="-22%" width="132%" height="152%">
+      <feGaussianBlur stdDeviation="15"/>
+    </filter>
+  </defs>
+  <!-- Asymmetric medium cloud — organic, slightly lumpy top -->
+  <path d="M40 172 C40 164 30 145 48 128 C62 112 88 100 122 96 C142 78 178 66 218 65 C252 54 292 52 328 58 C358 50 392 56 418 72 C440 68 460 80 468 98 C480 108 484 128 475 145 C482 160 472 174 455 178 L55 180 C42 180 38 176 40 172 Z" fill="url(#c7a)" filter="url(#c7s)"/>
+  <!-- Soft glow -->
+  <path d="M110 165 C122 138 168 115 240 105 C305 96 358 102 400 125" fill="none" stroke="#f0f3eb" stroke-width="16" stroke-linecap="round" opacity="0.22" filter="url(#c7soft)"/>
+</svg>

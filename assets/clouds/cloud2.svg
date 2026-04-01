@@ -1,13 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="700" height="300" viewBox="0 0 700 300">
+<svg xmlns="http://www.w3.org/2000/svg" width="750" height="280" viewBox="0 0 750 280" fill="none">
   <defs>
-    <filter id="cloudBlur" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="28" />
+    <linearGradient id="c2a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ebf0e5" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#dae2d0" stop-opacity="0.52"/>
+    </linearGradient>
+    <filter id="c2s" x="-8%" y="-12%" width="116%" height="132%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+    <filter id="c2soft" x="-14%" y="-18%" width="128%" height="144%">
+      <feGaussianBlur stdDeviation="16"/>
     </filter>
   </defs>
-  <ellipse cx="140" cy="180" rx="110" ry="80" fill="rgba(232,238,224,1)" opacity="0.7" filter="url(#cloudBlur)"/>
-    <ellipse cx="260" cy="145" rx="130" ry="100" fill="rgba(232,238,224,1)" opacity="0.8" filter="url(#cloudBlur)"/>
-    <ellipse cx="380" cy="130" rx="145" ry="110" fill="rgba(232,238,224,1)" opacity="0.85" filter="url(#cloudBlur)"/>
-    <ellipse cx="490" cy="150" rx="120" ry="90" fill="rgba(232,238,224,1)" opacity="0.75" filter="url(#cloudBlur)"/>
-    <ellipse cx="580" cy="175" rx="100" ry="75" fill="rgba(232,238,224,1)" opacity="0.65" filter="url(#cloudBlur)"/>
-    <ellipse cx="320" cy="195" rx="160" ry="85" fill="rgba(232,238,224,1)" opacity="0.6" filter="url(#cloudBlur)"/>
+  <!-- Elongated wispy cloud -->
+  <path d="M55 215 C55 208 38 188 60 168 C75 150 105 138 145 135 C165 115 205 100 258 98 C295 82 345 75 395 80 C430 68 478 64 520 74 C555 65 598 72 635 88 C660 82 690 92 705 110 C725 118 735 138 722 155 C735 172 728 195 710 208 C718 222 705 232 685 234 L72 234 C60 234 52 228 55 215 Z" fill="url(#c2a)" filter="url(#c2s)"/>
+  <!-- Inner light -->
+  <path d="M170 210 C182 180 225 155 300 142 C360 130 420 128 480 138 C530 148 570 170 585 200" fill="none" stroke="#f2f5ee" stroke-width="22" stroke-linecap="round" opacity="0.28" filter="url(#c2soft)"/>
+  <!-- Bottom fade -->
+  <path d="M90 230 Q375 250 700 230" fill="none" stroke="#ced6c2" stroke-width="12" stroke-linecap="round" opacity="0.15" filter="url(#c2soft)"/>
 </svg>

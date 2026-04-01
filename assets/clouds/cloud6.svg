@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="220" viewBox="0 0 800 220" fill="none">
+  <defs>
+    <linearGradient id="c6a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e9eee3" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#d7e0cc" stop-opacity="0.42"/>
+    </linearGradient>
+    <filter id="c6s" x="-8%" y="-14%" width="116%" height="136%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <filter id="c6soft" x="-14%" y="-20%" width="128%" height="148%">
+      <feGaussianBlur stdDeviation="16"/>
+    </filter>
+  </defs>
+  <!-- Wide flat stratus bank — cinematic horizon cloud -->
+  <path d="M25 168 C28 158 50 138 95 128 C135 115 188 105 252 102 C305 92 368 86 435 88 C498 82 565 85 625 94 C672 88 718 95 748 108 C770 102 790 115 795 132 C802 142 798 158 785 165 C792 175 782 185 765 188 L42 188 C30 188 22 180 25 168 Z" fill="url(#c6a)" filter="url(#c6s)"/>
+  <!-- Atmospheric highlight -->
+  <path d="M150 178 C168 152 240 130 365 120 C475 112 568 122 660 145" fill="none" stroke="#f1f4ed" stroke-width="18" stroke-linecap="round" opacity="0.22" filter="url(#c6soft)"/>
+</svg>

@@ -1,12 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="500" height="220" viewBox="0 0 500 220">
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="180" viewBox="0 0 420 180" fill="none">
   <defs>
-    <filter id="cloudBlur" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="20" />
+    <linearGradient id="c5a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e6ece0" stop-opacity="0.78"/>
+      <stop offset="100%" stop-color="#d2dbc8" stop-opacity="0.35"/>
+    </linearGradient>
+    <filter id="c5s" x="-12%" y="-18%" width="124%" height="144%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+    <filter id="c5soft" x="-18%" y="-24%" width="136%" height="156%">
+      <feGaussianBlur stdDeviation="12"/>
     </filter>
   </defs>
-  <ellipse cx="100" cy="135" rx="80" ry="60" fill="rgba(225,232,218,1)" opacity="0.65" filter="url(#cloudBlur)"/>
-    <ellipse cx="200" cy="108" rx="100" ry="80" fill="rgba(225,232,218,1)" opacity="0.78" filter="url(#cloudBlur)"/>
-    <ellipse cx="300" cy="100" rx="110" ry="85" fill="rgba(225,232,218,1)" opacity="0.82" filter="url(#cloudBlur)"/>
-    <ellipse cx="390" cy="120" rx="90" ry="68" fill="rgba(225,232,218,1)" opacity="0.68" filter="url(#cloudBlur)"/>
-    <ellipse cx="250" cy="150" rx="120" ry="65" fill="rgba(225,232,218,1)" opacity="0.55" filter="url(#cloudBlur)"/>
+  <!-- Small compact puff — gentle, minimal -->
+  <path d="M35 138 C35 130 28 115 45 102 C58 88 82 78 115 76 C138 62 172 56 208 60 C238 52 272 56 300 68 C325 62 352 72 368 88 C382 96 388 115 378 128 C385 140 375 150 358 154 L48 154 C38 154 33 148 35 138 Z" fill="url(#c5a)" filter="url(#c5s)"/>
+  <!-- Tiny highlight -->
+  <path d="M95 142 C105 118 148 100 210 92 C265 86 310 95 340 115" fill="none" stroke="#eff2ea" stroke-width="12" stroke-linecap="round" opacity="0.2" filter="url(#c5soft)"/>
 </svg>

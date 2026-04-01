@@ -1,17 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="800" height="300" viewBox="0 0 800 300" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="320" viewBox="0 0 900 320" fill="none">
   <defs>
-    <linearGradient id="c1g" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#f0f3ec" />
-      <stop offset="100%" stop-color="#dce2d4" />
+    <linearGradient id="c1a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef2e8" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#dde4d3" stop-opacity="0.6"/>
     </linearGradient>
-    <filter id="c1s" x="-4%" y="-4%" width="108%" height="116%">
-      <feGaussianBlur stdDeviation="3" />
+    <linearGradient id="c1b" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#f0f4ec" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#d8e0ce" stop-opacity="0.4"/>
+    </linearGradient>
+    <filter id="c1s" x="-8%" y="-12%" width="116%" height="132%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="c1soft" x="-12%" y="-16%" width="124%" height="140%">
+      <feGaussianBlur stdDeviation="14"/>
     </filter>
   </defs>
-  <!-- Main cloud body: puffy cumulus shape -->
-  <path d="M90 240 C90 240 60 240 50 220 C30 210 20 190 30 170 C20 150 30 120 60 115 C65 80 100 55 140 55 C165 40 200 30 235 40 C260 20 300 10 340 25 C370 10 410 5 440 20 C470 5 520 10 545 30 C575 18 615 25 640 45 C670 35 710 50 720 75 C750 70 780 90 770 120 C790 140 785 170 760 185 C775 210 760 240 730 245 C730 250 720 255 700 255 L110 255 C95 255 85 248 90 240 Z" fill="url(#c1g)" />
-  <!-- Inner highlight for volume -->
-  <path d="M140 220 C150 180 180 140 250 120 C300 100 370 90 430 95 C500 85 560 100 610 130 C650 150 680 180 690 210" fill="none" stroke="#f6f9f2" stroke-width="20" stroke-linecap="round" opacity="0.3" filter="url(#c1s)" />
-  <!-- Bottom shadow for depth -->
-  <path d="M120 245 Q400 270 700 245" fill="none" stroke="#c5ccbb" stroke-width="14" stroke-linecap="round" opacity="0.25" filter="url(#c1s)" />
+  <!-- Base mass — wide, soft, organic -->
+  <path d="M60 260 C60 250 40 220 65 195 C80 172 110 158 150 152 C168 128 210 108 265 105 C300 88 350 78 405 82 C445 68 500 62 550 72 C590 60 640 65 680 80 C715 70 758 78 790 98 C820 88 855 100 865 125 C885 135 895 158 880 180 C895 200 888 228 865 242 C870 258 855 270 830 272 L85 272 C68 272 58 268 60 260 Z" fill="url(#c1a)" filter="url(#c1s)"/>
+  <!-- Upper highlight layer — adds volume -->
+  <path d="M180 245 C190 210 230 172 310 155 C370 138 440 130 520 135 C590 128 650 140 710 162 C755 180 790 208 800 238" fill="none" stroke="#f4f7f0" stroke-width="28" stroke-linecap="round" opacity="0.3" filter="url(#c1soft)"/>
+  <!-- Soft inner glow -->
+  <path d="M250 230 C265 195 320 168 400 158 C465 148 530 152 590 170 C635 185 665 210 675 235" fill="none" stroke="#f6f9f2" stroke-width="18" stroke-linecap="round" opacity="0.2" filter="url(#c1soft)"/>
+  <!-- Bottom atmospheric fade -->
+  <path d="M100 268 Q450 290 830 268" fill="none" stroke="#d0d8c4" stroke-width="16" stroke-linecap="round" opacity="0.18" filter="url(#c1soft)"/>
 </svg>

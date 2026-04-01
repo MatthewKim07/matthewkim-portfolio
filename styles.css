@@ -2151,23 +2151,24 @@ body[data-view="map"] .site-shell {
   transform: translate3d(0, 0, 0);
 }
 
-/* ── Far cloud layer ── */
+/* ── Far cloud layer — small, high, wispy ── */
 .intro-cloud-layer--far {
   position: absolute;
   inset: 0;
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
-.cl-f1 { width: 28vw; top: 4%;  left: -3%;  animation: cloudDrift1 60s linear infinite; }
-.cl-f2 { width: 24vw; top: 9%;  left: 24%;  animation: cloudDrift2 70s linear infinite; }
-.cl-f3 { width: 26vw; top: 3%;  left: 54%;  animation: cloudDrift3 65s linear infinite; }
-.cl-f4 { width: 22vw; top: 11%; left: 80%;  animation: cloudDrift4 55s linear infinite; }
+.cl-f1 { width: 22vw; top: 2%;  left: -4%;  animation: cloudDrift1 42s linear infinite; }
+.cl-f2 { width: 16vw; top: 8%;  left: 18%;  animation: cloudDrift2 50s linear infinite; }
+.cl-f3 { width: 20vw; top: 1%;  left: 44%;  animation: cloudDrift3 46s linear infinite; }
+.cl-f4 { width: 14vw; top: 10%; left: 68%;  animation: cloudDrift4 38s linear infinite; }
+.cl-f5 { width: 18vw; top: 5%;  left: 85%;  animation: cloudDrift5 44s linear infinite; }
 
-/* ── Mid cloud layer ── */
+/* ── Mid cloud layer — medium, varied, split L/R on transition ── */
 .intro-cloud-layer--mid {
   position: absolute;
   inset: 0;
-  opacity: 0.72;
+  opacity: 0.68;
 }
 
 .intro-cloud-group {
@@ -2176,32 +2177,38 @@ body[data-view="map"] .site-shell {
   transform: translate3d(0, 0, 0);
 }
 
-.cl-m1 { width: 34vw; top: 22%; left: -6%;  animation: cloudDrift5 48s linear infinite; }
-.cl-m2 { width: 38vw; top: 30%; left: 15%;  animation: cloudDrift6 52s linear infinite; }
-.cl-m3 { width: 36vw; top: 24%; left: 50%;  animation: cloudDrift7 46s linear infinite; }
-.cl-m4 { width: 32vw; top: 32%; left: 76%;  animation: cloudDrift8 50s linear infinite; }
+.cl-m1 { width: 30vw; top: 20%; left: -5%;  animation: cloudDrift6 34s linear infinite; }
+.cl-m2 { width: 22vw; top: 28%; left: 16%;  animation: cloudDrift7 38s linear infinite; }
+.cl-m3 { width: 18vw; top: 34%; left: 32%;  animation: cloudDrift8 30s linear infinite; }
+.cl-m4 { width: 28vw; top: 22%; left: 48%;  animation: cloudDrift9 36s linear infinite; }
+.cl-m5 { width: 24vw; top: 30%; left: 68%;  animation: cloudDrift10 32s linear infinite; }
+.cl-m6 { width: 16vw; top: 26%; left: 86%;  animation: cloudDrift11 40s linear infinite; }
 
-/* ── Front cloud layer ── */
+/* ── Front cloud layer — large, close, atmospheric banks ── */
 .intro-cloud-layer--front {
   position: absolute;
   inset: 0;
-  opacity: 0.9;
+  opacity: 0.88;
 }
 
-.cl-n1 { width: 48vw; top: 50%; left: -12%; animation: cloudDrift9  38s linear infinite; }
-.cl-n2 { width: 42vw; top: 60%; left: 12%;  animation: cloudDrift10 42s linear infinite; }
-.cl-n3 { width: 46vw; top: 52%; left: 46%;  animation: cloudDrift11 40s linear infinite; }
-.cl-n4 { width: 38vw; top: 62%; left: 74%;  animation: cloudDrift12 44s linear infinite; }
+.cl-n1 { width: 38vw; top: 48%; left: -10%; animation: cloudDrift12 26s linear infinite; }
+.cl-n2 { width: 44vw; top: 62%; left: -8%;  animation: cloudDrift1  30s linear infinite; }
+.cl-n3 { width: 26vw; top: 55%; left: 22%;  animation: cloudDrift3  28s linear infinite; }
+.cl-n4 { width: 36vw; top: 50%; left: 42%;  animation: cloudDrift6  24s linear infinite; }
+.cl-n5 { width: 42vw; top: 64%; left: 52%;  animation: cloudDrift8  32s linear infinite; }
+.cl-n6 { width: 28vw; top: 56%; left: 78%;  animation: cloudDrift10 28s linear infinite; }
 
-/* ── Bottom fog bank ── */
+/* ── Bottom fog bank — atmospheric haze ── */
 .intro-fog {
   position: absolute;
   left: -10%;
   right: -10%;
-  bottom: -8%;
-  height: 38%;
-  background: linear-gradient(to top, rgba(195, 185, 136, 0.55), rgba(180, 192, 168, 0.25) 40%, transparent 100%);
-  animation: introFogDrift 24s ease-in-out infinite alternate;
+  bottom: -6%;
+  height: 32%;
+  background:
+    linear-gradient(to top, rgba(195, 185, 136, 0.45), rgba(180, 192, 168, 0.2) 35%, transparent 100%),
+    linear-gradient(to top, rgba(210, 205, 172, 0.3), transparent 60%);
+  animation: introFogDrift 20s ease-in-out infinite alternate;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -2783,19 +2790,19 @@ body[data-view="map"] .map-return-btn {
   display: none;
 }
 
-/* ── Individual cloud drift: gentle horizontal meander ── */
-@keyframes cloudDrift1  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(3vw,0.6vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift2  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-2.5vw,0.8vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift3  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(2vw,-0.5vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift4  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-2.8vw,0.4vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift5  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(4vw,0.8vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift6  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-3.5vw,1vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift7  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(3vw,-0.6vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift8  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-3.2vw,0.7vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift9  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(5vw,1vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift10 { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-4vw,1.2vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift11 { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(4.5vw,-0.8vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift12 { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-3.8vw,0.9vh,0)}100%{transform:translate3d(0,0,0)} }
+/* ── Individual cloud drift: gentle horizontal meander (slightly faster) ── */
+@keyframes cloudDrift1  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(5vw,0.8vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift2  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-4vw,1vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift3  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(3.5vw,-0.6vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift4  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-4.5vw,0.5vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift5  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(6vw,1vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift6  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5.5vw,1.2vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift7  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(4.5vw,-0.8vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift8  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5vw,0.9vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift9  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(7vw,1.2vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift10 { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-6vw,1.5vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift11 { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(6.5vw,-1vh,0)}100%{transform:translate3d(0,0,0)} }
+@keyframes cloudDrift12 { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5.8vw,1.1vh,0)}100%{transform:translate3d(0,0,0)} }
 
 @keyframes introFogDrift {
   from { transform: translateX(-0.8%); }
