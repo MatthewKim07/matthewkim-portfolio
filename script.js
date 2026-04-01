@@ -828,18 +828,6 @@ function bindIntroExperience() {
     });
   }
 
-  els.introGate.addEventListener("click", (event) => {
-    if (event.target.closest(".intro-continue")) return;
-    continueToMap();
-  });
-
-  window.addEventListener("keydown", (event) => {
-    if (state.view !== VIEW.INTRO) return;
-    if (event.key !== "Enter") return;
-    event.preventDefault();
-    continueToMap();
-  });
-
   if (!els.introIllustration) return;
   const layers = Array.from(els.introIllustration.querySelectorAll(".intro-parallax"));
   layers.forEach((layer) => {
