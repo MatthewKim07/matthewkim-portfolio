@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="260" viewBox="0 0 600 260">
+  <defs>
+    <filter id="cloudBlur" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="24" />
+    </filter>
+  </defs>
+  <ellipse cx="120" cy="155" rx="95" ry="70" fill="rgba(228,234,220,1)" opacity="0.7" filter="url(#cloudBlur)"/>
+    <ellipse cx="230" cy="125" rx="115" ry="90" fill="rgba(228,234,220,1)" opacity="0.8" filter="url(#cloudBlur)"/>
+    <ellipse cx="350" cy="115" rx="130" ry="100" fill="rgba(228,234,220,1)" opacity="0.85" filter="url(#cloudBlur)"/>
+    <ellipse cx="460" cy="140" rx="105" ry="80" fill="rgba(228,234,220,1)" opacity="0.72" filter="url(#cloudBlur)"/>
+    <ellipse cx="290" cy="170" rx="140" ry="75" fill="rgba(228,234,220,1)" opacity="0.6" filter="url(#cloudBlur)"/>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="300" viewBox="0 0 800 300" fill="none">
+  <defs>
+    <linearGradient id="c1g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f0f3ec" />
+      <stop offset="100%" stop-color="#dce2d4" />
+    </linearGradient>
+    <filter id="c1s" x="-4%" y="-4%" width="108%" height="116%">
+      <feGaussianBlur stdDeviation="3" />
+    </filter>
+  </defs>
+  <!-- Main cloud body: puffy cumulus shape -->
+  <path d="M90 240 C90 240 60 240 50 220 C30 210 20 190 30 170 C20 150 30 120 60 115 C65 80 100 55 140 55 C165 40 200 30 235 40 C260 20 300 10 340 25 C370 10 410 5 440 20 C470 5 520 10 545 30 C575 18 615 25 640 45 C670 35 710 50 720 75 C750 70 780 90 770 120 C790 140 785 170 760 185 C775 210 760 240 730 245 C730 250 720 255 700 255 L110 255 C95 255 85 248 90 240 Z" fill="url(#c1g)" />
+  <!-- Inner highlight for volume -->
+  <path d="M140 220 C150 180 180 140 250 120 C300 100 370 90 430 95 C500 85 560 100 610 130 C650 150 680 180 690 210" fill="none" stroke="#f6f9f2" stroke-width="20" stroke-linecap="round" opacity="0.3" filter="url(#c1s)" />
+  <!-- Bottom shadow for depth -->
+  <path d="M120 245 Q400 270 700 245" fill="none" stroke="#c5ccbb" stroke-width="14" stroke-linecap="round" opacity="0.25" filter="url(#c1s)" />
+</svg>
