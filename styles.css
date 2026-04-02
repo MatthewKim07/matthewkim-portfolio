@@ -969,10 +969,18 @@ h1 {
   border-radius: 2px;
 }
 
+.skill-chip-icon-wrap--symbol {
+  color: color-mix(in srgb, var(--ink) 84%, var(--ink-muted));
+}
+
 .skill-chip-icon {
   width: 1rem;
   height: 1rem;
   object-fit: contain;
+}
+
+.skill-chip-symbol {
+  stroke: currentColor;
 }
 
 .skill-chip-fallback {

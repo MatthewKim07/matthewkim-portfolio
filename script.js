@@ -1030,23 +1030,10 @@ function renderSkills() {
     .map((group, index) => {
       const chips = group.items
         .map((item) => {
-          const icon = item.icon
-            ? `<span class="skill-chip-icon-wrap" aria-hidden="true">
-                <img
-                  class="skill-chip-icon"
-                  src="${escapeHtml(item.icon)}"
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  referrerpolicy="no-referrer"
-                  onerror="this.hidden=true;this.nextElementSibling.hidden=false;"
-                />
-                <span class="skill-chip-fallback" hidden>${escapeHtml(getSkillMark(item.name))}</span>
-              </span>`
-            : "";
+          const icon = renderSkillIcon(item);
 
           const titleAttr = item.detail ? ` title="${escapeHtml(item.detail)}"` : "";
-          const className = item.icon ? "skill-chip skill-chip--with-icon" : "skill-chip";
+          const className = icon ? "skill-chip skill-chip--with-icon" : "skill-chip";
 
           return `<li><span class="${className}"${titleAttr}>${icon}<span class="skill-chip-label">${escapeHtml(
             item.name
@@ -1063,6 +1050,89 @@ function renderSkills() {
       `;
     })
     .join("");
+}
+
+function renderSkillIcon(item) {
+  if (item.icon) {
+    return `<span class="skill-chip-icon-wrap" aria-hidden="true">
+      <img
+        class="skill-chip-icon"
+        src="${escapeHtml(item.icon)}"
+        alt=""
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        onerror="this.hidden=true;this.nextElementSibling.hidden=false;"
+      />
+      <span class="skill-chip-fallback" hidden>${escapeHtml(getSkillMark(item.name))}</span>
+    </span>`;
+  }
+
+  const customIcon = getSkillSymbol(item.name);
+  if (!customIcon) return "";
+
+  return `<span class="skill-chip-icon-wrap skill-chip-icon-wrap--symbol" aria-hidden="true">${customIcon}</span>`;
+}
+
+function getSkillSymbol(name) {
+  const skillName = String(name).trim().toLowerCase();
+  const skillSymbols = {
+    sql: `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="12" cy="5" rx="7" ry="3"></ellipse>
+        <path d="M5 5v6c0 1.66 3.13 3 7 3s7-1.34 7-3V5"></path>
+        <path d="M5 11v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6"></path>
+      </svg>
+    `,
+    "rest apis": `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="5" width="8" height="6" rx="2"></rect>
+        <rect x="13" y="13" width="8" height="6" rx="2"></rect>
+        <path d="M11 8h2a4 4 0 0 1 4 4v1"></path>
+        <path d="M13 16h-2a4 4 0 0 1-4-4v-1"></path>
+      </svg>
+    `,
+    wcag: `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="4.5" r="1.5"></circle>
+        <path d="M6 8h12"></path>
+        <path d="M12 8v5"></path>
+        <path d="M9 21l3-8 3 8"></path>
+        <path d="M8 13h8"></path>
+      </svg>
+    `,
+    aria: `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3a4 4 0 0 1 4 4v3"></path>
+        <path d="M12 3a4 4 0 0 0-4 4v3"></path>
+        <path d="M17 11v2a5 5 0 0 1-10 0v-2"></path>
+        <path d="M12 18v3"></path>
+        <path d="M9 21h6"></path>
+      </svg>
+    `,
+    "ci/cd": `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 3l4 4-4 4"></path>
+        <path d="M3 11V9a2 2 0 0 1 2-2h16"></path>
+        <path d="M7 21l-4-4 4-4"></path>
+        <path d="M21 13v2a2 2 0 0 1-2 2H3"></path>
+      </svg>
+    `,
+    llms: `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="6" y="8" width="12" height="9" rx="3"></rect>
+        <path d="M12 8V5"></path>
+        <circle cx="9.5" cy="12" r="0.8" fill="currentColor" stroke="none"></circle>
+        <circle cx="14.5" cy="12" r="0.8" fill="currentColor" stroke="none"></circle>
+        <path d="M10 15h4"></path>
+        <path d="M8 5h8"></path>
+        <path d="M4 11v3"></path>
+        <path d="M20 11v3"></path>
+      </svg>
+    `,
+  };
+
+  return skillSymbols[skillName] || "";
 }
 
 function getSkillMark(name) {
