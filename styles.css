@@ -2662,6 +2662,11 @@ body[data-view="map"] .site-shell {
 .cl-n5 { width: 42vw; top: 64%; left: 52%;  animation: cloudDrift8  32s var(--ease-in-out-smooth) infinite; }
 .cl-n6 { width: 28vw; top: 56%; left: 78%;  animation: cloudDrift10 28s var(--ease-in-out-smooth) infinite; }
 
+.intro-cloud-layer .cloud {
+  animation-timing-function: linear;
+  animation-direction: alternate;
+}
+
 /* ── Bottom fog bank — atmospheric haze ── */
 .intro-fog {
   position: absolute;
@@ -3256,19 +3261,19 @@ body[data-view="map"] .map-return-btn {
   display: none;
 }
 
-/* ── Individual cloud drift: gentle horizontal meander (slightly faster) ── */
-@keyframes cloudDrift1  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(5vw,0.8vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift2  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-4vw,1vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift3  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(3.5vw,-0.6vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift4  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-4.5vw,0.5vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift5  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(6vw,1vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift6  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5.5vw,1.2vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift7  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(4.5vw,-0.8vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift8  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5vw,0.9vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift9  { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(7vw,1.2vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift10 { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-6vw,1.5vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift11 { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(6.5vw,-1vh,0)}100%{transform:translate3d(0,0,0)} }
-@keyframes cloudDrift12 { 0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-5.8vw,1.1vh,0)}100%{transform:translate3d(0,0,0)} }
+/* ── Individual cloud drift: constant, slow meander ── */
+@keyframes cloudDrift1  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(5vw,0.8vh,0)} }
+@keyframes cloudDrift2  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-4vw,1vh,0)} }
+@keyframes cloudDrift3  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(3.5vw,-0.6vh,0)} }
+@keyframes cloudDrift4  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-4.5vw,0.5vh,0)} }
+@keyframes cloudDrift5  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(6vw,1vh,0)} }
+@keyframes cloudDrift6  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-5.5vw,1.2vh,0)} }
+@keyframes cloudDrift7  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(4.5vw,-0.8vh,0)} }
+@keyframes cloudDrift8  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-5vw,0.9vh,0)} }
+@keyframes cloudDrift9  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(7vw,1.2vh,0)} }
+@keyframes cloudDrift10 { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-6vw,1.5vh,0)} }
+@keyframes cloudDrift11 { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(6.5vw,-1vh,0)} }
+@keyframes cloudDrift12 { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-5.8vw,1.1vh,0)} }
 
 @keyframes introFogDrift {
   from { transform: translateX(-0.8%); }
