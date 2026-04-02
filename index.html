@@ -264,28 +264,94 @@
           <div class="section-intro">
             <p class="section-kicker">Academic Foundation</p>
             <h2 id="education-title">Education</h2>
+            <p class="section-description">
+              Mechatronics student with a growing focus on software and building practical applications through coursework and hands-on experience.
+            </p>
           </div>
 
-          <article class="card education-card reveal" style="--stagger-index:0">
-            <div class="education-top">
-              <div class="org-logo-wrap">
-                <img
-                  class="org-logo"
-                  src="./assets/icons/uwaterloo-logo.svg"
-                  alt="University of Waterloo logo"
-                  loading="lazy"
-                />
+          <div class="section-grid section-grid--education">
+            <article class="card section-panel education-card reveal" style="--stagger-index:0">
+              <div class="section-panel-head section-panel-head--logo">
+                <div class="org-logo-wrap">
+                  <img
+                    class="org-logo"
+                    src="./assets/icons/uwaterloo-logo.svg"
+                    alt="University of Waterloo logo"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="section-title-stack">
+                  <h3>University of Waterloo</h3>
+                  <p>Bachelor of Applied Science, Mechatronics Engineering</p>
+                </div>
               </div>
-              <div class="card-top">
-                <h3>University of Waterloo</h3>
-                <p>Bachelor of Applied Science, Mechatronics Engineering</p>
+
+              <dl class="section-facts">
+                <div class="section-fact">
+                  <dt>Expected Graduation</dt>
+                  <dd>April 2030</dd>
+                </div>
+                <div class="section-fact">
+                  <dt>Location</dt>
+                  <dd>Waterloo, Ontario</dd>
+                </div>
+              </dl>
+            </article>
+
+            <article class="card section-panel section-panel--coursework reveal" style="--stagger-index:1">
+              <div class="section-panel-head">
+                <div class="section-panel-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5V6.75A2.75 2.75 0 0 1 6.75 4H20v15.5H6.75A2.75 2.75 0 0 0 4 22.25" />
+                    <path d="M8 8h8" />
+                    <path d="M8 11.5h6" />
+                  </svg>
+                </div>
+                <div class="section-title-stack">
+                  <h3>Relevant Coursework:</h3>
+                </div>
               </div>
-            </div>
-            <div class="meta">
-              <span>Expected Graduation: April 2030</span>
-              <span>Waterloo, Ontario</span>
-            </div>
-          </article>
+
+              <div class="coursework-stack">
+                <article class="coursework-block">
+                  <h4>MTE 100 – Mechatronics Engineering</h4>
+                  <ul class="section-bullet-list">
+                    <li>Engineering Design</li>
+                  </ul>
+                </article>
+
+                <article class="coursework-block">
+                  <h4>MTE 121 – Digital Computation</h4>
+                  <ul class="section-bullet-list">
+                    <li>Object-Oriented Programming in C++</li>
+                    <li>Data Structures &amp; Algorithms</li>
+                  </ul>
+                </article>
+              </div>
+            </article>
+
+            <article class="card section-panel reveal" style="--stagger-index:2">
+              <div class="section-panel-head">
+                <div class="section-panel-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3 20 7.5v9L12 21l-8-4.5v-9L12 3Z" />
+                    <path d="M12 12 20 7.5" />
+                    <path d="M12 12v9" />
+                    <path d="M12 12 4 7.5" />
+                  </svg>
+                </div>
+                <div class="section-title-stack">
+                  <h3>Focus Areas</h3>
+                </div>
+              </div>
+
+              <ul class="section-bullet-list">
+                <li>Software engineering within Mechatronics</li>
+                <li>Building real-world applications</li>
+                <li>Accessibility-focused development</li>
+              </ul>
+            </article>
+          </div>
         </section>
 
         <section class="content-section reveal" id="skills" aria-labelledby="skills-title">
@@ -303,7 +369,7 @@
           </div>
           <div class="projects-browser" id="projects-browser">
             <div class="projects-grid projects-grid--compact" id="projects-grid"></div>
-            <article class="card project-detail" id="project-detail" hidden></article>
+            <article class="card section-panel project-detail" id="project-detail" hidden></article>
           </div>
         </section>
 

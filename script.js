@@ -1339,7 +1339,7 @@ function renderExperience() {
             <img src="${escapeHtml(item.logo)}" alt="${escapeHtml(item.organization)} logo" loading="lazy" />
           </div>
 
-          <div class="card timeline-card">
+          <div class="card section-panel timeline-card">
             <div class="timeline-head">
               <h3>${escapeHtml(timelineTitle)}</h3>
               <p class="timeline-period">${escapeHtml(item.period)}</p>

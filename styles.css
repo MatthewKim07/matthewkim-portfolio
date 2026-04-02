@@ -523,7 +523,117 @@ h1 {
 
 .section-intro p:not(.section-kicker) {
   color: color-mix(in srgb, var(--ink) 85%, var(--ink-muted));
-  margin: 0.35rem 0 0;
+  margin: var(--section-content-offset) 0 0;
+}
+
+.section-grid {
+  margin-top: var(--section-content-offset);
+  display: grid;
+  gap: 0.9rem;
+}
+
+.section-grid--education {
+  grid-template-columns: minmax(320px, 1.15fr) minmax(280px, 0.85fr);
+  align-items: stretch;
+}
+
+.section-panel {
+  padding: 1.15rem;
+  border-top: 2px solid color-mix(in srgb, var(--accent-soft) 48%, var(--line));
+}
+
+.section-panel-head {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.section-panel-head--logo {
+  align-items: center;
+}
+
+.section-title-stack {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.section-title-stack h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.55rem, 2.4vw, 1.95rem);
+  line-height: 1.06;
+  letter-spacing: 0.01em;
+}
+
+.section-title-stack p {
+  margin: 0;
+  color: color-mix(in srgb, var(--ink) 84%, var(--ink-muted));
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.section-panel-icon {
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 3rem;
+  border-radius: 2px;
+  border: 1px solid color-mix(in srgb, var(--line-strong) 72%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 20%, rgba(252, 247, 228, 0.96)), rgba(241, 233, 201, 0.82));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: color-mix(in srgb, var(--accent-strong) 52%, var(--ink));
+}
+
+.section-panel-icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.section-facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.section-fact {
+  border: 1px solid color-mix(in srgb, var(--line) 92%, transparent);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--panel-strong) 55%, transparent);
+  padding: 0.8rem 0.9rem;
+}
+
+.section-fact dt {
+  margin: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-family: var(--font-caps);
+  color: var(--ink-muted);
+}
+
+.section-fact dd {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.06;
+  color: color-mix(in srgb, var(--ink) 92%, var(--ink-muted));
+}
+
+.section-bullet-list {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: color-mix(in srgb, var(--ink) 88%, var(--ink-muted));
+  line-height: 1.65;
+}
+
+.section-bullet-list li + li {
+  margin-top: 0.65rem;
 }
 
 .card {
@@ -709,17 +819,30 @@ h1 {
 }
 
 .education-card {
-  margin-top: var(--section-content-offset);
-  padding: 1.15rem;
-  border-top: 2px solid color-mix(in srgb, var(--accent-soft) 48%, var(--line));
+  grid-column: 1 / -1;
 }
 
-.education-top {
+.coursework-stack {
   display: grid;
-  grid-template-columns: 84px 1fr;
-  gap: 0.95rem;
-  align-items: center;
-  margin-bottom: 0.4rem;
+  gap: 1rem;
+}
+
+.coursework-block {
+  border-left: 2px solid color-mix(in srgb, var(--accent-soft) 44%, var(--line));
+  padding-left: 0.9rem;
+}
+
+.coursework-block h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1.06;
+  letter-spacing: 0.01em;
+  color: color-mix(in srgb, var(--ink) 92%, var(--ink-muted));
+}
+
+.coursework-block .section-bullet-list {
+  margin-top: 0.6rem;
 }
 
 .org-logo-wrap {
@@ -1712,9 +1835,18 @@ textarea:focus-visible {
     border-radius: 2px;
   }
 
-  .education-top {
+  .section-grid--education {
     grid-template-columns: 1fr;
+  }
+
+  .section-panel-head--logo {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 0.7rem;
+  }
+
+  .section-facts {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -2253,6 +2385,7 @@ body[data-view="content"] .btn-primary {
 }
 
 body[data-view="content"] .card,
+body[data-view="content"] .section-panel,
 body[data-view="content"] .connect-link,
 body[data-view="content"] .timeline-role-card,
 body[data-view="content"] .timeline-card,
@@ -2307,8 +2440,31 @@ body[data-view="content"] .about-facet h3 {
   color: #413121;
 }
 
-body[data-view="content"] .education-card {
+body[data-view="content"] .section-panel {
   border-top-color: color-mix(in srgb, var(--accent-soft) 52%, var(--accent-strong));
+}
+
+body[data-view="content"] .section-panel-icon,
+body[data-view="content"] .section-fact {
+  border-color: rgba(118, 92, 53, 0.24);
+  background:
+    linear-gradient(180deg, rgba(247, 239, 206, 0.9), rgba(236, 225, 189, 0.82)),
+    rgba(245, 236, 200, 0.86);
+}
+
+body[data-view="content"] .section-title-stack h3,
+body[data-view="content"] .coursework-block h4,
+body[data-view="content"] .section-fact dd {
+  color: #413121;
+}
+
+body[data-view="content"] .section-title-stack p,
+body[data-view="content"] .section-bullet-list {
+  color: #524131;
+}
+
+body[data-view="content"] .section-fact dt {
+  color: #85785f;
 }
 
 body[data-view="content"] .about-simple-mark {
