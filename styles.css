@@ -2409,32 +2409,8 @@ body[data-view="map"] .site-shell {
 .intro-content > * {
   animation: introReveal 550ms var(--ease-out-strong) both;
 }
-.intro-content > :nth-child(1) { animation-delay: 200ms; }
+.intro-content > :nth-child(1) { animation-delay: 220ms; }
 .intro-content > :nth-child(2) { animation-delay: 360ms; }
-.intro-content > :nth-child(3) { animation-delay: 520ms; }
-
-/* ── Intro ornament (decorative rule with diamond) ── */
-.intro-ornament {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  width: min(22rem, 80vw);
-  margin-bottom: 1.8rem;
-}
-.intro-ornament::before,
-.intro-ornament::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, rgba(210, 198, 148, 0.45), transparent);
-}
-.intro-ornament-diamond {
-  width: 7px;
-  height: 7px;
-  background: rgba(210, 198, 148, 0.8);
-  transform: rotate(45deg);
-  flex-shrink: 0;
-}
 
 .intro-name {
   margin: 0 0 2rem;
@@ -2562,8 +2538,7 @@ body[data-view="transitioning"] .map-gate {
 
 /* 10. Map HUD identity: appears near the end of the reveal */
 .expedition-shell.is-transitioning .map-hud-identity,
-.expedition-shell.is-transitioning .map-hud-controls,
-.expedition-shell.is-transitioning .map-hud-hint {
+.expedition-shell.is-transitioning .map-hud-controls {
   opacity: clamp(0, calc((var(--fall-progress) - 0.82) * 6.5), 1);
 }
 
@@ -2584,6 +2559,16 @@ body[data-view="transitioning"] .map-gate {
   top: 1.3rem;
   left: 1.5rem;
   pointer-events: auto;
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.62rem 0.82rem 0.58rem;
+  border: 1px solid rgba(112, 84, 50, 0.26);
+  background:
+    linear-gradient(180deg, rgba(249, 243, 219, 0.84), rgba(239, 229, 197, 0.72));
+  box-shadow:
+    0 10px 24px -18px rgba(31, 21, 11, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(8px);
 }
 
 .map-hud-name {
@@ -2591,17 +2576,18 @@ body[data-view="transitioning"] .map-gate {
   font-family: var(--font-caps);
   font-size: 0.62rem;
   letter-spacing: 0.34em;
-  color: rgba(91, 70, 44, 0.7);
+  color: rgba(73, 53, 31, 0.9);
   text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 250, 238, 0.4);
 }
 
 .map-hud-sub {
-  margin: 0.2rem 0 0;
+  margin: 0;
   font-family: var(--font-ui);
   font-size: 0.5rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(91, 70, 44, 0.44);
+  color: rgba(90, 68, 42, 0.72);
 }
 
 .map-hud-controls {
@@ -2627,7 +2613,11 @@ body[data-view="transitioning"] .map-gate {
   color: rgba(91, 70, 44, 0.65);
   font-size: 0.85rem;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  transition:
+    transform 160ms var(--ease-out-strong),
+    border-color 200ms var(--ease-standard),
+    color 200ms var(--ease-standard),
+    background 200ms var(--ease-standard);
   font-family: var(--font-ui);
 }
 .map-hud-btn:hover {
@@ -2635,24 +2625,13 @@ body[data-view="transitioning"] .map-gate {
   color: rgba(91, 70, 44, 0.9);
   background: rgba(248, 241, 212, 0.72);
 }
+.map-hud-btn:active {
+  transform: scale(0.92);
+  transition-duration: 100ms;
+}
 .map-hud-btn:focus-visible {
   outline: 2px solid rgba(180, 144, 76, 0.7);
   outline-offset: 2px;
-}
-
-.map-hud-hint {
-  position: absolute;
-  bottom: 1.6rem;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 0;
-  font-family: var(--font-ui);
-  font-size: 0.52rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(91, 70, 44, 0.38);
-  white-space: nowrap;
-  pointer-events: none;
 }
 
 .map-viewport {
@@ -2920,11 +2899,18 @@ body[data-view="transitioning"] .map-gate {
   font-size: 0.62rem;
   padding: 0.42rem 0.82rem;
   cursor: pointer;
+  transition:
+    transform 160ms var(--ease-out-strong),
+    background 200ms var(--ease-standard);
 }
 
 .map-return-btn:hover,
 .map-return-btn:focus-visible {
   background: rgba(248, 232, 180, 0.92);
+}
+.map-return-btn:active {
+  transform: scale(0.97);
+  transition-duration: 100ms;
 }
 
 body[data-view="intro"] .map-return-btn,
@@ -3034,10 +3020,6 @@ body[data-view="map"] .map-return-btn {
 }
 
 @media (max-width: 820px) {
-  .map-hud-hint {
-    display: none;
-  }
-
   .map-pin-label {
     font-size: 0.48rem;
     letter-spacing: 0.22em;
@@ -3048,11 +3030,6 @@ body[data-view="map"] .map-return-btn {
   .intro-name {
     font-size: clamp(2.4rem, 12vw, 3.8rem);
     letter-spacing: 0.06em;
-  }
-
-  .intro-ornament {
-    width: min(16rem, 85vw);
-    margin-bottom: 1.2rem;
   }
 
   .intro-enter {
