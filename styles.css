@@ -505,7 +505,7 @@ h1 {
 
 .content-section h2 {
   font-size: clamp(1.65rem, 2.8vw, 2.6rem);
-  line-height: 1.02;
+  line-height: 1.08;
   letter-spacing: 0.02em;
 }
 
@@ -709,7 +709,9 @@ h1 {
 }
 
 .education-card {
-  margin-top: 0.7rem;
+  margin-top: var(--section-content-offset);
+  padding: 1.15rem;
+  border-top: 2px solid color-mix(in srgb, var(--accent-soft) 48%, var(--line));
 }
 
 .education-top {
@@ -766,7 +768,12 @@ h1 {
 }
 
 .toolkit-grid {
+  margin-top: var(--section-content-offset);
   grid-template-columns: repeat(auto-fit, minmax(228px, 1fr));
+}
+
+.toolkit-card {
+  border-top: 2px solid color-mix(in srgb, var(--accent-soft) 48%, var(--line));
 }
 
 .toolkit-card h3 {
@@ -809,6 +816,20 @@ h1 {
     0 10px 18px -18px rgba(0, 0, 0, 0.7);
 }
 
+.skill-chip {
+  transition:
+    border-color 160ms var(--ease-standard),
+    background 160ms var(--ease-standard),
+    box-shadow 160ms var(--ease-standard);
+}
+
+.skill-chip:hover {
+  border-color: color-mix(in srgb, var(--line-strong) 100%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 16px -14px rgba(0, 0, 0, 0.5);
+}
+
 .skill-chip--with-icon {
   padding-left: 0.5rem;
 }
@@ -847,7 +868,7 @@ h1 {
 }
 
 .projects-browser {
-  margin-top: 0;
+  margin-top: var(--section-content-offset);
 }
 
 .projects-grid {
@@ -1023,6 +1044,18 @@ h1 {
   display: grid;
   gap: 0.85rem;
   margin-top: 0;
+  animation: revealDetail 380ms var(--ease-out-strong) both;
+}
+
+@keyframes revealDetail {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .project-detail-top {
@@ -1178,7 +1211,7 @@ h1 {
 }
 
 .timeline {
-  margin-top: 0;
+  margin-top: var(--section-content-offset);
   display: grid;
   gap: 0.8rem;
   position: relative;
@@ -1234,9 +1267,20 @@ h1 {
   object-fit: cover;
 }
 
+.timeline-marker {
+  transition: border-color 200ms var(--ease-standard), box-shadow 200ms var(--ease-standard);
+}
+
+.timeline-entry:hover .timeline-marker {
+  border-color: color-mix(in srgb, var(--active-line) 56%, var(--line-strong));
+  box-shadow: 0 6px 16px -10px rgba(0, 0, 0, 0.5);
+}
+
 .timeline-card {
   display: grid;
   gap: 0.45rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 2px;
 }
 
 .timeline-head {
@@ -1283,6 +1327,10 @@ h1 {
 .timeline-toggle {
   justify-self: start;
   margin-top: 0.25rem;
+  font-size: 0.66rem;
+  padding: 0.3rem 0.7rem;
+  min-height: auto;
+  border-color: color-mix(in srgb, var(--line) 80%, transparent);
 }
 
 .timeline-details[hidden] {
@@ -1292,6 +1340,7 @@ h1 {
 .timeline-details {
   padding-top: 0.4rem;
   border-top: 1px dashed color-mix(in srgb, var(--line) 90%, transparent);
+  animation: revealDetail 320ms var(--ease-out-strong) both;
 }
 
 .timeline-role-group {
@@ -1340,7 +1389,7 @@ h1 {
 }
 
 .contact-layout {
-  margin-top: 0;
+  margin-top: var(--section-content-offset);
   display: grid;
   gap: 0.85rem;
   grid-template-columns: 1.35fr 1fr;
@@ -1379,7 +1428,7 @@ h1 {
   text-decoration: none;
   color: var(--ink);
   border: 1px solid color-mix(in srgb, var(--line) 90%, transparent);
-  border-radius: 12px;
+  border-radius: 2px;
   background: color-mix(in srgb, var(--panel) 60%, transparent);
   padding: 0.62rem 0.72rem;
   min-height: 4rem;
@@ -2276,14 +2325,127 @@ body[data-view="content"] .connect-link:focus-visible {
   box-shadow: 0 24px 42px -30px rgba(77, 61, 34, 0.34);
 }
 
+body[data-view="content"] .project-tile {
+  clip-path: none;
+  border-color: rgba(121, 94, 54, 0.22);
+  background:
+    linear-gradient(180deg, rgba(250, 244, 219, 0.92), rgba(239, 232, 201, 0.86)),
+    rgba(247, 239, 208, 0.88);
+  box-shadow:
+    0 18px 34px -30px rgba(78, 63, 35, 0.28),
+    inset 0 1px 0 rgba(255, 251, 235, 0.62);
+}
+
 body[data-view="content"] .project-art {
   border: 1px solid rgba(121, 94, 54, 0.18);
   box-shadow: inset 0 1px 0 rgba(255, 252, 238, 0.34);
+  background:
+    radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--art-a) 14%, rgba(255, 248, 225, 0.92)), transparent 40%),
+    radial-gradient(circle at 82% 86%, color-mix(in srgb, var(--art-b) 16%, rgba(233, 224, 188, 0.78)), transparent 46%),
+    linear-gradient(180deg, rgba(251, 246, 225, 0.96), rgba(236, 228, 193, 0.88));
+}
+
+body[data-view="content"] .project-art::before {
+  background:
+    linear-gradient(180deg, rgba(255, 252, 240, 0.08), rgba(121, 94, 54, 0.08) 72%, rgba(82, 64, 39, 0.12)),
+    linear-gradient(90deg, rgba(133, 109, 68, 0.05) 0 1px, transparent 1px 100%);
+  background-size: auto, 36px 36px;
+  opacity: 1;
+}
+
+body[data-view="content"] .project-art::after {
+  inset: 0.6rem;
+  border: 1px solid rgba(132, 104, 61, 0.1);
+  background:
+    linear-gradient(125deg, rgba(255, 255, 255, 0.16), transparent 32%),
+    radial-gradient(circle at 80% 20%, rgba(168, 142, 92, 0.08), transparent 42%);
+  opacity: 1;
+}
+
+body[data-view="content"] .project-art-label {
+  left: 0.8rem;
+  top: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  max-width: calc(100% - 1.6rem);
+  padding: 0.28rem 0.52rem;
+  border: 1px solid rgba(126, 96, 54, 0.2);
+  background: rgba(251, 245, 220, 0.78);
+  color: rgba(91, 69, 41, 0.82);
+  font-size: 0.61rem;
+  letter-spacing: 0.18em;
+  border-radius: 2px;
+  box-shadow: 0 8px 18px -16px rgba(66, 50, 28, 0.4);
 }
 
 body[data-view="content"] .project-logo-badge {
-  background: rgba(250, 243, 217, 0.9);
-  border-color: rgba(119, 93, 54, 0.24);
+  top: 45%;
+  width: min(12.4rem, 66%);
+  height: min(12.4rem, 66%);
+  border-radius: 2px;
+  background:
+    linear-gradient(180deg, rgba(251, 246, 225, 0.96), rgba(236, 228, 193, 0.88)),
+    rgba(250, 243, 217, 0.9);
+  border-color: rgba(119, 93, 54, 0.22);
+  box-shadow:
+    0 16px 26px -20px rgba(70, 54, 31, 0.28),
+    inset 0 1px 0 rgba(255, 252, 237, 0.72);
+}
+
+body[data-view="content"] .project-tile:hover .project-logo-badge,
+body[data-view="content"] .project-tile:focus-visible .project-logo-badge {
+  transform: translate(-50%, -50%) scale(1.03);
+  background:
+    linear-gradient(180deg, rgba(253, 248, 229, 1), rgba(240, 232, 198, 0.92)),
+    rgba(250, 243, 217, 0.96);
+  box-shadow:
+    0 18px 30px -20px rgba(70, 54, 31, 0.32),
+    inset 0 1px 0 rgba(255, 252, 237, 0.8);
+}
+
+body[data-view="content"] .project-logo-image {
+  transform: scale(var(--logo-scale, 1.2));
+}
+
+body[data-view="content"] .project-logo-image--contain {
+  transform: scale(var(--logo-scale, 1.1));
+}
+
+body[data-view="content"] .project-logo-badge--fallback {
+  background:
+    linear-gradient(180deg, rgba(240, 230, 193, 0.96), rgba(220, 206, 167, 0.88)),
+    rgba(231, 220, 185, 0.9);
+}
+
+body[data-view="content"] .project-logo-fallback {
+  color: #5b4529;
+}
+
+body[data-view="content"] .project-tile-title {
+  left: 0.85rem;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  color: #3f301f;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  line-height: 0.98;
+  text-shadow: none;
+}
+
+body[data-view="content"] .project-tile:hover .project-art-label,
+body[data-view="content"] .project-tile:focus-visible .project-art-label {
+  transform: translateY(-1px);
+}
+
+body[data-view="content"] .project-tile:hover .project-art::before,
+body[data-view="content"] .project-tile:focus-visible .project-art::before {
+  opacity: 1;
+}
+
+body[data-view="content"] .project-tile:hover .project-art::after,
+body[data-view="content"] .project-tile:focus-visible .project-art::after {
+  opacity: 1;
 }
 
 body[data-view="content"] .timeline::before {
@@ -2315,6 +2477,12 @@ body[data-view="content"] textarea {
   background: rgba(248, 241, 214, 0.76);
   border-color: rgba(119, 92, 53, 0.26);
   color: #3d3020;
+}
+
+body[data-view="content"] input:focus-visible,
+body[data-view="content"] textarea:focus-visible {
+  border-color: rgba(154, 120, 64, 0.52);
+  box-shadow: 0 0 0 3px rgba(197, 162, 94, 0.14);
 }
 
 body[data-view="content"] .map-return-btn {
@@ -3210,6 +3378,20 @@ body[data-view="map"] .map-return-btn {
     top: 0.72rem;
     right: 0.72rem;
   }
+}
+
+/* Touch devices: neutralize hover transforms that persist after tap */
+@media (hover: none) {
+  .btn:hover { transform: none; }
+  .card:hover,
+  .project-tile:hover,
+  .connect-link:hover { --surface-lift: 0px; }
+  .intro-enter:hover { transform: none; }
+  .intro-enter:hover .intro-enter-arrow { transform: none; }
+  .project-tile:hover .project-art-label { transform: none; }
+  .project-tile:hover .project-logo-badge { transform: translate(-50%, -50%); }
+  .skill-chip:hover { border-color: color-mix(in srgb, var(--line) 92%, transparent); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 10px 18px -18px rgba(0, 0, 0, 0.7); }
+  .timeline-entry:hover .timeline-marker { border-color: var(--line-strong); box-shadow: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
