@@ -2,91 +2,204 @@ window.PORTFOLIO_DATA = {
   skills: [
     {
       category: "Languages",
-      summary: "Primary programming languages used in coursework, co-ops, and projects.",
+      summary: "Core programming languages used across product work, coursework, and engineering projects.",
       items: [
         {
           name: "Python",
-          detail: "Rapid scripting, automation, and API integration.",
-        },
-        {
-          name: "C/C++",
-          detail: "Embedded systems, firmware, and performance-sensitive development.",
-        },
-        {
-          name: "HTML",
-          detail: "Semantic page structure and accessible content layout.",
-        },
-        {
-          name: "CSS",
-          detail: "Responsive styling systems, design tokens, and UI polish.",
-        },
-        {
-          name: "JavaScript",
-          detail: "Vanilla browser scripting and full-stack product prototyping.",
+          detail: "Automation, data work, and backend scripting.",
+          icon: "https://cdn.simpleicons.org/python/3776AB",
         },
         {
           name: "TypeScript",
-          detail: "Primary language for modern web applications, tooling, and backend services.",
+          detail: "Primary language for modern web apps and services.",
+          icon: "https://cdn.simpleicons.org/typescript/3178C6",
+        },
+        {
+          name: "JavaScript",
+          detail: "Browser logic and full-stack product prototyping.",
+          icon: "https://cdn.simpleicons.org/javascript/F7DF1E",
+        },
+        {
+          name: "SQL",
+          detail: "Relational queries, schema design, and data workflows.",
+        },
+        {
+          name: "C++",
+          detail: "Embedded systems and performance-sensitive engineering work.",
+          icon: "https://cdn.simpleicons.org/cplusplus/00599C",
+        },
+        {
+          name: "Bash",
+          detail: "CLI workflows, scripts, and local tooling.",
+          icon: "https://cdn.simpleicons.org/gnubash/4EAA25",
+        },
+        {
+          name: "HTML5",
+          detail: "Semantic structure and accessible UI foundations.",
+          icon: "https://cdn.simpleicons.org/html5/E34F26",
+        },
+        {
+          name: "CSS3",
+          detail: "Responsive layouts, theming, and interface polish.",
+          icon: "https://cdn.simpleicons.org/css/1572B6",
         },
       ],
     },
     {
-      category: "Frameworks + Libraries",
-      summary: "Frontend and backend frameworks used for production-style apps.",
+      category: "Frameworks & Libraries",
+      summary: "Frontend, backend, and data libraries used for production-style applications.",
       items: [
         {
           name: "React",
           detail: "Component-driven UI development with reusable patterns.",
+          icon: "https://cdn.simpleicons.org/react/61DAFB",
         },
         {
           name: "Next.js",
           detail: "Full-stack React applications with robust routing and rendering options.",
+          icon: "https://cdn.simpleicons.org/nextdotjs/111111",
         },
         {
-          name: "Vite",
-          detail: "Fast local tooling and bundling for modern frontend development.",
+          name: "Node.js",
+          detail: "Backend services, tooling, and server-side JavaScript.",
+          icon: "https://cdn.simpleicons.org/nodedotjs/5FA04E",
+        },
+        {
+          name: "Hono",
+          detail: "Lean TypeScript routing for lightweight APIs and services.",
+          icon: "https://cdn.simpleicons.org/hono/E36002",
+        },
+        {
+          name: "Fastify",
+          detail: "High-performance Node.js APIs and backend services.",
+          icon: "https://cdn.simpleicons.org/fastify/111111",
         },
         {
           name: "Flask",
           detail: "Python web backends and service endpoints.",
+          icon: "https://cdn.simpleicons.org/flask/111111",
+        },
+        {
+          name: "FastAPI",
+          detail: "Typed Python APIs and service development.",
+          icon: "https://cdn.simpleicons.org/fastapi/009688",
+        },
+        {
+          name: "Pydantic",
+          detail: "Data validation and typed model handling in Python services.",
+          icon: "https://cdn.simpleicons.org/pydantic/E92063",
+        },
+        {
+          name: "NumPy",
+          detail: "Numerical computing and array-based workflows.",
+          icon: "https://cdn.simpleicons.org/numpy/013243",
+        },
+        {
+          name: "Pandas",
+          detail: "Data wrangling, analysis, and tabular processing.",
+          icon: "https://cdn.simpleicons.org/pandas/150458",
+        },
+        {
+          name: "Prisma",
+          detail: "Type-safe database access and schema modeling.",
+          icon: "https://cdn.simpleicons.org/prisma/2D3748",
         },
         {
           name: "Tailwind CSS",
           detail: "Utility-driven styling for rapid, consistent UI development.",
-        },
-        {
-          name: "Hono",
-          detail: "Minimal TypeScript server framework for lean backend routes.",
+          icon: "https://cdn.simpleicons.org/tailwindcss/06B6D4",
         },
       ],
     },
     {
       category: "Tools",
-      summary: "Core software engineering tools and platforms used in project and team workflows.",
+      summary: "Core engineering tools, infrastructure, and platforms used in daily development workflows.",
       items: [
         {
-          name: "Git/GitHub",
-          detail: "Version control, collaborative workflows, and PR-based development.",
+          name: "Git",
+          detail: "Version control and branching workflows.",
+          icon: "https://cdn.simpleicons.org/git/F05032",
+        },
+        {
+          name: "GitHub",
+          detail: "Repository hosting, pull requests, and collaboration.",
+          icon: "https://cdn.simpleicons.org/github/181717",
         },
         {
           name: "Docker",
           detail: "Consistent runtime environments and reproducible setup.",
+          icon: "https://cdn.simpleicons.org/docker/2496ED",
+        },
+        {
+          name: "GitHub Actions",
+          detail: "Automated CI workflows and deployment tasks.",
+          icon: "https://cdn.simpleicons.org/githubactions/2088FF",
         },
         {
           name: "PostgreSQL",
           detail: "Relational database design and query optimization.",
-        },
-        {
-          name: "Prisma ORM",
-          detail: "Type-safe data modeling and query workflows.",
+          icon: "https://cdn.simpleicons.org/postgresql/4169E1",
         },
         {
           name: "Supabase",
           detail: "Backend services, auth, and database integration.",
+          icon: "https://cdn.simpleicons.org/supabase/3ECF8E",
         },
         {
           name: "Playwright",
           detail: "End-to-end testing and reliability checks.",
+          icon: "https://cdn.simpleicons.org/playwright/2EAD33",
+        },
+        {
+          name: "Pytest",
+          detail: "Python test suites and developer tooling.",
+          icon: "https://cdn.simpleicons.org/pytest/0A9EDC",
+        },
+        {
+          name: "Vite",
+          detail: "Fast frontend development server and build tooling.",
+          icon: "https://cdn.simpleicons.org/vite/646CFF",
+        },
+        {
+          name: "Notion",
+          detail: "Planning, documentation, and personal workflow organization.",
+          icon: "https://cdn.simpleicons.org/notion/111111",
+        },
+        {
+          name: "Canva",
+          detail: "Lightweight visual design and presentation assets.",
+          icon: "https://cdn.simpleicons.org/canva/00C4CC",
+        },
+        {
+          name: "Excel",
+          detail: "Spreadsheets, analysis, and structured data organization.",
+          icon: "https://cdn.simpleicons.org/microsoftexcel/217346",
+        },
+      ],
+    },
+    {
+      category: "Other",
+      summary: "Cross-functional technical concepts and practices that shape how I build software.",
+      items: [
+        {
+          name: "REST APIs",
+          detail: "Designing and integrating clear service boundaries and endpoints.",
+        },
+        {
+          name: "WCAG",
+          detail: "Accessibility-aware design and implementation standards.",
+        },
+        {
+          name: "ARIA",
+          detail: "Semantic accessibility patterns for interactive interfaces.",
+        },
+        {
+          name: "CI/CD",
+          detail: "Automated build, validation, and delivery workflows.",
+        },
+        {
+          name: "LLMs",
+          detail: "Building with and around large language model workflows.",
         },
       ],
     },

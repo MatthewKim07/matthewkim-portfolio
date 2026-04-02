@@ -1027,19 +1027,61 @@ function renderSkills() {
   if (!els.skillsGrid) return;
 
   els.skillsGrid.innerHTML = data.skills
-    .map((group) => {
+    .map((group, index) => {
       const chips = group.items
-        .map((item) => `<li><span class="skill-chip">${escapeHtml(item.name)}</span></li>`)
+        .map((item) => {
+          const icon = item.icon
+            ? `<span class="skill-chip-icon-wrap" aria-hidden="true">
+                <img
+                  class="skill-chip-icon"
+                  src="${escapeHtml(item.icon)}"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  referrerpolicy="no-referrer"
+                  onerror="this.hidden=true;this.nextElementSibling.hidden=false;"
+                />
+                <span class="skill-chip-fallback" hidden>${escapeHtml(getSkillMark(item.name))}</span>
+              </span>`
+            : "";
+
+          const titleAttr = item.detail ? ` title="${escapeHtml(item.detail)}"` : "";
+          const className = item.icon ? "skill-chip skill-chip--with-icon" : "skill-chip";
+
+          return `<li><span class="${className}"${titleAttr}>${icon}<span class="skill-chip-label">${escapeHtml(
+            item.name
+          )}</span></span></li>`;
+        })
         .join("");
 
       return `
-        <article class="card toolkit-card reveal">
+        <article class="card toolkit-card reveal" style="--stagger-index:${index}">
           <h3>${escapeHtml(group.category)}</h3>
+          <p class="toolkit-summary">${escapeHtml(group.summary)}</p>
           <ul class="skill-list">${chips}</ul>
         </article>
       `;
     })
     .join("");
+}
+
+function getSkillMark(name) {
+  const tokens = String(name)
+    .replace(/[+.]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (!tokens.length) return "SK";
+
+  if (tokens.length === 1) {
+    return tokens[0].slice(0, 2).toUpperCase();
+  }
+
+  return tokens
+    .slice(0, 2)
+    .map((token) => token[0])
+    .join("")
+    .toUpperCase();
 }
 
 function getProjectBySlug(slug) {
@@ -1093,11 +1135,11 @@ function renderProjectTiles() {
   if (!els.projectsGrid) return;
 
   els.projectsGrid.innerHTML = data.projects
-    .map((project) => {
+    .map((project, index) => {
       const iconBadge = renderProjectIconBadge(project, "tile");
 
       return `
-        <button class="card project-tile reveal" type="button" data-open-project="${escapeHtml(
+        <button class="card project-tile reveal" style="--stagger-index:${index}" type="button" data-open-project="${escapeHtml(
           project.slug
         )}" aria-label="Open ${escapeHtml(project.title)} project details">
           <div class="project-art" style="--art-a:${escapeHtml(project.palette.a)};--art-b:${escapeHtml(
@@ -1292,7 +1334,7 @@ function renderExperience() {
         item.headingOnlyOrganization || !item.role ? item.organization : `${item.role} · ${item.organization}`;
 
       return `
-        <article class="timeline-entry reveal">
+        <article class="timeline-entry reveal" style="--stagger-index:${index}">
           <div class="timeline-marker">
             <img src="${escapeHtml(item.logo)}" alt="${escapeHtml(item.organization)} logo" loading="lazy" />
           </div>
@@ -1700,6 +1742,7 @@ function bindCursorAura() {
 
 function bindSurfaceEffects() {
   if (prefersReducedMotion) return;
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
   const selector = ".card, .project-tile, .connect-link, .timeline-role-card";
 
