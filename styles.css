@@ -39,6 +39,7 @@
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out-smooth: cubic-bezier(0.77, 0, 0.175, 1);
   --section-space: clamp(1.2rem, 2.4vw, 1.7rem);
+  --section-content-offset: 0.85rem;
 
   --header-height: 72px;
 }
@@ -514,7 +515,13 @@ h1 {
   max-width: 75ch;
 }
 
-.section-intro p {
+.section-intro {
+  display: grid;
+  gap: 0;
+  padding-bottom: 0.5rem;
+}
+
+.section-intro p:not(.section-kicker) {
   color: color-mix(in srgb, var(--ink) 85%, var(--ink-muted));
   margin: 0.35rem 0 0;
 }
@@ -598,6 +605,107 @@ h1 {
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem;
+}
+
+.about-facets {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 0.9rem;
+  margin-top: var(--section-content-offset);
+}
+
+.about-facet {
+  --facet-accent: color-mix(in srgb, var(--accent-soft) 48%, var(--line));
+  --facet-aura: rgba(138, 157, 120, 0.26);
+  min-height: 100%;
+  height: 100%;
+  display: grid;
+  gap: 1rem;
+  grid-template-rows: auto 1fr;
+  padding: 1.2rem 1.15rem;
+  border-top: 2px solid var(--facet-accent);
+  border-left: 3px solid color-mix(in srgb, var(--facet-accent) 92%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--facet-aura) 42%, rgba(255, 252, 240, 0.92)), rgba(248, 242, 218, 0.82)),
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--facet-aura) 72%, transparent), transparent 44%),
+    radial-gradient(circle at 0% 100%, color-mix(in srgb, var(--facet-aura) 54%, transparent), transparent 38%),
+    color-mix(in srgb, var(--panel) 84%, transparent);
+}
+
+.about-facet:nth-child(1) {
+  --facet-accent: rgba(119, 140, 98, 0.42);
+  --facet-aura: rgba(137, 162, 112, 0.34);
+}
+
+.about-facet:nth-child(2) {
+  --facet-accent: rgba(97, 128, 156, 0.42);
+  --facet-aura: rgba(108, 142, 173, 0.3);
+}
+
+.about-facet:nth-child(3) {
+  --facet-accent: rgba(166, 126, 92, 0.42);
+  --facet-aura: rgba(181, 137, 99, 0.3);
+}
+
+.about-facet:nth-child(4) {
+  --facet-accent: rgba(162, 138, 84, 0.42);
+  --facet-aura: rgba(191, 163, 96, 0.3);
+}
+
+.about-facet-head {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.about-facet-icon {
+  width: 3rem;
+  height: 3rem;
+  flex: 0 0 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--line-strong) 72%, transparent);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--facet-aura) 36%, rgba(252, 247, 228, 0.96)), rgba(241, 233, 201, 0.82));
+  color: color-mix(in srgb, var(--facet-accent) 72%, #4d3a29);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.about-facet-icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.about-facet h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1;
+  color: color-mix(in srgb, var(--ink) 92%, var(--ink-muted));
+}
+
+.about-facet-copy {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.about-facet p,
+.about-facet-list {
+  margin: 0;
+  color: color-mix(in srgb, var(--ink) 88%, var(--ink-muted));
+  font-size: 1rem;
+  line-height: 1.65;
+  max-width: none;
+}
+
+.about-facet-list {
+  padding-left: 1.15rem;
+}
+
+.about-facet-list li + li {
+  margin-top: 0.8rem;
 }
 
 .education-card {
@@ -1305,6 +1413,13 @@ h1 {
   align-items: center;
   justify-content: center;
   background: color-mix(in srgb, var(--panel-strong) 58%, transparent);
+  transition: border-color 170ms var(--ease-standard), background 170ms var(--ease-standard);
+}
+
+.connect-link:hover .connect-icon-wrap,
+.connect-link:focus-visible .connect-icon-wrap {
+  border-color: color-mix(in srgb, var(--active-line) 56%, var(--line-strong));
+  background: color-mix(in srgb, var(--panel-strong) 78%, transparent);
 }
 
 .connect-icon {
@@ -1350,13 +1465,18 @@ textarea {
   color: var(--ink);
   background: color-mix(in srgb, var(--panel) 72%, transparent);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 2px;
   padding: 0.52rem 0.65rem;
+  transition:
+    border-color 180ms var(--ease-standard),
+    box-shadow 180ms var(--ease-standard);
 }
 
 input:focus-visible,
 textarea:focus-visible {
   border-color: color-mix(in srgb, var(--accent-strong) 65%, var(--line-strong));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent-strong) 12%, transparent);
+  outline: none;
 }
 
 .form-note {
@@ -1482,6 +1602,10 @@ textarea:focus-visible {
 @media (max-width: 1020px) {
   .main-nav a {
     font-size: 0.8rem;
+  }
+
+  .about-facets {
+    grid-template-columns: 1fr;
   }
 
   .about-simple {
@@ -2040,6 +2164,17 @@ body[data-view="content"] .skill-chip {
     inset 0 1px 0 rgba(255, 251, 235, 0.62);
 }
 
+body[data-view="content"] .toolkit-card {
+  border-top-color: color-mix(in srgb, var(--accent-soft) 52%, var(--accent-strong));
+}
+
+body[data-view="content"] .skill-chip:hover {
+  border-color: rgba(118, 93, 56, 0.42);
+  box-shadow:
+    0 10px 18px -16px rgba(78, 63, 35, 0.28),
+    inset 0 1px 0 rgba(255, 251, 235, 0.68);
+}
+
 body[data-view="content"] .skill-chip-icon-wrap {
   border-color: rgba(118, 93, 56, 0.24);
   background: rgba(252, 246, 223, 0.86);
@@ -2091,6 +2226,40 @@ body[data-view="content"] .about-simple {
   background:
     linear-gradient(180deg, rgba(250, 244, 219, 0.82), rgba(241, 234, 201, 0.74)),
     rgba(247, 239, 208, 0.8);
+}
+
+body[data-view="content"] .about-facet {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--facet-aura) 48%, rgba(250, 244, 219, 0.96)), rgba(239, 232, 201, 0.9)),
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--facet-aura) 78%, transparent), transparent 44%),
+    radial-gradient(circle at 0% 100%, color-mix(in srgb, var(--facet-aura) 58%, transparent), transparent 38%),
+    rgba(247, 239, 208, 0.84);
+  border-top-color: color-mix(in srgb, var(--facet-accent) 88%, var(--accent-strong));
+  border-left-color: color-mix(in srgb, var(--facet-accent) 96%, transparent);
+}
+
+body[data-view="content"] .about-facet-icon {
+  border-color: rgba(118, 92, 53, 0.24);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--facet-aura) 48%, rgba(247, 239, 206, 0.96)), rgba(236, 225, 189, 0.86)),
+    rgba(245, 236, 200, 0.86);
+  color: color-mix(in srgb, var(--facet-accent) 78%, #4f3b28);
+}
+
+body[data-view="content"] .about-facet p {
+  color: #524131;
+}
+
+body[data-view="content"] .about-facet-list {
+  color: #524131;
+}
+
+body[data-view="content"] .about-facet h3 {
+  color: #413121;
+}
+
+body[data-view="content"] .education-card {
+  border-top-color: color-mix(in srgb, var(--accent-soft) 52%, var(--accent-strong));
 }
 
 body[data-view="content"] .about-simple-mark {
