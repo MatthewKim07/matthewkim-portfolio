@@ -499,16 +499,6 @@ h1 {
   margin-top: var(--section-space);
 }
 
-.section-kicker {
-  margin: 0 0 0.35rem;
-  font-size: 0.58rem;
-  letter-spacing: 0.36em;
-  text-transform: uppercase;
-  font-weight: 500;
-  font-family: var(--font-caps);
-  color: var(--accent-strong);
-}
-
 .content-section h2 {
   font-size: clamp(1.65rem, 2.8vw, 2.6rem);
   line-height: 1.08;
@@ -527,7 +517,7 @@ h1 {
   padding-bottom: 0.5rem;
 }
 
-.section-intro p:not(.section-kicker) {
+.section-intro p {
   color: color-mix(in srgb, var(--ink) 85%, var(--ink-muted));
   margin: var(--section-content-offset) 0 0;
 }
@@ -2329,8 +2319,7 @@ body[data-view="content"] .hero-layer-grid {
   mask-image: radial-gradient(circle at 56% 42%, black 35%, transparent 88%);
 }
 
-body[data-view="content"] .eyebrow,
-body[data-view="content"] .section-kicker {
+body[data-view="content"] .eyebrow {
   color: #7a6848;
 }
 
