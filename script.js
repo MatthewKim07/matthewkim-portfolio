@@ -758,6 +758,7 @@ function showContentView(sectionId) {
 
   state.lockedNavId = null;
   state.lockedNavAt = 0;
+  updateContentMapBackdrop(nextId);
   setActiveNavLink(nextId);
   setActiveContentSection(nextId);
   closeMobileNav();
@@ -774,6 +775,28 @@ function getSectionCameraTarget(sectionId) {
   const y = height * 0.44 - location.y * scale;
 
   return { x, y, scale };
+}
+
+function updateContentMapBackdrop(sectionId = state.activeSectionId) {
+  if (!els.body) return;
+
+  const location = findMapLocation(sectionId);
+  const rawTarget =
+    (state.activeSectionId === sectionId && state.activeSectionCamera) ||
+    getSectionCameraTarget(sectionId) ||
+    getFitMapCameraTarget();
+  const target = clampCamera(rawTarget.x, rawTarget.y, rawTarget.scale);
+  const mapWidth = mapMeta.width * target.scale;
+  const mapHeight = mapMeta.height * target.scale;
+  const focusX = location ? (location.x / mapMeta.width) * 100 : 50;
+  const focusY = location ? (location.y / mapMeta.height) * 100 : 50;
+
+  els.body.style.setProperty("--content-map-x", `${target.x}px`);
+  els.body.style.setProperty("--content-map-y", `${target.y}px`);
+  els.body.style.setProperty("--content-map-width", `${mapWidth}px`);
+  els.body.style.setProperty("--content-map-height", `${mapHeight}px`);
+  els.body.style.setProperty("--content-map-focus-x", `${focusX.toFixed(2)}%`);
+  els.body.style.setProperty("--content-map-focus-y", `${focusY.toFixed(2)}%`);
 }
 
 function flyToSection(sectionId) {
@@ -1989,6 +2012,11 @@ function init() {
       } else {
         setCameraTarget(state.camera.targetX, state.camera.targetY, state.camera.targetScale);
       }
+      return;
+    }
+
+    if (state.view === VIEW.CONTENT) {
+      updateContentMapBackdrop();
     }
   });
 }

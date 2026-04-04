@@ -40,6 +40,12 @@
   --ease-in-out-smooth: cubic-bezier(0.77, 0, 0.175, 1);
   --section-space: clamp(1.2rem, 2.4vw, 1.7rem);
   --section-content-offset: 0.85rem;
+  --content-map-x: 50%;
+  --content-map-y: 50%;
+  --content-map-width: 100vw;
+  --content-map-height: auto;
+  --content-map-focus-x: 50%;
+  --content-map-focus-y: 50%;
 
   --header-height: 72px;
 }
@@ -2151,10 +2157,23 @@ body[data-view="content"] {
   --accent-strong: #c7a15b;
   --accent-soft: #88a17b;
   --active-line: rgba(200, 162, 94, 0.46);
-  background:
-    radial-gradient(1200px 640px at 14% -5%, rgba(249, 246, 223, 0.7), transparent 60%),
-    radial-gradient(900px 520px at 88% 18%, rgba(183, 191, 136, 0.42), transparent 58%),
+  background-image:
+    linear-gradient(180deg, rgba(247, 242, 220, 0.18), rgba(215, 205, 163, 0.34)),
+    radial-gradient(44% 34% at var(--content-map-focus-x) var(--content-map-focus-y), rgba(255, 247, 214, 0.18), transparent 72%),
+    url("./assets/map/world-map.png"),
     linear-gradient(180deg, #d7d0a6 0%, #c3c58f 48%, #adb67f 100%);
+  background-position:
+    center center,
+    center center,
+    var(--content-map-x) var(--content-map-y),
+    center center;
+  background-size:
+    100% 100%,
+    100% 100%,
+    var(--content-map-width) var(--content-map-height),
+    cover;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
+  background-attachment: scroll, scroll, fixed, scroll;
 }
 
 body[data-view="content"]::before {
@@ -2167,9 +2186,10 @@ body[data-view="content"]::before {
 
 body[data-view="content"]::after {
   background:
-    radial-gradient(38% 30% at 20% 18%, rgba(244, 236, 194, 0.6), transparent 68%),
-    radial-gradient(32% 24% at 82% 16%, rgba(121, 155, 114, 0.18), transparent 74%),
-    radial-gradient(36% 28% at 84% 84%, rgba(160, 142, 87, 0.2), transparent 72%);
+    radial-gradient(42% 30% at 20% 18%, rgba(244, 236, 194, 0.56), transparent 68%),
+    radial-gradient(34% 26% at 82% 16%, rgba(121, 155, 114, 0.16), transparent 74%),
+    radial-gradient(46% 34% at var(--content-map-focus-x) var(--content-map-focus-y), rgba(241, 226, 166, 0.16), transparent 76%),
+    linear-gradient(180deg, rgba(255, 252, 242, 0.08), rgba(84, 74, 49, 0.12));
   animation: none;
 }
 
@@ -2245,10 +2265,10 @@ body[data-view="content"] .hero,
 body[data-view="content"] .content-section {
   border-color: rgba(111, 87, 50, 0.24);
   background:
-    linear-gradient(180deg, rgba(247, 241, 214, 0.84), rgba(238, 230, 195, 0.76)),
-    rgba(245, 237, 204, 0.82);
+    linear-gradient(180deg, rgba(249, 243, 220, 0.9), rgba(239, 230, 195, 0.82)),
+    rgba(245, 237, 204, 0.86);
   box-shadow:
-    0 28px 60px -42px rgba(72, 58, 33, 0.34),
+    0 34px 72px -42px rgba(72, 58, 33, 0.42),
     inset 0 1px 0 rgba(255, 250, 232, 0.54);
 }
 
