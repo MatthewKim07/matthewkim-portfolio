@@ -27,7 +27,7 @@ window.EXPEDITION_MAP_PINS = [
   },
   {
     id: "skills",
-    x: 860,
+    x: 915,
     y: 800,
     zoomLevel: 1.5,
     color: "#4f8857",
