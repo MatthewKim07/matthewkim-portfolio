@@ -472,6 +472,13 @@ h1 {
   transition-duration: 100ms;
 }
 
+.btn:disabled {
+  cursor: wait;
+  opacity: 0.72;
+  transform: none;
+  pointer-events: none;
+}
+
 .btn-primary {
   color: #171715;
   border-color: color-mix(in srgb, var(--accent-strong) 78%, #dcc28f);
@@ -1535,6 +1542,16 @@ h1 {
   font-size: 1.3rem;
 }
 
+.contact-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .connect-intro {
   margin: 0.1rem 0 0.25rem;
   color: var(--ink-muted);
@@ -1658,6 +1675,14 @@ textarea:focus-visible {
 .form-note {
   min-height: 1.2rem;
   font-size: 0.84rem;
+}
+
+.form-note.is-success {
+  color: #506a40;
+}
+
+.form-note.is-error {
+  color: #8e473a;
 }
 
 .modal {

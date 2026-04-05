@@ -21,6 +21,13 @@ const mapLocations = mapLocationSource.map((location) => {
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const DEBUG_TRANSITION = false;
 const ENABLE_FALL_TRANSITION = true;
+const CONTACT_FORM_CONFIG = {
+  endpoint:
+    (window.CONTACT_FORM_CONFIG && typeof window.CONTACT_FORM_CONFIG.endpoint === "string"
+      ? window.CONTACT_FORM_CONFIG.endpoint
+      : "") || "https://formspree.io/f/mwvwwney",
+  subject: "Portfolio inquiry from matthewkim.com",
+};
 
 const VIEW = {
   INTRO: "intro",
@@ -171,6 +178,7 @@ const els = {
   experienceTimeline: document.getElementById("experience-timeline"),
   contactForm: document.getElementById("contact-form"),
   formStatus: document.getElementById("form-status"),
+  contactSubmit: document.querySelector('#contact-form button[type="submit"]'),
 };
 
 function escapeHtml(value) {
@@ -188,6 +196,22 @@ function clamp(value, min, max) {
 
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - ((-2 * t + 2) ** 3) / 2;
+}
+
+function isContactFormConfigured() {
+  return (
+    typeof CONTACT_FORM_CONFIG.endpoint === "string" &&
+    CONTACT_FORM_CONFIG.endpoint.startsWith("https://formspree.io/f/") &&
+    !CONTACT_FORM_CONFIG.endpoint.includes("YOUR_FORM_ID")
+  );
+}
+
+function setFormStatus(message, tone = "") {
+  if (!els.formStatus) return;
+
+  els.formStatus.textContent = message;
+  els.formStatus.classList.toggle("is-error", tone === "error");
+  els.formStatus.classList.toggle("is-success", tone === "success");
 }
 
 function setReady() {
@@ -1785,24 +1809,58 @@ function bindHeroParallax() {
 function bindContactForm() {
   if (!els.contactForm || !els.formStatus) return;
 
-  els.contactForm.addEventListener("submit", (event) => {
+  els.contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     if (!els.contactForm.reportValidity()) {
-      els.formStatus.textContent = "Please complete all required fields.";
+      setFormStatus("Please complete all required fields.", "error");
+      return;
+    }
+
+    if (!isContactFormConfigured()) {
+      setFormStatus("Contact form is not configured yet. Add your Formspree endpoint before deploying.", "error");
       return;
     }
 
     const formData = new FormData(els.contactForm);
-    const name = String(formData.get("name") || "").trim();
-    const email = String(formData.get("email") || "").trim();
-    const message = String(formData.get("message") || "").trim();
+    formData.set("_subject", CONTACT_FORM_CONFIG.subject);
 
-    const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+    if (els.contactSubmit) {
+      els.contactSubmit.disabled = true;
+      els.contactSubmit.textContent = "Sending...";
+    }
 
-    els.formStatus.textContent = "Opening your email client...";
-    window.location.href = `mailto:m398kim@uwaterloo.ca?subject=${subject}&body=${body}`;
+    setFormStatus("Sending your message...");
+
+    try {
+      const response = await fetch(CONTACT_FORM_CONFIG.endpoint, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+        },
+        body: formData,
+      });
+
+      const result = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        const errorMessage =
+          Array.isArray(result && result.errors) && result.errors.length
+            ? result.errors.map((error) => error.message).join(", ")
+            : "There was a problem sending your message. Please try again.";
+        throw new Error(errorMessage);
+      }
+
+      els.contactForm.reset();
+      setFormStatus("Message sent successfully. I’ll get back to you soon.", "success");
+    } catch (error) {
+      setFormStatus(error instanceof Error ? error.message : "Unable to send your message right now.", "error");
+    } finally {
+      if (els.contactSubmit) {
+        els.contactSubmit.disabled = false;
+        els.contactSubmit.textContent = "Send Message";
+      }
+    }
   });
 }
 

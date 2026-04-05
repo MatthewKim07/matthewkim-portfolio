@@ -40,6 +40,19 @@ Update `data/portfolio-data.js`:
 - `projects`: project cards/details, stack, media, icon references
 - `experience`: timeline entries, logos, and highlights
 
+## Contact Form Setup
+
+The contact form uses Formspree so visitors can submit messages directly on the site without opening an email client.
+
+1. Create a free form at [Formspree](https://formspree.io/).
+2. Copy the generated endpoint, which looks like `https://formspree.io/f/xxxxabcd`.
+3. Replace `https://formspree.io/f/YOUR_FORM_ID` in `CONTACT_FORM_CONFIG.endpoint` inside `script.js`.
+
+Notes:
+
+- Formspree's free plan currently allows 50 submissions per month.
+- The form includes a hidden `_gotcha` field for basic spam filtering.
+
 ## Accessibility + Motion
 
 - Keyboard support for map pins (`Tab`, `Enter`, `Space`)
