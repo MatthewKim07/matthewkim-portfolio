@@ -1307,8 +1307,8 @@ function renderProjectIconBadge(project, variant = "tile") {
     variant === "detail" ? "project-logo-badge project-logo-badge--detail" : "project-logo-badge";
 
   if (project.icon) {
-    const fitClass =
-      project.iconFit === "contain" ? "project-logo-image project-logo-image--contain" : "project-logo-image";
+    const shouldContain = project.iconFit === "contain";
+    const fitClass = shouldContain ? "project-logo-image project-logo-image--contain" : "project-logo-image";
     const logoScale = Number.isFinite(project.iconScale) ? project.iconScale : null;
     const styleAttr = logoScale ? ` style="--logo-scale:${logoScale}"` : "";
     const badgeVars = [];
@@ -1408,7 +1408,6 @@ function renderProjectDetail(project) {
         <span class="project-back-icon" aria-hidden="true">&larr;</span>
         <span>Back to all projects</span>
       </button>
-      <p class="project-detail-meta">${escapeHtml(project.category)} · ${escapeHtml(project.status)}</p>
     </div>
 
     <div class="project-detail-head">

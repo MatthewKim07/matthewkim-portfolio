@@ -1252,11 +1252,12 @@ h1 {
 .project-logo-badge--detail {
   position: static;
   transform: none;
-  width: 3.25rem;
-  height: 3.25rem;
-  flex: 0 0 3.25rem;
+  width: 4.1rem;
+  height: 4.1rem;
+  flex: 0 0 4.1rem;
   border-radius: 2px;
   border-color: color-mix(in srgb, var(--line-strong) 88%, transparent);
+  overflow: hidden;
 }
 
 .project-detail-summary,
@@ -2421,6 +2422,19 @@ body[data-view="content"] .project-back-btn {
     inset 0 1px 0 rgba(255, 252, 238, 0.56);
 }
 
+body[data-view="content"] .project-back-icon {
+  color: #6a5636;
+  border-color: rgba(121, 94, 53, 0.22);
+  background:
+    linear-gradient(180deg, rgba(244, 236, 203, 0.96), rgba(232, 221, 183, 0.9)),
+    rgba(241, 232, 196, 0.92);
+}
+
+body[data-view="content"] .project-back-btn:hover .project-back-icon,
+body[data-view="content"] .project-back-btn:focus-visible .project-back-icon {
+  border-color: rgba(126, 96, 54, 0.34);
+}
+
 body[data-view="content"] .card::before {
   background: linear-gradient(115deg, rgba(255, 251, 236, 0.34), transparent 42%);
   opacity: 0.42;
@@ -2594,6 +2608,12 @@ body[data-view="content"] .project-logo-image {
 
 body[data-view="content"] .project-logo-image--contain {
   transform: scale(var(--logo-scale, 1.1));
+}
+
+body[data-view="content"] .project-logo-badge--detail {
+  width: 4.25rem;
+  height: 4.25rem;
+  flex-basis: 4.25rem;
 }
 
 body[data-view="content"] .project-logo-badge--fallback {
