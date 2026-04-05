@@ -108,6 +108,7 @@ const state = {
   lockedNavId: null,
   lockedNavAt: 0,
   view: VIEW.INTRO,
+  activeTimelineEntry: null,
   introTransitioning: false,
   mapInteracted: false,
   camera: {
@@ -196,6 +197,90 @@ function clamp(value, min, max) {
 
 function easeInOutCubic(t) {
   return t < 0.5 ? 4 * t * t * t : 1 - ((-2 * t + 2) ** 3) / 2;
+}
+
+function getTimelineLineInsetPx() {
+  return parseFloat(getComputedStyle(document.documentElement).fontSize || "16") * 0.4;
+}
+
+function updateTimelineTrackBounds() {
+  if (!els.experienceTimeline) return;
+
+  const entries = getTimelineEntries();
+  const firstMarker = entries[0] ? entries[0].querySelector(".timeline-marker") : null;
+  const lastMarker = entries[entries.length - 1] ? entries[entries.length - 1].querySelector(".timeline-marker") : null;
+
+  if (!firstMarker || !lastMarker) return;
+
+  const timelineRect = els.experienceTimeline.getBoundingClientRect();
+  const firstMarkerRect = firstMarker.getBoundingClientRect();
+  const lastMarkerRect = lastMarker.getBoundingClientRect();
+
+  const lineTop = firstMarkerRect.top + firstMarkerRect.height / 2 - timelineRect.top;
+  const lineBottom = timelineRect.bottom - (lastMarkerRect.top + lastMarkerRect.height / 2);
+
+  els.experienceTimeline.style.setProperty("--timeline-line-top", `${Math.max(lineTop, 0).toFixed(2)}px`);
+  els.experienceTimeline.style.setProperty("--timeline-line-bottom", `${Math.max(lineBottom, 0).toFixed(2)}px`);
+}
+
+function setTimelineFillHeight(heightPx) {
+  if (!els.experienceTimeline) return;
+
+  updateTimelineTrackBounds();
+
+  const maxHeight = getTimelineMaxHeight();
+  const clampedHeight = clamp(heightPx, 0, maxHeight);
+
+  els.experienceTimeline.style.setProperty("--timeline-fill-height", `${clampedHeight.toFixed(2)}px`);
+}
+
+function getTimelineFillHeightForEntry(entry) {
+  if (!els.experienceTimeline || !entry) return 0;
+
+  const marker = entry.querySelector(".timeline-marker");
+  if (!marker) return 0;
+
+  const timelineRect = els.experienceTimeline.getBoundingClientRect();
+  const markerRect = marker.getBoundingClientRect();
+  const lineTop = parseFloat(getComputedStyle(els.experienceTimeline).getPropertyValue("--timeline-line-top")) || getTimelineLineInsetPx();
+
+  return markerRect.top + markerRect.height / 2 - timelineRect.top - lineTop;
+}
+
+function getTimelineEntries() {
+  return els.experienceTimeline ? Array.from(els.experienceTimeline.querySelectorAll(".timeline-entry")) : [];
+}
+
+function getTimelineEntryIndex(entry) {
+  if (!entry) return -1;
+
+  const rawIndex = Number(entry.getAttribute("data-timeline-index"));
+  return Number.isFinite(rawIndex) ? rawIndex : -1;
+}
+
+function getTimelineMaxHeight() {
+  if (!els.experienceTimeline) return 0;
+
+  const styles = getComputedStyle(els.experienceTimeline);
+  const lineTop = parseFloat(styles.getPropertyValue("--timeline-line-top")) || getTimelineLineInsetPx();
+  const lineBottom = parseFloat(styles.getPropertyValue("--timeline-line-bottom")) || getTimelineLineInsetPx();
+
+  return Math.max(els.experienceTimeline.offsetHeight - lineTop - lineBottom, 0);
+}
+
+function activateTimelineEntry(entry) {
+  const entryIndex = getTimelineEntryIndex(entry);
+  if (entryIndex < 0) return;
+
+  state.activeTimelineEntry = entry;
+  updateTimelineProgress();
+}
+
+function getInteractiveTimelineEntry(target) {
+  if (!(target instanceof Element)) return null;
+
+  const interactiveArea = target.closest(".timeline-marker, .timeline-card");
+  return interactiveArea ? interactiveArea.closest(".timeline-entry") : null;
 }
 
 function isContactFormConfigured() {
@@ -1435,7 +1520,7 @@ function renderExperience() {
         item.headingOnlyOrganization || !item.role ? item.organization : `${item.role} · ${item.organization}`;
 
       return `
-        <article class="timeline-entry reveal" style="--stagger-index:${index}">
+        <article class="timeline-entry reveal" style="--stagger-index:${index}" data-timeline-index="${index}">
           <div class="timeline-marker">
             <img src="${escapeHtml(item.logo)}" alt="${escapeHtml(item.organization)} logo" loading="lazy" />
           </div>
@@ -1715,15 +1800,59 @@ function bindMobileNav() {
 function updateTimelineProgress() {
   if (!els.experienceTimeline || state.view !== VIEW.CONTENT) return;
 
-  const rect = els.experienceTimeline.getBoundingClientRect();
-  const viewportHeight = window.innerHeight;
-  const start = viewportHeight * 0.2;
-  const end = rect.height + viewportHeight * 0.6;
+  if (!state.activeTimelineEntry) {
+    setTimelineFillHeight(0);
+    return;
+  }
 
-  const progressRaw = (viewportHeight - rect.top - start) / end;
-  const progress = Math.max(0, Math.min(1, progressRaw));
+  setTimelineFillHeight(getTimelineFillHeightForEntry(state.activeTimelineEntry));
+}
 
-  els.experienceTimeline.style.setProperty("--timeline-progress", progress.toFixed(3));
+function bindTimelineHoverProgress() {
+  if (!els.experienceTimeline) return;
+
+  els.experienceTimeline.addEventListener("mousemove", (event) => {
+    const entry = getInteractiveTimelineEntry(event.target);
+
+    if (!entry) {
+      if (!state.activeTimelineEntry) return;
+
+      state.activeTimelineEntry = null;
+      updateTimelineProgress();
+      return;
+    }
+
+    if (state.activeTimelineEntry === entry) return;
+    activateTimelineEntry(entry);
+  });
+
+  els.experienceTimeline.addEventListener("focusin", (event) => {
+    const entry = getInteractiveTimelineEntry(event.target) || event.target.closest(".timeline-entry");
+    if (!entry) return;
+
+    activateTimelineEntry(entry);
+  });
+
+  els.experienceTimeline.addEventListener("click", (event) => {
+    const entry = getInteractiveTimelineEntry(event.target);
+    if (!entry) return;
+
+    activateTimelineEntry(entry);
+  });
+
+  els.experienceTimeline.addEventListener("mouseleave", () => {
+    if (!state.activeTimelineEntry) return;
+
+    state.activeTimelineEntry = null;
+    updateTimelineProgress();
+  });
+
+  els.experienceTimeline.addEventListener("focusout", (event) => {
+    if (event.relatedTarget && els.experienceTimeline.contains(event.relatedTarget)) return;
+
+    state.activeTimelineEntry = null;
+    updateTimelineProgress();
+  });
 }
 
 function bindHeroParallax() {
@@ -2000,6 +2129,7 @@ function init() {
   bindContentRouteLinks();
   bindMobileNav();
   bindProjectBrowser();
+  bindTimelineHoverProgress();
   bindHeroParallax();
   bindContactForm();
   bindCursorAura();
