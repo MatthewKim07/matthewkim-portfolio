@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Pathfinding API icon</title>
+  <desc id="desc">A weighted grid with a highlighted route path.</desc>
+  <rect width="256" height="256" rx="20" fill="#0f1720"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <g stroke="#314252" stroke-width="10">
+      <path d="M48 48h160"/>
+      <path d="M48 88h160"/>
+      <path d="M48 128h160"/>
+      <path d="M48 168h160"/>
+      <path d="M48 208h160"/>
+      <path d="M48 48v160"/>
+      <path d="M88 48v160"/>
+      <path d="M128 48v160"/>
+      <path d="M168 48v160"/>
+      <path d="M208 48v160"/>
+    </g>
+    <path d="M68 188h60v-40h40V88h40" stroke="#f6c26b" stroke-width="16"/>
+  </g>
+  <g>
+    <circle cx="68" cy="188" r="14" fill="#8fd0b2"/>
+    <circle cx="168" cy="148" r="14" fill="#8fd0b2"/>
+    <circle cx="208" cy="88" r="14" fill="#f0876a"/>
+  </g>
+</svg>

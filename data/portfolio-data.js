@@ -238,6 +238,56 @@ window.PORTFOLIO_DATA = {
       ],
     },
     {
+      slug: "pathfinding-api",
+      title: "Pathfinding API",
+      category: "Backend",
+      status: "Shipped",
+      summary:
+        "FastAPI backend for grid-based pathfinding with BFS, Dijkstra, and A* implemented from scratch, plus reproducible map generation and benchmark reporting.",
+      impact:
+        "Built the algorithms, layered backend structure, and benchmark tooling with automated coverage across algorithms, services, and API endpoints.",
+      stack: ["Python", "FastAPI", "Pydantic", "NumPy", "Pandas", "Pytest", "Uvicorn"],
+      palette: { a: "#64806e", b: "#3a4f63" },
+      icon: "./assets/icons/pathfinding-api.svg",
+      iconFit: "contain",
+      iconScale: 0.98,
+      approach: [
+        "Implemented BFS, Dijkstra, and A* manually with clear separation between algorithm logic, services, and API routes.",
+        "Added seeded map generation and benchmark workflows to make performance comparisons reproducible and easy to inspect.",
+        "Structured the backend like an application instead of a single script, keeping routes thin and behavior testable.",
+      ],
+      outcomes: [
+        "Delivered an API that returns path quality, total cost, visited nodes, and runtime metrics for each run.",
+        "Created benchmark reporting with CSV export and summary comparisons for multi-map algorithm analysis.",
+        "Established strong automated coverage across algorithms, validation, services, and endpoint behavior.",
+      ],
+    },
+    {
+      slug: "escapade",
+      title: "Escapade",
+      category: "Game",
+      status: "Archived Build",
+      summary:
+        "Retro ASCII adventure game built in high school with C++, bitmap-based map rendering, FMOD-powered audio, and a packaged runnable build.",
+      impact:
+        "Designed a complete terminal game loop with world exploration, encounters, inventory systems, and a standalone packaged release.",
+      stack: ["C++", "FMOD", "Visual Studio", "Bitmap Map Rendering", "Windows Console"],
+      palette: { a: "#7b6a52", b: "#252f3f" },
+      icon: "./assets/icons/escapade.svg",
+      iconFit: "contain",
+      iconScale: 1.02,
+      approach: [
+        "Built a custom ASCII presentation layer around bitmap-driven map generation and retro console styling.",
+        "Implemented encounters, inventory flow, shops, and town interactions to create a complete small-scale adventure loop.",
+        "Packaged the runnable build alongside the original Visual Studio project to preserve the project as a playable archive.",
+      ],
+      outcomes: [
+        "Shipped a standalone playable C++ game with map, combat, item, and town systems working together.",
+        "Documented the runtime file structure, build setup, and FMOD dependency path for reproducible local builds.",
+        "Preserved the project as a cleaned-up archive while noting the missing redistributable audio assets.",
+      ],
+    },
+    {
       slug: "queueme",
       title: "QueueMe",
       category: "Backend",
