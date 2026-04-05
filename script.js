@@ -1410,27 +1410,16 @@ function renderExperience() {
 
   els.experienceTimeline.innerHTML = data.experience
     .map((item, index) => {
-      const highlights = (item.highlights || []).map((point) => `<li>${escapeHtml(point)}</li>`).join("");
-      const highlightList = highlights.length ? `<ul class="timeline-highlights">${highlights}</ul>` : "";
-
       const hasPositions = Array.isArray(item.positions) && item.positions.length > 0;
       const positionBlocks = hasPositions
         ? item.positions
             .map((position) => {
-              const positionHighlights = (position.highlights || [])
-                .map((point) => `<li>${escapeHtml(point)}</li>`)
-                .join("");
-              const positionHighlightList = positionHighlights.length
-                ? `<ul class="timeline-role-highlights">${positionHighlights}</ul>`
-                : "";
-
               return `
                 <article class="timeline-role-card">
                   <div class="timeline-role-head">
                     <h4>${escapeHtml(position.title)}</h4>
                     <p class="timeline-role-period">${escapeHtml(position.period)}</p>
                   </div>
-                  ${positionHighlightList}
                 </article>
               `;
             })
@@ -1442,11 +1431,6 @@ function renderExperience() {
       const companySummary = item.companySummary
         ? `<p class="timeline-company-summary">${escapeHtml(item.companySummary)}</p>`
         : "";
-
-      const notes = (item.fieldNotes || []).map((note) => `<li>${escapeHtml(note)}</li>`).join("");
-
-      const detailsId = `timeline-details-${index}`;
-      const hasFieldNotes = notes.length > 0;
       const timelineTitle =
         item.headingOnlyOrganization || !item.role ? item.organization : `${item.role} · ${item.organization}`;
 
@@ -1464,17 +1448,7 @@ function renderExperience() {
 
             <p class="timeline-location">${escapeHtml(item.location)}</p>
             ${companySummary}
-            ${highlightList}
             ${nestedRoles}
-
-            ${
-              hasFieldNotes
-                ? `<button class="btn btn-ghost timeline-toggle" type="button" aria-expanded="false" aria-controls="${detailsId}">Field Notes</button>
-                   <div class="timeline-details" id="${detailsId}" hidden>
-                     <ul class="timeline-details-list">${notes}</ul>
-                   </div>`
-                : ""
-            }
           </div>
         </article>
       `;
@@ -1735,26 +1709,6 @@ function bindMobileNav() {
 
   window.addEventListener("keydown", (event) => {
     if (event.key === "Escape") closeMobileNav();
-  });
-}
-
-function bindExperienceExpansion() {
-  if (!els.experienceTimeline) return;
-
-  els.experienceTimeline.addEventListener("click", (event) => {
-    const button = event.target.closest(".timeline-toggle");
-    if (!button) return;
-
-    const detailsId = button.getAttribute("aria-controls");
-    if (!detailsId) return;
-
-    const details = document.getElementById(detailsId);
-    if (!details) return;
-
-    const isExpanded = button.getAttribute("aria-expanded") === "true";
-    button.setAttribute("aria-expanded", String(!isExpanded));
-    button.textContent = isExpanded ? "Field Notes" : "Hide Notes";
-    details.hidden = isExpanded;
   });
 }
 
@@ -2046,7 +2000,6 @@ function init() {
   bindContentRouteLinks();
   bindMobileNav();
   bindProjectBrowser();
-  bindExperienceExpansion();
   bindHeroParallax();
   bindContactForm();
   bindCursorAura();

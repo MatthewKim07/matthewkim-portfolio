@@ -1447,36 +1447,6 @@ h1 {
   font-size: 0.92rem;
 }
 
-.timeline-highlights,
-.timeline-details-list {
-  margin: 0.3rem 0 0;
-  padding-left: 1.08rem;
-}
-
-.timeline-highlights li,
-.timeline-details-list li {
-  margin-top: 0.3rem;
-}
-
-.timeline-toggle {
-  justify-self: start;
-  margin-top: 0.25rem;
-  font-size: 0.66rem;
-  padding: 0.3rem 0.7rem;
-  min-height: auto;
-  border-color: color-mix(in srgb, var(--line) 80%, transparent);
-}
-
-.timeline-details[hidden] {
-  display: none;
-}
-
-.timeline-details {
-  padding-top: 0.4rem;
-  border-top: 1px dashed color-mix(in srgb, var(--line) 90%, transparent);
-  animation: revealDetail 320ms var(--ease-out-strong) both;
-}
-
 .timeline-role-group {
   margin-top: 0.45rem;
   display: grid;
@@ -1511,15 +1481,6 @@ h1 {
   color: var(--ink-muted);
   font-size: 0.82rem;
   font-weight: 600;
-}
-
-.timeline-role-highlights {
-  margin: 0.3rem 0 0;
-  padding-left: 1.02rem;
-}
-
-.timeline-role-highlights li {
-  margin-top: 0.26rem;
 }
 
 .contact-layout {
@@ -2109,8 +2070,7 @@ body::after {
 }
 
 .project-tile:active,
-.project-back-btn:active,
-.timeline-toggle:active {
+.project-back-btn:active {
   --surface-lift: -1px;
   --surface-scale: 0.985;
   transition-duration: 100ms;

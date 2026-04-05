@@ -441,8 +441,6 @@ window.PORTFOLIO_DATA = {
       period: "Nov 2023 - Aug 2025",
       location: "London, Ontario",
       logo: "./assets/icons/Storybook-gardens-icon.png",
-      companySummary:
-        "Held multiple frontline operations roles at Storybook Gardens, supporting safe daily operations and guest experience across seasonal attractions.",
       positions: [
         {
           title: "Skate Cruiser",
