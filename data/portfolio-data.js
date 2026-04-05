@@ -366,7 +366,7 @@ window.PORTFOLIO_DATA = {
     },
     {
       slug: "uw-assignment-planner",
-      title: "UW Assignment Planner",
+      title: "Assignment Planner",
       category: "Backend",
       status: "Internal Project",
       summary:
@@ -394,7 +394,7 @@ window.PORTFOLIO_DATA = {
     },
     {
       slug: "food-printer",
-      title: "Peristaltic Multi-Material 3D Food Printer",
+      title: "3D Food Printer",
       category: "Research",
       status: "Research + Hardware",
       summary:
