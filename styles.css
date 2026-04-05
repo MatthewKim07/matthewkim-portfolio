@@ -2805,11 +2805,11 @@ body[data-view="map"] .site-shell {
   filter: blur(1.5px);
 }
 
-.cl-f1 { width: 22vw; top: 2%;  left: -4%;  animation: cloudDrift1 42s var(--ease-in-out-smooth) infinite; }
-.cl-f2 { width: 16vw; top: 8%;  left: 18%;  animation: cloudDrift2 50s var(--ease-in-out-smooth) infinite; }
-.cl-f3 { width: 20vw; top: 1%;  left: 44%;  animation: cloudDrift3 46s var(--ease-in-out-smooth) infinite; }
-.cl-f4 { width: 14vw; top: 10%; left: 68%;  animation: cloudDrift4 38s var(--ease-in-out-smooth) infinite; }
-.cl-f5 { width: 18vw; top: 5%;  left: 85%;  animation: cloudDrift5 44s var(--ease-in-out-smooth) infinite; }
+.cl-f1 { width: 22vw; top: 2%;  left: -4%;  animation: cloudDrift1 30s var(--ease-in-out-smooth) infinite; }
+.cl-f2 { width: 16vw; top: 8%;  left: 18%;  animation: cloudDrift2 36s var(--ease-in-out-smooth) infinite; }
+.cl-f3 { width: 20vw; top: 1%;  left: 44%;  animation: cloudDrift3 33s var(--ease-in-out-smooth) infinite; }
+.cl-f4 { width: 14vw; top: 10%; left: 68%;  animation: cloudDrift4 28s var(--ease-in-out-smooth) infinite; }
+.cl-f5 { width: 18vw; top: 5%;  left: 85%;  animation: cloudDrift5 32s var(--ease-in-out-smooth) infinite; }
 
 /* ── Mid cloud layer — medium, varied, split L/R on transition ── */
 .intro-cloud-layer--mid {
@@ -2825,12 +2825,12 @@ body[data-view="map"] .site-shell {
   transform: translate3d(0, 0, 0);
 }
 
-.cl-m1 { width: 30vw; top: 20%; left: -5%;  animation: cloudDrift6 34s var(--ease-in-out-smooth) infinite; }
-.cl-m2 { width: 22vw; top: 28%; left: 16%;  animation: cloudDrift7 38s var(--ease-in-out-smooth) infinite; }
-.cl-m3 { width: 18vw; top: 34%; left: 32%;  animation: cloudDrift8 30s var(--ease-in-out-smooth) infinite; }
-.cl-m4 { width: 28vw; top: 22%; left: 48%;  animation: cloudDrift9 36s var(--ease-in-out-smooth) infinite; }
-.cl-m5 { width: 24vw; top: 30%; left: 68%;  animation: cloudDrift10 32s var(--ease-in-out-smooth) infinite; }
-.cl-m6 { width: 16vw; top: 26%; left: 86%;  animation: cloudDrift11 40s var(--ease-in-out-smooth) infinite; }
+.cl-m1 { width: 30vw; top: 20%; left: -5%;  animation: cloudDrift6 24s var(--ease-in-out-smooth) infinite; }
+.cl-m2 { width: 22vw; top: 28%; left: 16%;  animation: cloudDrift7 27s var(--ease-in-out-smooth) infinite; }
+.cl-m3 { width: 18vw; top: 34%; left: 32%;  animation: cloudDrift8 21s var(--ease-in-out-smooth) infinite; }
+.cl-m4 { width: 28vw; top: 22%; left: 48%;  animation: cloudDrift9 25s var(--ease-in-out-smooth) infinite; }
+.cl-m5 { width: 24vw; top: 30%; left: 68%;  animation: cloudDrift10 22s var(--ease-in-out-smooth) infinite; }
+.cl-m6 { width: 16vw; top: 26%; left: 86%;  animation: cloudDrift11 29s var(--ease-in-out-smooth) infinite; }
 
 /* ── Front cloud layer — large, close, atmospheric banks ── */
 .intro-cloud-layer--front {
@@ -2839,12 +2839,12 @@ body[data-view="map"] .site-shell {
   opacity: 0.88;
 }
 
-.cl-n1 { width: 38vw; top: 48%; left: -10%; animation: cloudDrift12 26s var(--ease-in-out-smooth) infinite; }
-.cl-n2 { width: 44vw; top: 62%; left: -8%;  animation: cloudDrift1  30s var(--ease-in-out-smooth) infinite; }
-.cl-n3 { width: 26vw; top: 55%; left: 22%;  animation: cloudDrift3  28s var(--ease-in-out-smooth) infinite; }
-.cl-n4 { width: 36vw; top: 50%; left: 42%;  animation: cloudDrift6  24s var(--ease-in-out-smooth) infinite; }
-.cl-n5 { width: 42vw; top: 64%; left: 52%;  animation: cloudDrift8  32s var(--ease-in-out-smooth) infinite; }
-.cl-n6 { width: 28vw; top: 56%; left: 78%;  animation: cloudDrift10 28s var(--ease-in-out-smooth) infinite; }
+.cl-n1 { width: 38vw; top: 48%; left: -10%; animation: cloudDrift12 18s var(--ease-in-out-smooth) infinite; }
+.cl-n2 { width: 44vw; top: 62%; left: -8%;  animation: cloudDrift1  21s var(--ease-in-out-smooth) infinite; }
+.cl-n3 { width: 26vw; top: 55%; left: 22%;  animation: cloudDrift3  19s var(--ease-in-out-smooth) infinite; }
+.cl-n4 { width: 36vw; top: 50%; left: 42%;  animation: cloudDrift6  17s var(--ease-in-out-smooth) infinite; }
+.cl-n5 { width: 42vw; top: 64%; left: 52%;  animation: cloudDrift8  23s var(--ease-in-out-smooth) infinite; }
+.cl-n6 { width: 28vw; top: 56%; left: 78%;  animation: cloudDrift10 20s var(--ease-in-out-smooth) infinite; }
 
 .intro-cloud-layer .cloud {
   animation-timing-function: linear;
