@@ -45,7 +45,7 @@ const SECTION_PAGE_CONTENT = {
       "Focused on software development and robotics with a strong programming and systems engineering foundation.",
     tags: ["Software Engineering", "Full-Stack Development", "Robotics + AI", "Embedded Systems"],
     actions: [
-      { label: "Download Resume", variant: "ghost", href: "./assets/Matthew-Kim-Software-Engineer.pdf", download: true },
+      { label: "Download Resume", variant: "ghost", href: "./assets/Matthew_Kim_Resume.pdf", download: true },
       { label: "Email Matthew", variant: "primary", href: "mailto:m398kim@uwaterloo.ca" },
     ],
   },
@@ -56,7 +56,7 @@ const SECTION_PAGE_CONTENT = {
     subline:
       "This page covers academic foundation, technical training, and the coursework context behind the projects and experience shown across the portfolio.",
     tags: ["BASc Mechatronics", "Expected 2030", "Systems Thinking", "Engineering Fundamentals"],
-    actions: [{ label: "Download Resume", variant: "ghost", href: "./assets/Matthew-Kim-Software-Engineer.pdf", download: true }],
+    actions: [{ label: "Download Resume", variant: "ghost", href: "./assets/Matthew_Kim_Resume.pdf", download: true }],
   },
   skills: {
     eyebrow: "Skills",
@@ -94,7 +94,7 @@ const SECTION_PAGE_CONTENT = {
     tags: ["Email", "GitHub", "LinkedIn", "Resume"],
     actions: [
       { label: "Email Matthew", variant: "primary", href: "mailto:m398kim@uwaterloo.ca" },
-      { label: "Download Resume", variant: "ghost", href: "./assets/Matthew-Kim-Software-Engineer.pdf", download: true },
+      { label: "Download Resume", variant: "ghost", href: "./assets/Matthew_Kim_Resume.pdf", download: true },
     ],
   },
 };
