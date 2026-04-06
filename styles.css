@@ -888,6 +888,31 @@ h1 {
 
 .toolkit-grid,
 .projects-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.project-group {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.project-group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.project-group-title {
+  margin: 0;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--ink-muted);
+}
+
+.projects-grid-cluster {
   margin-top: 0;
   display: grid;
   gap: 0.85rem;
@@ -1005,7 +1030,7 @@ h1 {
   margin-top: var(--section-content-offset);
 }
 
-.projects-grid {
+.projects-grid-cluster {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -1795,7 +1820,7 @@ textarea:focus-visible {
     grid-template-columns: 1fr;
   }
 
-  .projects-grid {
+  .projects-grid-cluster {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1881,7 +1906,7 @@ textarea:focus-visible {
     justify-content: center;
   }
 
-  .projects-grid {
+  .projects-grid-cluster {
     grid-template-columns: 1fr;
   }
 

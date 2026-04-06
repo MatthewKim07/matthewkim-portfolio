@@ -1336,21 +1336,48 @@ function renderProjectIconBadge(project, variant = "tile") {
 function renderProjectTiles() {
   if (!els.projectsGrid) return;
 
-  els.projectsGrid.innerHTML = data.projects
-    .map((project, index) => {
-      const iconBadge = renderProjectIconBadge(project, "tile");
+  const groupOrder = [
+    { key: "work", label: "Work" },
+    { key: "personal", label: "Personal" },
+  ];
+
+  let tileIndex = 0;
+
+  els.projectsGrid.innerHTML = groupOrder
+    .map((group) => {
+      const projects = data.projects.filter((project) => (project.projectGroup || "personal") === group.key);
+
+      if (!projects.length) return "";
+
+      const tiles = projects
+        .map((project) => {
+          const iconBadge = renderProjectIconBadge(project, "tile");
+          const currentIndex = tileIndex++;
+
+          return `
+            <button class="card project-tile reveal" style="--stagger-index:${currentIndex}" type="button" data-open-project="${escapeHtml(
+              project.slug
+            )}" aria-label="Open ${escapeHtml(project.title)} project details">
+              <div class="project-art" style="--art-a:${escapeHtml(project.palette.a)};--art-b:${escapeHtml(
+                project.palette.b
+              )};" aria-hidden="true">
+                ${iconBadge}
+                <span class="project-tile-title">${escapeHtml(project.title)}</span>
+              </div>
+            </button>
+          `;
+        })
+        .join("");
 
       return `
-        <button class="card project-tile reveal" style="--stagger-index:${index}" type="button" data-open-project="${escapeHtml(
-          project.slug
-        )}" aria-label="Open ${escapeHtml(project.title)} project details">
-          <div class="project-art" style="--art-a:${escapeHtml(project.palette.a)};--art-b:${escapeHtml(
-            project.palette.b
-          )};" aria-hidden="true">
-            ${iconBadge}
-            <span class="project-tile-title">${escapeHtml(project.title)}</span>
+        <section class="project-group" aria-labelledby="projects-group-${escapeHtml(group.key)}">
+          <div class="project-group-head">
+            <h3 class="project-group-title" id="projects-group-${escapeHtml(group.key)}">${escapeHtml(group.label)}</h3>
           </div>
-        </button>
+          <div class="projects-grid-cluster projects-grid--compact">
+            ${tiles}
+          </div>
+        </section>
       `;
     })
     .join("");

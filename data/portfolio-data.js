@@ -207,112 +207,29 @@ window.PORTFOLIO_DATA = {
 
   projects: [
     {
-      slug: "pantry-pal",
-      title: "Pantry Pal",
+      slug: "waterlooworks-plus",
+      title: "WaterlooWorks+",
+      projectGroup: "personal",
       category: "Web",
-      status: "Shipped",
+      status: "Concept + Development",
       summary:
-        "PantryPal scans pantry photos, identifies ingredients, and recommends recipes by ingredient match percentage while also supporting meal planning and shopping lists.",
-      impact:
-        "Implemented AI ingredient scanning, improved ingredient-to-recipe matching behavior, and shipped UI/UX refinements.",
-      stack: ["TypeScript", "React", "Vite", "Tailwind CSS", "Supabase", "Edamam API"],
-      palette: { a: "#567f75", b: "#395b65" },
-      icon: "./assets/icons/carrot.png",
-      iconFit: "contain",
-      iconScale: 0.82,
-      demoUrl: "https://yourpantrypal.lovable.app/",
-      media: {
-        type: "video",
-        src: "./assets/videos/pantrypal-video.mov",
-        fallbackLabel: "Open video in new tab",
-      },
+        "Browser extension concept that improves WaterlooWorks with resume-aware job matching, work-term signals, and application support insights.",
+      impact: "Ongoing build; details will be expanded as milestones are completed.",
+      stack: ["Tech stack details coming soon"],
+      palette: { a: "#7b6e56", b: "#4f5358" },
+      icon: "./assets/icons/logo.png",
       approach: [
-        "Designed an image-to-ingredient pipeline that converts pantry photos into structured ingredient data.",
-        "Connected ingredient confidence scoring to recipe ranking logic to improve suggestion quality.",
-        "Refined interaction flow for meal planning and shopping list continuity.",
+        "Framed extension opportunities around speed, signal clarity, and workflow ergonomics.",
+        "Explored matching logic ideas linking resume context to posting relevance.",
       ],
       outcomes: [
-        "Delivered a functional end-to-end demo with AI-driven ingredient extraction.",
-        "Improved user trust by making recipe relevance behavior more transparent.",
-        "Shipped cleaner interface details for faster task completion.",
-      ],
-    },
-    {
-      slug: "pathfinding-api",
-      title: "Pathfinding API",
-      category: "Backend",
-      status: "Shipped",
-      summary:
-        "FastAPI backend for grid-based pathfinding with BFS, Dijkstra, and A* implemented from scratch, plus reproducible map generation and benchmark reporting.",
-      impact:
-        "Built the algorithms, layered backend structure, and benchmark tooling with automated coverage across algorithms, services, and API endpoints.",
-      stack: ["Python", "FastAPI", "Pydantic", "NumPy", "Pandas", "Pytest", "Uvicorn"],
-      palette: { a: "#64806e", b: "#3a4f63" },
-      icon: "./assets/icons/pathfinding-api.svg",
-      iconFit: "contain",
-      iconScale: 0.98,
-      approach: [
-        "Implemented BFS, Dijkstra, and A* manually with clear separation between algorithm logic, services, and API routes.",
-        "Added seeded map generation and benchmark workflows to make performance comparisons reproducible and easy to inspect.",
-        "Structured the backend like an application instead of a single script, keeping routes thin and behavior testable.",
-      ],
-      outcomes: [
-        "Delivered an API that returns path quality, total cost, visited nodes, and runtime metrics for each run.",
-        "Created benchmark reporting with CSV export and summary comparisons for multi-map algorithm analysis.",
-        "Established strong automated coverage across algorithms, validation, services, and endpoint behavior.",
-      ],
-    },
-    {
-      slug: "escapade",
-      title: "Escapade",
-      category: "Game",
-      status: "Archived Build",
-      summary:
-        "Retro ASCII adventure game built in high school with C++, bitmap-based map rendering, FMOD-powered audio, and a packaged runnable build.",
-      impact:
-        "Designed a complete terminal game loop with world exploration, encounters, inventory systems, and a standalone packaged release.",
-      stack: ["C++", "FMOD", "Visual Studio", "Bitmap Map Rendering", "Windows Console"],
-      palette: { a: "#7b6a52", b: "#252f3f" },
-      icon: "./assets/icons/escapade.svg",
-      iconFit: "contain",
-      iconScale: 1.02,
-      approach: [
-        "Built a custom ASCII presentation layer around bitmap-driven map generation and retro console styling.",
-        "Implemented encounters, inventory flow, shops, and town interactions to create a complete small-scale adventure loop.",
-        "Packaged the runnable build alongside the original Visual Studio project to preserve the project as a playable archive.",
-      ],
-      outcomes: [
-        "Shipped a standalone playable C++ game with map, combat, item, and town systems working together.",
-        "Documented the runtime file structure, build setup, and FMOD dependency path for reproducible local builds.",
-        "Preserved the project as a cleaned-up archive while noting the missing redistributable audio assets.",
-      ],
-    },
-    {
-      slug: "queueme",
-      title: "QueueMe",
-      category: "Backend",
-      status: "Building",
-      summary:
-        "Virtual queue management platform where companies create queues and customers join remotely to reduce physical lineups and wait friction.",
-      impact:
-        "Focused on backend integration, connecting frontend and backend services, and enabling synced queue interactions across multiple devices.",
-      stack: ["TypeScript", "Python", "React", "Flask", "REST APIs", "Supabase"],
-      palette: { a: "#6f856d", b: "#6a5e4e" },
-      icon: "./assets/icons/QueueMe.png",
-      iconFit: "contain",
-      approach: [
-        "Defined service contracts for queue creation, join, status updates, and notification behavior.",
-        "Integrated frontend queue views with backend queue state to support live synchronization.",
-        "Validated edge cases around concurrent joins and update consistency.",
-      ],
-      outcomes: [
-        "Established core API and data flow patterns for multi-device queue participation.",
-        "Reduced integration friction by clarifying interface boundaries between frontend and backend.",
+        "Defined high-priority feature path for MVP validation.",
       ],
     },
     {
       slug: "clarus",
       title: "Clarus",
+      projectGroup: "personal",
       category: "Web",
       status: "In Active Development",
       summary:
@@ -346,27 +263,117 @@ window.PORTFOLIO_DATA = {
       ],
     },
     {
-      slug: "waterlooworks-plus",
-      title: "WaterlooWorks+",
+      slug: "pantry-pal",
+      title: "Pantry Pal",
+      projectGroup: "personal",
       category: "Web",
-      status: "Concept + Development",
+      status: "Shipped",
       summary:
-        "Browser extension concept that improves WaterlooWorks with resume-aware job matching, work-term signals, and application support insights.",
-      impact: "Ongoing build; details will be expanded as milestones are completed.",
-      stack: ["Tech stack details coming soon"],
-      palette: { a: "#7b6e56", b: "#4f5358" },
-      icon: "./assets/icons/logo.png",
+        "PantryPal scans pantry photos, identifies ingredients, and recommends recipes by ingredient match percentage while also supporting meal planning and shopping lists.",
+      impact:
+        "Implemented AI ingredient scanning, improved ingredient-to-recipe matching behavior, and shipped UI/UX refinements.",
+      stack: ["TypeScript", "React", "Vite", "Tailwind CSS", "Supabase", "Edamam API"],
+      palette: { a: "#567f75", b: "#395b65" },
+      icon: "./assets/icons/carrot.png",
+      iconFit: "contain",
+      iconScale: 0.82,
+      demoUrl: "https://yourpantrypal.lovable.app/",
+      media: {
+        type: "video",
+        src: "./assets/videos/pantrypal-video.mov",
+        fallbackLabel: "Open video in new tab",
+      },
       approach: [
-        "Framed extension opportunities around speed, signal clarity, and workflow ergonomics.",
-        "Explored matching logic ideas linking resume context to posting relevance.",
+        "Designed an image-to-ingredient pipeline that converts pantry photos into structured ingredient data.",
+        "Connected ingredient confidence scoring to recipe ranking logic to improve suggestion quality.",
+        "Refined interaction flow for meal planning and shopping list continuity.",
       ],
       outcomes: [
-        "Defined high-priority feature path for MVP validation.",
+        "Delivered a functional end-to-end demo with AI-driven ingredient extraction.",
+        "Improved user trust by making recipe relevance behavior more transparent.",
+        "Shipped cleaner interface details for faster task completion.",
+      ],
+    },
+    {
+      slug: "pathfinding-api",
+      title: "Pathfinding API",
+      projectGroup: "personal",
+      category: "Backend",
+      status: "Shipped",
+      summary:
+        "FastAPI backend for grid-based pathfinding with BFS, Dijkstra, and A* implemented from scratch, plus reproducible map generation and benchmark reporting.",
+      impact:
+        "Built the algorithms, layered backend structure, and benchmark tooling with automated coverage across algorithms, services, and API endpoints.",
+      stack: ["Python", "FastAPI", "Pydantic", "NumPy", "Pandas", "Pytest", "Uvicorn"],
+      palette: { a: "#64806e", b: "#3a4f63" },
+      icon: "./assets/icons/pathfinding-api.svg",
+      iconFit: "contain",
+      iconScale: 0.98,
+      approach: [
+        "Implemented BFS, Dijkstra, and A* manually with clear separation between algorithm logic, services, and API routes.",
+        "Added seeded map generation and benchmark workflows to make performance comparisons reproducible and easy to inspect.",
+        "Structured the backend like an application instead of a single script, keeping routes thin and behavior testable.",
+      ],
+      outcomes: [
+        "Delivered an API that returns path quality, total cost, visited nodes, and runtime metrics for each run.",
+        "Created benchmark reporting with CSV export and summary comparisons for multi-map algorithm analysis.",
+        "Established strong automated coverage across algorithms, validation, services, and endpoint behavior.",
+      ],
+    },
+    {
+      slug: "queueme",
+      title: "QueueMe",
+      projectGroup: "personal",
+      category: "Backend",
+      status: "Building",
+      summary:
+        "Virtual queue management platform where companies create queues and customers join remotely to reduce physical lineups and wait friction.",
+      impact:
+        "Focused on backend integration, connecting frontend and backend services, and enabling synced queue interactions across multiple devices.",
+      stack: ["TypeScript", "Python", "React", "Flask", "REST APIs", "Supabase"],
+      palette: { a: "#6f856d", b: "#6a5e4e" },
+      icon: "./assets/icons/QueueMe.png",
+      iconFit: "contain",
+      approach: [
+        "Defined service contracts for queue creation, join, status updates, and notification behavior.",
+        "Integrated frontend queue views with backend queue state to support live synchronization.",
+        "Validated edge cases around concurrent joins and update consistency.",
+      ],
+      outcomes: [
+        "Established core API and data flow patterns for multi-device queue participation.",
+        "Reduced integration friction by clarifying interface boundaries between frontend and backend.",
+      ],
+    },
+    {
+      slug: "escapade",
+      title: "Escapade",
+      projectGroup: "personal",
+      category: "Game",
+      status: "Archived Build",
+      summary:
+        "Retro ASCII adventure game built in high school with C++, bitmap-based map rendering, FMOD-powered audio, and a packaged runnable build.",
+      impact:
+        "Designed a complete terminal game loop with world exploration, encounters, inventory systems, and a standalone packaged release.",
+      stack: ["C++", "FMOD", "Visual Studio", "Bitmap Map Rendering", "Windows Console"],
+      palette: { a: "#7b6a52", b: "#252f3f" },
+      icon: "./assets/icons/escapade.svg",
+      iconFit: "contain",
+      iconScale: 1.02,
+      approach: [
+        "Built a custom ASCII presentation layer around bitmap-driven map generation and retro console styling.",
+        "Implemented encounters, inventory flow, shops, and town interactions to create a complete small-scale adventure loop.",
+        "Packaged the runnable build alongside the original Visual Studio project to preserve the project as a playable archive.",
+      ],
+      outcomes: [
+        "Shipped a standalone playable C++ game with map, combat, item, and town systems working together.",
+        "Documented the runtime file structure, build setup, and FMOD dependency path for reproducible local builds.",
+        "Preserved the project as a cleaned-up archive while noting the missing redistributable audio assets.",
       ],
     },
     {
       slug: "uw-assignment-planner",
       title: "Assignment Planner",
+      projectGroup: "work",
       category: "Backend",
       status: "Internal Project",
       summary:
@@ -395,6 +402,7 @@ window.PORTFOLIO_DATA = {
     {
       slug: "food-printer",
       title: "3D Food Printer",
+      projectGroup: "work",
       category: "Research",
       status: "Research + Hardware",
       summary:
