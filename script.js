@@ -1185,7 +1185,13 @@ function renderSkills() {
 }
 
 function renderSkillIcon(item) {
+  return renderSkillLikeIcon(item);
+}
+
+function renderSkillLikeIcon(item, fallbackMode = "mark") {
   if (item.icon) {
+    const styleAttr = item.iconScale ? ` style="--skill-icon-scale:${escapeHtml(String(item.iconScale))}"` : "";
+
     return `<span class="skill-chip-icon-wrap" aria-hidden="true">
       <img
         class="skill-chip-icon"
@@ -1194,6 +1200,7 @@ function renderSkillIcon(item) {
         loading="lazy"
         decoding="async"
         referrerpolicy="no-referrer"
+        ${styleAttr}
         onerror="this.hidden=true;this.nextElementSibling.hidden=false;"
       />
       <span class="skill-chip-fallback" hidden>${escapeHtml(getSkillMark(item.name))}</span>
@@ -1201,9 +1208,15 @@ function renderSkillIcon(item) {
   }
 
   const customIcon = getSkillSymbol(item.name);
-  if (!customIcon) return "";
+  if (customIcon) {
+    return `<span class="skill-chip-icon-wrap skill-chip-icon-wrap--symbol" aria-hidden="true">${customIcon}</span>`;
+  }
 
-  return `<span class="skill-chip-icon-wrap skill-chip-icon-wrap--symbol" aria-hidden="true">${customIcon}</span>`;
+  if (fallbackMode === "generic") {
+    return `<span class="skill-chip-icon-wrap skill-chip-icon-wrap--symbol" aria-hidden="true">${getGenericTechSymbol()}</span>`;
+  }
+
+  return "";
 }
 
 function getSkillSymbol(name) {
@@ -1250,6 +1263,30 @@ function getSkillSymbol(name) {
         <path d="M21 13v2a2 2 0 0 1-2 2H3"></path>
       </svg>
     `,
+    "chrome extensions": `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 4h4a2 2 0 0 1 2 2v1.2a2 2 0 0 0 1.1 1.8l.8.4a2 2 0 0 1 1.1 1.8V14a2 2 0 0 1-2 2h-1.2a2 2 0 0 0-1.8 1.1l-.4.8a2 2 0 0 1-1.8 1.1H10a2 2 0 0 1-2-2v-1.2a2 2 0 0 0-1.1-1.8l-.8-.4A2 2 0 0 1 5 11.8V10a2 2 0 0 1 2-2h1.2A2 2 0 0 0 10 6.9l.4-.8A2 2 0 0 1 12.2 5H14"></path>
+        <circle cx="12" cy="12" r="2"></circle>
+      </svg>
+    `,
+    "manifest v3": `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="8"></circle>
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M12 4a8 8 0 0 1 6.9 4H12"></path>
+        <path d="M5.1 8A8 8 0 0 0 8 18l4-6"></path>
+        <path d="M15 18a8 8 0 0 0 3.9-6H12"></path>
+      </svg>
+    `,
+    "chrome storage api": `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+        <path d="M4 9h16"></path>
+        <path d="M8 13h3"></path>
+        <path d="M13 13h3"></path>
+        <path d="M8 16h8"></path>
+      </svg>
+    `,
     llms: `
       <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="6" y="8" width="12" height="9" rx="3"></rect>
@@ -1260,6 +1297,40 @@ function getSkillSymbol(name) {
         <path d="M8 5h8"></path>
         <path d="M4 11v3"></path>
         <path d="M20 11v3"></path>
+      </svg>
+    `,
+    "3d printing": `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M7 7V4h10v3"></path>
+        <rect x="5" y="7" width="14" height="6" rx="2"></rect>
+        <path d="M12 13v3"></path>
+        <path d="M9 20h6"></path>
+        <path d="M8 16h8"></path>
+        <path d="M8 20v-2a4 4 0 0 1 8 0v2"></path>
+      </svg>
+    `,
+    "mechanical design": `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 18l7-7"></path>
+        <path d="M14 4l6 6"></path>
+        <path d="M13 5l6 6"></path>
+        <path d="M8 21H4v-4"></path>
+        <path d="M9 8l2-2"></path>
+        <path d="M15 14l2-2"></path>
+      </svg>
+    `,
+    "hardware prototyping": `
+      <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="7" y="7" width="10" height="10" rx="2"></rect>
+        <path d="M9 1v3"></path>
+        <path d="M15 1v3"></path>
+        <path d="M9 20v3"></path>
+        <path d="M15 20v3"></path>
+        <path d="M1 9h3"></path>
+        <path d="M1 15h3"></path>
+        <path d="M20 9h3"></path>
+        <path d="M20 15h3"></path>
+        <path d="M10 10h4v4h-4z"></path>
       </svg>
     `,
   };
@@ -1300,6 +1371,73 @@ function getProjectMark(title) {
     .toUpperCase();
 
   return chars || "PR";
+}
+
+function findProjectStackMeta(name) {
+  const target = String(name).trim().toLowerCase();
+  const projectStackIcons = {
+    "chrome extensions": { icon: "./assets/icons/chrome-extensions-icon.png", iconScale: 3.35 },
+    "manifest v3": { icon: "./assets/icons/manifest-v3-icon.png", iconScale: 3.35 },
+    "3d printing": { icon: "./assets/icons/3d-printing-icon.png" },
+    "mechanical design": { icon: "./assets/icons/mechanical-design-icon.png", iconScale: 1.8 },
+    "fusion 360": { icon: "./assets/icons/fusion-360-icon.png" },
+    cura: { icon: "./assets/icons/cura-icon.png" },
+    prusaslicer: { icon: "./assets/icons/prusa-slicer-icon.png" },
+  };
+
+  if (projectStackIcons[target]) {
+    return { name, ...projectStackIcons[target] };
+  }
+
+  return findSkillMetaByName(name);
+}
+
+function findSkillMetaByName(name) {
+  const target = String(name).trim().toLowerCase();
+  const aliases = {
+    "vanilla javascript": "javascript",
+    "server-rendered html": "html5",
+    css3: "css3",
+    "docker compose": "docker",
+    "supabase edge functions": "supabase",
+    "react dnd": "react",
+    jspdf: "javascript",
+    "supabase auth": "supabase",
+    "supabase realtime": "supabase",
+    "node test runner": "node.js",
+    cad: "fusion 360",
+  };
+  const resolvedTarget = aliases[target] || target;
+
+  for (const group of data.skills || []) {
+    for (const item of group.items || []) {
+      if (String(item.name).trim().toLowerCase() === resolvedTarget) {
+        return item;
+      }
+    }
+  }
+
+  return null;
+}
+
+function getGenericTechSymbol() {
+  return `
+    <svg class="skill-chip-icon skill-chip-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="5" width="16" height="14" rx="2"></rect>
+      <path d="M8 9h8"></path>
+      <path d="M8 13h5"></path>
+      <path d="M15.5 13l1.5 1.5-1.5 1.5"></path>
+    </svg>
+  `;
+}
+
+function renderProjectStackChip(item) {
+  const skillMeta = findProjectStackMeta(item);
+  const icon = renderSkillLikeIcon(skillMeta || { name: item }, "generic");
+
+  return `<span class="tag project-stack-chip project-stack-chip--with-icon">${icon}<span class="project-stack-chip-label">${escapeHtml(
+    item
+  )}</span></span>`;
 }
 
 function renderProjectIconBadge(project, variant = "tile") {
@@ -1388,7 +1526,7 @@ function renderProjectDetail(project) {
 
   const iconBadge = renderProjectIconBadge(project, "detail");
   const stackChips = project.stack
-    .map((item) => `<span class="tag project-stack-chip">${escapeHtml(item)}</span>`)
+    .map((item) => renderProjectStackChip(item))
     .join("");
 
   const approachItems = project.approach.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
@@ -1398,17 +1536,20 @@ function renderProjectDetail(project) {
   const media =
     project.media && project.media.type === "video"
       ? `
-        <div class="project-detail-media">
-          <video class="project-video" controls preload="metadata" playsinline>
-            <source src="${escapeHtml(project.media.src)}" />
-            Your browser does not support embedded videos.
-          </video>
-          <a class="project-video-link" href="${escapeHtml(
-            project.media.src
-          )}" target="_blank" rel="noreferrer">${escapeHtml(
-            project.media.fallbackLabel || "Open media"
-          )}</a>
-        </div>
+        <section class="project-detail-panel project-detail-panel--media">
+          <h4>Preview</h4>
+          <div class="project-detail-media">
+            <video class="project-video" controls preload="metadata" playsinline>
+              <source src="${escapeHtml(project.media.src)}" />
+              Your browser does not support embedded videos.
+            </video>
+            <a class="project-video-link" href="${escapeHtml(
+              project.media.src
+            )}" target="_blank" rel="noreferrer">${escapeHtml(
+              project.media.fallbackLabel || "Open media"
+            )}</a>
+          </div>
+        </section>
       `
       : "";
 
@@ -1437,30 +1578,42 @@ function renderProjectDetail(project) {
       </button>
     </div>
 
-    <div class="project-detail-head">
-      ${iconBadge}
-      <h3 class="project-detail-title">${escapeHtml(project.title)}</h3>
-    </div>
-    <p class="project-detail-summary">${escapeHtml(project.summary)}</p>
-    <p class="project-detail-impact"><strong>Impact:</strong> ${escapeHtml(project.impact)}</p>
+    <section class="project-detail-panel project-detail-panel--overview">
+      <div class="project-detail-head">
+        ${iconBadge}
+        <h3 class="project-detail-title">${escapeHtml(project.title)}</h3>
+      </div>
+      <div class="project-detail-copy-grid">
+        <div class="project-detail-copy-block">
+          <h4>Overview</h4>
+          <p class="project-detail-summary">${escapeHtml(project.summary)}</p>
+        </div>
+        <div class="project-detail-copy-block">
+          <h4>Impact</h4>
+          <p class="project-detail-impact">${escapeHtml(project.impact)}</p>
+        </div>
+      </div>
+    </section>
 
-    <div class="project-detail-stack">${stackChips}</div>
     ${media}
 
     <div class="project-detail-columns">
-      <div class="project-detail-block">
+      <div class="project-detail-block project-detail-panel">
         <h4>Approach</h4>
         <ul>${approachItems}</ul>
       </div>
-      <div class="project-detail-block">
+      <div class="project-detail-block project-detail-panel">
         <h4>Outcomes</h4>
         <ul>${outcomeItems}</ul>
       </div>
     </div>
 
-    <div class="project-actions">
-      ${links.join("")}
-    </div>
+    <section class="project-detail-panel">
+      <h4>Tech Stack</h4>
+      <div class="project-detail-stack">${stackChips}</div>
+    </section>
+
+    ${links.length ? `<div class="project-actions project-detail-panel project-detail-panel--actions">${links.join("")}</div>` : ""}
   `;
 }
 
