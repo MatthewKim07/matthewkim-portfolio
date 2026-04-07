@@ -149,6 +149,7 @@ window.PORTFOLIO_DATA = {
           name: "Playwright",
           detail: "End-to-end testing and reliability checks.",
           icon: "./assets/icons/playwright-icon.png",
+          iconScale: 1.18,
         },
         {
           name: "Pytest",

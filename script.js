@@ -1190,7 +1190,21 @@ function renderSkillIcon(item) {
 
 function renderSkillLikeIcon(item, fallbackMode = "mark") {
   if (item.icon) {
-    const styleAttr = item.iconScale ? ` style="--skill-icon-scale:${escapeHtml(String(item.iconScale))}"` : "";
+    const styleVars = [];
+
+    if (item.iconScale) {
+      styleVars.push(`--skill-icon-scale:${escapeHtml(String(item.iconScale))}`);
+    }
+
+    if (item.iconOffsetX) {
+      styleVars.push(`--skill-icon-offset-x:${escapeHtml(String(item.iconOffsetX))}`);
+    }
+
+    if (item.iconOffsetY) {
+      styleVars.push(`--skill-icon-offset-y:${escapeHtml(String(item.iconOffsetY))}`);
+    }
+
+    const styleAttr = styleVars.length ? ` style="${styleVars.join(";")}"` : "";
 
     return `<span class="skill-chip-icon-wrap" aria-hidden="true">
       <img
@@ -1376,13 +1390,26 @@ function getProjectMark(title) {
 function findProjectStackMeta(name) {
   const target = String(name).trim().toLowerCase();
   const projectStackIcons = {
-    "chrome extensions": { icon: "./assets/icons/chrome-extensions-icon.png", iconScale: 3.35 },
+    "chrome extensions": {
+      icon: "./assets/icons/chrome-extensions-icon.png",
+      iconScale: 3.35,
+      iconOffsetX: "-0.04rem",
+      iconOffsetY: "0.06rem",
+    },
     "manifest v3": { icon: "./assets/icons/manifest-v3-icon.png", iconScale: 3.35 },
     "3d printing": { icon: "./assets/icons/3d-printing-icon.png" },
     "mechanical design": { icon: "./assets/icons/mechanical-design-icon.png", iconScale: 1.8 },
+    "edamam api": { icon: "./assets/icons/edamam-icon.png" },
+    expo: { icon: "./assets/icons/expo-icon.png", iconScale: 1.18 },
+    "google places api": { icon: "./assets/icons/google-places-api-icon.png", iconScale: 1.16 },
     "fusion 360": { icon: "./assets/icons/fusion-360-icon.png" },
+    "bitmap_image.hpp": { icon: "./assets/icons/bitmap-image-icon.png" },
+    fmod: { icon: "./assets/icons/fmod-icon.webp" },
+    "visual studio": { icon: "./assets/icons/visual-studio-icon.png" },
     cura: { icon: "./assets/icons/cura-icon.png" },
     prusaslicer: { icon: "./assets/icons/prusa-slicer-icon.png" },
+    uvicorn: { icon: "./assets/icons/uvicorn-icon.png" },
+    "win32 api": { icon: "./assets/icons/win32-api-icon.png", iconScale: 1.4 },
   };
 
   if (projectStackIcons[target]) {
@@ -1399,6 +1426,7 @@ function findSkillMetaByName(name) {
     "server-rendered html": "html5",
     css3: "css3",
     "docker compose": "docker",
+    "react native": "react",
     "supabase edge functions": "supabase",
     "react dnd": "react",
     jspdf: "javascript",
