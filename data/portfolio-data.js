@@ -22,6 +22,8 @@ window.PORTFOLIO_DATA = {
         {
           name: "SQL",
           detail: "Relational queries, schema design, and data workflows.",
+          icon: "./assets/icons/sql-icon.png",
+          iconScale: 1.18,
         },
         {
           name: "C++",
@@ -169,12 +171,13 @@ window.PORTFOLIO_DATA = {
         {
           name: "Canva",
           detail: "Lightweight visual design and presentation assets.",
-          icon: "https://cdn.simpleicons.org/canva/00C4CC",
+          icon: "./assets/icons/canva-icon.png",
+          iconScale: 1.32,
         },
         {
           name: "Excel",
           detail: "Spreadsheets, analysis, and structured data organization.",
-          icon: "https://cdn.simpleicons.org/microsoftexcel/217346",
+          icon: "./assets/icons/excel-icon.png",
         },
       ],
     },
