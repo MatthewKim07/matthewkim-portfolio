@@ -217,9 +217,9 @@ window.PORTFOLIO_DATA = {
       category: "Web",
       status: "Concept + Development",
       summary:
-        "Local-first Chrome extension that adds resume-aware ranking, job analysis, and lightweight application tracking on top of WaterlooWorks without sending student data to a backend.",
+        "A Chrome extension I’m building for WaterlooWorks that helps students rank jobs against their resume, break down role fit, and track applications without sending personal data to a backend.",
       impact:
-        "Built a WaterlooWorks-specific decision layer that helps students prioritize postings faster, inspect role fit more clearly, and keep private job-search data inside the browser.",
+        "I started this because the default WaterlooWorks flow makes it hard to quickly tell which postings are actually worth your time. The extension makes that process faster while keeping everything local to the browser.",
       stack: [
         "JavaScript",
         "HTML5",
@@ -231,14 +231,14 @@ window.PORTFOLIO_DATA = {
       palette: { a: "#7b6e56", b: "#4f5358" },
       icon: "./assets/icons/logo.png",
       approach: [
-        "Built page-specific content scripts for listings, postings, ratings, and application flows so the extension enhances WaterlooWorks directly in context.",
-        "Implemented local resume parsing, posting analysis, and scoring logic to surface fit signals without relying on a hosted backend or external analytics.",
-        "Designed the extension around privacy-first local storage, keeping profiles, settings, cached analysis, and tracking data inside chrome.storage.local.",
+        "I built page-specific content scripts for listings, posting pages, ratings, and application flows so the extension feels native to WaterlooWorks instead of bolted on.",
+        "I implemented local resume parsing, posting analysis, and scoring logic so users can see useful fit signals without depending on a hosted backend or external analytics.",
+        "I designed the storage layer around privacy first, keeping profiles, settings, cached analysis, and application tracking data in chrome.storage.local.",
       ],
       outcomes: [
-        "Turned WaterlooWorks into a more decision-friendly workflow with ranking, structured analysis, and local tracking in one layer.",
-        "Established a maintainable extension architecture with content scripts, popup controls, a full-page app surface, and a constrained background service worker.",
-        "Kept the product tightly scoped to WaterlooWorks domains and local-only processing, which is one of the project’s main differentiators.",
+        "It turns WaterlooWorks into a more usable decision-making tool with ranking, structured analysis, and lightweight tracking in one place.",
+        "It gave me a cleaner extension architecture with content scripts, popup controls, a full-page app surface, and a constrained background service worker.",
+        "Its biggest differentiator is still the scope: it is built specifically for WaterlooWorks and keeps sensitive job-search data local.",
       ],
     },
     {
@@ -248,9 +248,9 @@ window.PORTFOLIO_DATA = {
       category: "Web",
       status: "In Active Development",
       summary:
-        "Full-stack academic productivity app that connects to D2L/Brightspace, syncs course and timeline data, and turns scattered LMS information into a clearer planning workspace.",
+        "A full-stack academic planner that connects to D2L/Brightspace and pulls scattered course information into one place that actually feels usable.",
       impact:
-        "Contributed across backend integration, auth and session flows, planning logic, and post-hackathon product polish to move the project from demo-stage idea toward a usable MVP.",
+        "I worked on the parts that moved it beyond a hackathon demo: backend integration, auth and session handling, planning logic, and the product polish needed to make it feel like something students could actually use.",
       stack: [
         "TypeScript",
         "React",
@@ -265,14 +265,14 @@ window.PORTFOLIO_DATA = {
       palette: { a: "#6b7d92", b: "#40576c" },
       icon: "./assets/icons/icon.svg",
       approach: [
-        "Integrated a Playwright-based Brightspace connector that handles login, session capture, and course/timeline sync without relying on a browser extension model.",
-        "Worked on planning and workload flows that help students move from raw LMS data toward clearer next actions and priorities.",
-        "Refined login, landing, and dashboard experiences so the product feels more like a focused academic tool and less like a hackathon prototype.",
+        "I helped integrate a Playwright-based Brightspace connector that handles login, session capture, and course and timeline sync without needing a browser extension.",
+        "I worked on the planning and workload flows so students can move from raw LMS data to something closer to an actual plan.",
+        "I also spent time refining the login, landing, and dashboard experience so the product feels focused rather than prototype-like.",
       ],
       outcomes: [
-        "Helped turn the original hackathon concept into a more structured full-stack product with cleaner sync, planning, and usability foundations.",
-        "Established a practical architecture split between frontend, public API, and connector service for future iteration.",
-        "Positioned the product around real student workflow pain points: LMS friction, fragmented information, and unclear prioritization.",
+        "The project ended up with a much stronger foundation for sync, planning, and usability than the original hackathon version.",
+        "It now has a more practical architecture split between frontend, public API, and connector service.",
+        "Most importantly, it stayed grounded in a real problem students have: LMS friction, fragmented information, and poor prioritization.",
       ],
     },
     {
@@ -282,9 +282,9 @@ window.PORTFOLIO_DATA = {
       category: "Web",
       status: "Shipped",
       summary:
-        "AI-assisted meal planning app that helps users cook with what they already have, reduce food waste, and move from pantry ingredients to recipes, meal plans, and shopping lists.",
+        "An AI-assisted meal planning app that helps people figure out what to cook with the ingredients they already have instead of starting from scratch.",
       impact:
-        "Built a practical pantry-to-recipe workflow with AI ingredient scanning, recipe matching, meal planning, and grocery support, and won 1st place at the FIDE x Lovable Hackathon.",
+        "I wanted the product to feel useful in a real kitchen, not just clever in a demo. It ended up covering the full pantry-to-recipe workflow and won 1st place at the FIDE x Lovable Hackathon.",
       stack: [
         "TypeScript",
         "React",
@@ -306,14 +306,14 @@ window.PORTFOLIO_DATA = {
         fallbackLabel: "Open video in new tab",
       },
       approach: [
-        "Built an image-to-ingredient pipeline through Supabase Edge Functions, using a vision-capable model to extract generic ingredient names and normalize them for recipe search.",
-        "Improved recipe discovery by detecting likely protein ingredients first, running parallel Edamam searches, and ranking results by ingredient match quality.",
-        "Connected recipe discovery to a drag-and-drop meal planner, categorized shopping list generation, PDF export, and nearby grocery store search.",
+        "I built an image-to-ingredient pipeline through Supabase Edge Functions, using a vision-capable model to extract ingredient names and normalize them for recipe search.",
+        "I improved recipe discovery by detecting likely protein ingredients first, running parallel Edamam searches, and ranking results by ingredient match quality.",
+        "I connected recipe discovery to a drag-and-drop meal planner, categorized shopping lists, PDF export, and nearby grocery store search so the product felt complete.",
       ],
       outcomes: [
-        "Delivered a complete end-to-end flow from pantry input to recipe discovery, meal planning, and shopping support.",
-        "Made the product more useful for everyday decision-making by separating recipes into Ready to Cook and Almost There states.",
-        "Kept external credentials off the client by routing API orchestration through edge functions instead of exposing keys in the frontend.",
+        "It shipped as a full end-to-end flow from pantry input to recipes, meal planning, and shopping support.",
+        "One of the best product decisions was separating recipes into Ready to Cook and Almost There so the results felt more actionable.",
+        "I also kept external credentials off the client by routing API orchestration through edge functions instead of exposing keys in the frontend.",
       ],
     },
     {
@@ -323,23 +323,23 @@ window.PORTFOLIO_DATA = {
       category: "Backend",
       status: "Shipped",
       summary:
-        "Backend-only FastAPI service for grid-based pathfinding and route analysis, with BFS, Dijkstra, and A* implemented from scratch and exposed through a validated API.",
+        "A FastAPI backend for grid-based pathfinding where I implemented BFS, Dijkstra, and A* from scratch and exposed them through a clean API.",
       impact:
-        "Combined algorithms work with clean backend design by separating routes, services, schemas, map generation, and benchmarking into a structure that feels like a real service instead of a demo script.",
+        "I wanted this to feel like a real backend project, not just an algorithms assignment, so I treated the API design, validation, testing, and benchmarking as seriously as the pathfinding logic itself.",
       stack: ["Python", "FastAPI", "Pydantic", "NumPy", "Pandas", "Uvicorn", "Pytest"],
       palette: { a: "#64806e", b: "#3a4f63" },
       icon: "./assets/icons/pathfinding-api.svg",
       iconFit: "contain",
       iconScale: 0.98,
       approach: [
-        "Implemented BFS, Dijkstra, and A* manually on NumPy-backed grids, with deterministic traversal behavior and clear separation from the HTTP layer.",
-        "Added seeded random map generation and predefined sample maps so algorithm behavior can be reproduced instead of tested on one-off inputs.",
-        "Built a Pandas-based benchmarking flow that compares algorithms across multiple maps and repeated runs, then exports raw results to CSV with summary highlights.",
+        "I implemented BFS, Dijkstra, and A* manually on NumPy-backed grids with deterministic traversal behavior and a clear separation from the HTTP layer.",
+        "I added seeded random map generation and predefined sample maps so the algorithms could be tested on reproducible inputs instead of one-off cases.",
+        "I also built a Pandas-based benchmarking flow that compares algorithms across multiple maps and repeated runs, then exports the results to CSV.",
       ],
       outcomes: [
-        "Delivered an API that returns the path plus cost, length, visited-node count, and runtime metrics for every request.",
-        "Turned the project into both a solver and an analysis tool by pairing pathfinding endpoints with reproducible benchmark reporting.",
-        "Backed the service with strong automated coverage across algorithms, validation, services, and API behavior.",
+        "The API returns more than just a path: it includes cost, length, visited-node count, and runtime metrics for each request.",
+        "That made the project useful both as a solver and as a small analysis tool for comparing algorithm behavior.",
+        "I backed it with solid automated coverage across the algorithms, validation layer, service layer, and API behavior.",
       ],
     },
     {
@@ -349,9 +349,9 @@ window.PORTFOLIO_DATA = {
       category: "Backend",
       status: "Building",
       summary:
-        "Cross-platform virtual queue app that lets businesses create live queues and lets customers join, track, and manage their place remotely instead of waiting in a physical line.",
+        "A cross-platform virtual queue app for businesses and customers who would rather manage a line from their phone than stand in one physically.",
       impact:
-        "Contributed backend integration work that helped evolve the original hackathon idea into a more complete realtime product with auth, persistence, and role-based queue management.",
+        "I worked on the backend and integration side to help turn the original hackathon idea into something more credible: realtime, persistent, and built around the actual needs of both businesses and customers.",
       stack: [
         "TypeScript",
         "React Native",
@@ -365,14 +365,14 @@ window.PORTFOLIO_DATA = {
       icon: "./assets/icons/QueueMe.png",
       iconFit: "contain",
       approach: [
-        "Built around a role-based model where customers and businesses see different queue actions, account states, and app flows.",
-        "Used Supabase for auth, persistent storage, and realtime sync so queue status updates propagate across devices without custom infrastructure.",
-        "Handled product constraints around duplicate joins, wait-time estimates, queue lifecycle states, and one-active-queue business workflows.",
+        "We designed it around a role-based model so customers and businesses see different actions, account states, and app flows.",
+        "I used Supabase for auth, persistence, and realtime sync so queue updates propagate across devices without custom infrastructure.",
+        "A lot of the real work was in edge cases like duplicate joins, wait-time estimates, queue lifecycle states, and one-active-queue business workflows.",
       ],
       outcomes: [
-        "Extended the original JAMHacks concept into a more production-shaped mobile-first app with persistent profiles, searchable queues, and realtime state.",
-        "Created a clearer business/customer experience for remote queue participation, queue hosting, and queue management.",
-        "Established backend and data-flow patterns that support future improvements like notifications and better queue analytics.",
+        "The project grew from a JAMHacks concept into a more production-shaped mobile app with persistent profiles, searchable queues, and realtime state.",
+        "It also became much clearer as a two-sided product for both queue participants and queue hosts.",
+        "The backend and data model now leave room for features like notifications and better queue analytics later on.",
       ],
     },
     {
@@ -382,23 +382,23 @@ window.PORTFOLIO_DATA = {
       category: "Game",
       status: "Archived Build",
       summary:
-        "Retro Windows console adventure game built in C++ that combines bitmap-driven map rendering, ASCII-style exploration, turn-based battles, inventory management, and FMOD-powered audio.",
+        "A retro Windows console adventure game I built in C++ with bitmap-driven maps, turn-based combat, inventory systems, and FMOD-powered audio.",
       impact:
-        "Built a surprisingly complete school-era RPG loop with exploration, combat, town/shop systems, sound design, and a packaged runnable build that still works as a playable archive.",
+        "This was one of the first projects where I really got hooked on building systems. I kept adding to it until it had a full RPG loop with exploration, combat, shops, sound, and a runnable packaged build.",
       stack: ["C++", "Win32 API", "Bitmap Rendering", "FMOD", "Visual Studio"],
       palette: { a: "#7b6a52", b: "#252f3f" },
       icon: "./assets/icons/escapade.svg",
       iconFit: "contain",
       iconScale: 1.02,
       approach: [
-        "Used a 100x100 bitmap image as the source of truth for world layout, translating pixel colors into terrain, collision rules, and console rendering behavior.",
-        "Built the core gameplay loop around roaming monsters, turn-based combat, consumables, weapon upgrades, and a safe-town economy with shop and hotel systems.",
-        "Layered in colored console rendering, immediate keyboard input, and FMOD sound playback so the project feels closer to a small game than a basic text demo.",
+        "I used a 100x100 bitmap image as the source of truth for the world layout, translating pixel colors into terrain, collision rules, and rendering behavior.",
+        "I built the gameplay loop around roaming monsters, turn-based combat, consumables, weapon upgrades, and a safe-town economy with shop and hotel systems.",
+        "I also layered in colored console rendering, immediate keyboard input, and FMOD sound playback so it felt more like a real game than a simple text demo.",
       ],
       outcomes: [
-        "Delivered a complete playable loop with map exploration, combat progression, economy mechanics, and multiple monster tiers.",
-        "Preserved both the original Visual Studio source and a packaged runnable build so the project is still easy to inspect and run.",
-        "Showcases early systems thinking across gameplay logic, rendering, assets, and audio integration.",
+        "It ended up with a complete playable loop: exploration, combat progression, economy mechanics, and multiple monster tiers.",
+        "I kept both the original Visual Studio source and a runnable packaged build, so it is still easy to inspect and run.",
+        "Looking back, it is still a good snapshot of how I started thinking about game logic, rendering, assets, and audio as connected systems.",
       ],
     },
     {
@@ -408,9 +408,9 @@ window.PORTFOLIO_DATA = {
       category: "Backend",
       status: "Internal Project",
       summary:
-        "University of Waterloo student support web app that turns a start date, due date, and assignment type into a structured academic work plan backed by curated templates and Waterloo resources.",
+        "A student support web app for Waterloo Libraries that turns a due date and assignment type into a structured academic work plan backed by curated templates and campus resources.",
       impact:
-        "Rebuilt the planner as a lightweight server-rendered TypeScript application, strengthened accessibility and responsive behavior, and maintained a student-facing tool used in the Waterloo Libraries ecosystem.",
+        "I rebuilt the planner into a lightweight server-rendered TypeScript app and spent a lot of time making it more maintainable, more accessible, and more dependable for real student use.",
       stack: [
         "TypeScript",
         "JavaScript",
@@ -424,14 +424,14 @@ window.PORTFOLIO_DATA = {
       palette: { a: "#6a857f", b: "#4d5f69" },
       icon: "./assets/icons/uw-libraries.png",
       approach: [
-        "Built the app around assignment-specific templates and deterministic planning logic instead of generic task management or AI-generated output.",
-        "Exposed lightweight API endpoints for step retrieval and plan generation while keeping the main experience server-rendered and easy to maintain.",
-        "Improved accessibility and UX with better heading structure, consent-managed analytics, modal focus behavior, and a responsive navigation fallback at narrower widths.",
+        "I built the app around assignment-specific templates and deterministic planning logic instead of generic task management or AI-generated output.",
+        "I exposed lightweight API endpoints for step retrieval and plan generation while keeping the main experience server-rendered and easy to maintain.",
+        "I also improved accessibility and UX with better heading structure, consent-managed analytics, modal focus behavior, and a responsive navigation fallback.",
       ],
       outcomes: [
-        "Delivered a focused planning tool that helps students break common assignment types into manageable steps across a real date range.",
-        "Improved maintainability by keeping the architecture lightweight, testable, and decoupled from unnecessary SPA complexity.",
-        "Fit the product into an institutional deployment workflow using GitHub Actions, GHCR, and Docker-based environment promotion.",
+        "The result is a focused planning tool that helps students break common assignment types into manageable steps across a real timeline.",
+        "It is also much easier to maintain because the architecture stays lightweight and avoids unnecessary SPA complexity.",
+        "I fit it into an institutional deployment workflow using GitHub Actions, GHCR, and Docker-based environment promotion.",
       ],
     },
     {
@@ -441,22 +441,22 @@ window.PORTFOLIO_DATA = {
       category: "Research",
       status: "Research + Hardware",
       summary:
-        "Open-source research project focused on converting a Creality Ender 3 Pro into a multi-material peristaltic-pump food printer during my high school co-op with Western University's FAST Research Group.",
+        "A research project from my high school co-op where we converted a Creality Ender 3 Pro into a multi-material food printer using a custom peristaltic-pump setup.",
       impact:
-        "Supported the mechanical build by researching, designing, printing, and assembling custom hardware that helped turn a low-cost FDM printer into a functional food-printing platform.",
+        "My role was on the mechanical side: researching, designing, printing, and assembling the custom hardware needed to turn a low-cost printer into a working food-printing platform.",
       stack: ["Fusion 360", "Cura", "PrusaSlicer", "3D Printing", "Mechanical Design", "Hardware Prototyping"],
       palette: { a: "#8a7753", b: "#4f5f52" },
       icon: "./assets/icons/fast-research-group.png",
       iconScale: 0.88,
       approach: [
-        "Designed and iterated custom CAD parts including a four-syringe holder, material cup holder, and heat-lamp mount for the modified printer assembly.",
-        "Used Fusion 360 for modeling and Cura/PrusaSlicer for print preparation, adjusting parts around fit, rigidity, mounting constraints, and printability.",
-        "Helped assemble the broader system by integrating printed components with motors, wiring, the heated build surface, and the lamp setup used to support food preparation.",
+        "I designed and iterated custom CAD parts including a four-syringe holder, material cup holder, and heat-lamp mount for the modified printer assembly.",
+        "I used Fusion 360 for modeling and Cura and PrusaSlicer for print prep, adjusting parts around fit, rigidity, mounting constraints, and printability.",
+        "I also helped assemble the broader system by integrating printed components with motors, wiring, the heated build surface, and the lamp setup.",
       ],
       outcomes: [
-        "Contributed to a working multi-material research platform built on top of an inexpensive consumer printer.",
-        "Translated research ideas into manufacturable hardware through iterative CAD and fabrication work.",
-        "Gained hands-on experience working across design, prototyping, assembly, and interdisciplinary research execution.",
+        "The project contributed to a working multi-material research platform built on top of an inexpensive consumer printer.",
+        "It taught me how to turn rough research ideas into manufacturable hardware through iterative CAD and fabrication work.",
+        "It also gave me hands-on experience across design, prototyping, assembly, and interdisciplinary research work.",
       ],
     },
   ],
