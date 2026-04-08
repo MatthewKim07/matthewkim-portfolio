@@ -10,6 +10,11 @@ window.PORTFOLIO_DATA = {
           icon: "https://cdn.simpleicons.org/python/3776AB",
         },
         {
+          name: "C++",
+          detail: "Embedded systems and performance-sensitive engineering work.",
+          icon: "https://cdn.simpleicons.org/cplusplus/00599C",
+        },
+        {
           name: "TypeScript",
           detail: "Primary language for modern web apps and services.",
           icon: "https://cdn.simpleicons.org/typescript/3178C6",
@@ -20,22 +25,6 @@ window.PORTFOLIO_DATA = {
           icon: "https://cdn.simpleicons.org/javascript/F7DF1E",
         },
         {
-          name: "SQL",
-          detail: "Relational queries, schema design, and data workflows.",
-          icon: "./assets/icons/sql-icon.png",
-          iconScale: 1.18,
-        },
-        {
-          name: "C++",
-          detail: "Embedded systems and performance-sensitive engineering work.",
-          icon: "https://cdn.simpleicons.org/cplusplus/00599C",
-        },
-        {
-          name: "Bash",
-          detail: "CLI workflows, scripts, and local tooling.",
-          icon: "https://cdn.simpleicons.org/gnubash/4EAA25",
-        },
-        {
           name: "HTML5",
           detail: "Semantic structure and accessible UI foundations.",
           icon: "https://cdn.simpleicons.org/html5/E34F26",
@@ -44,6 +33,17 @@ window.PORTFOLIO_DATA = {
           name: "CSS3",
           detail: "Responsive layouts, theming, and interface polish.",
           icon: "https://cdn.simpleicons.org/css/1572B6",
+        },
+        {
+          name: "SQL",
+          detail: "Relational queries, schema design, and data workflows.",
+          icon: "./assets/icons/sql-icon.png",
+          iconScale: 1.18,
+        },
+        {
+          name: "Bash",
+          detail: "CLI workflows, scripts, and local tooling.",
+          icon: "https://cdn.simpleicons.org/gnubash/4EAA25",
         },
       ],
     },
@@ -60,6 +60,11 @@ window.PORTFOLIO_DATA = {
           name: "Next.js",
           detail: "Full-stack React applications with robust routing and rendering options.",
           icon: "https://cdn.simpleicons.org/nextdotjs/111111",
+        },
+        {
+          name: "Tailwind CSS",
+          detail: "Utility-driven styling for rapid, consistent UI development.",
+          icon: "https://cdn.simpleicons.org/tailwindcss/06B6D4",
         },
         {
           name: "Node.js",
@@ -106,11 +111,6 @@ window.PORTFOLIO_DATA = {
           detail: "Type-safe database access and schema modeling.",
           icon: "https://cdn.simpleicons.org/prisma/2D3748",
         },
-        {
-          name: "Tailwind CSS",
-          detail: "Utility-driven styling for rapid, consistent UI development.",
-          icon: "https://cdn.simpleicons.org/tailwindcss/06B6D4",
-        },
       ],
     },
     {
@@ -128,14 +128,14 @@ window.PORTFOLIO_DATA = {
           icon: "https://cdn.simpleicons.org/github/181717",
         },
         {
-          name: "Docker",
-          detail: "Consistent runtime environments and reproducible setup.",
-          icon: "https://cdn.simpleicons.org/docker/2496ED",
-        },
-        {
           name: "GitHub Actions",
           detail: "Automated CI workflows and deployment tasks.",
           icon: "https://cdn.simpleicons.org/githubactions/2088FF",
+        },
+        {
+          name: "Docker",
+          detail: "Consistent runtime environments and reproducible setup.",
+          icon: "https://cdn.simpleicons.org/docker/2496ED",
         },
         {
           name: "PostgreSQL",
@@ -222,11 +222,11 @@ window.PORTFOLIO_DATA = {
         "Built a WaterlooWorks-specific decision layer that helps students prioritize postings faster, inspect role fit more clearly, and keep private job-search data inside the browser.",
       stack: [
         "JavaScript",
+        "HTML5",
+        "CSS3",
         "Chrome Extensions",
         "Manifest V3",
         "Chrome Storage API",
-        "HTML5",
-        "CSS3",
       ],
       palette: { a: "#7b6e56", b: "#4f5358" },
       icon: "./assets/icons/logo.png",
@@ -253,14 +253,14 @@ window.PORTFOLIO_DATA = {
         "Contributed across backend integration, auth and session flows, planning logic, and post-hackathon product polish to move the project from demo-stage idea toward a usable MVP.",
       stack: [
         "TypeScript",
-        "Next.js",
         "React",
+        "Next.js",
         "Tailwind CSS",
         "Fastify",
         "Prisma",
         "PostgreSQL",
         "Playwright",
-        "Docker Compose",
+        "Docker",
       ],
       palette: { a: "#6b7d92", b: "#40576c" },
       icon: "./assets/icons/icon.svg",
@@ -288,8 +288,8 @@ window.PORTFOLIO_DATA = {
       stack: [
         "TypeScript",
         "React",
-        "Vite",
         "Tailwind CSS",
+        "Vite",
         "Supabase",
         "Edamam API",
         "Google Places API",
@@ -326,7 +326,7 @@ window.PORTFOLIO_DATA = {
         "Backend-only FastAPI service for grid-based pathfinding and route analysis, with BFS, Dijkstra, and A* implemented from scratch and exposed through a validated API.",
       impact:
         "Combined algorithms work with clean backend design by separating routes, services, schemas, map generation, and benchmarking into a structure that feels like a real service instead of a demo script.",
-      stack: ["Python", "FastAPI", "Pydantic", "NumPy", "Pandas", "Pytest", "Uvicorn"],
+      stack: ["Python", "FastAPI", "Pydantic", "NumPy", "Pandas", "Uvicorn", "Pytest"],
       palette: { a: "#64806e", b: "#3a4f63" },
       icon: "./assets/icons/pathfinding-api.svg",
       iconFit: "contain",
@@ -385,7 +385,7 @@ window.PORTFOLIO_DATA = {
         "Retro Windows console adventure game built in C++ that combines bitmap-driven map rendering, ASCII-style exploration, turn-based battles, inventory management, and FMOD-powered audio.",
       impact:
         "Built a surprisingly complete school-era RPG loop with exploration, combat, town/shop systems, sound design, and a packaged runnable build that still works as a playable archive.",
-      stack: ["C++", "Visual Studio", "FMOD", "Win32 API", "bitmap_image.hpp"],
+      stack: ["C++", "Win32 API", "Bitmap Rendering", "FMOD", "Visual Studio"],
       palette: { a: "#7b6a52", b: "#252f3f" },
       icon: "./assets/icons/escapade.svg",
       iconFit: "contain",
@@ -413,13 +413,13 @@ window.PORTFOLIO_DATA = {
         "Rebuilt the planner as a lightweight server-rendered TypeScript application, strengthened accessibility and responsive behavior, and maintained a student-facing tool used in the Waterloo Libraries ecosystem.",
       stack: [
         "TypeScript",
-        "Node.js",
-        "Hono",
+        "JavaScript",
         "HTML5",
         "CSS3",
-        "Vanilla JavaScript",
+        "Node.js",
+        "Hono",
+        "Docker",
         "GitHub Actions",
-        "Docker Compose",
       ],
       palette: { a: "#6a857f", b: "#4d5f69" },
       icon: "./assets/icons/uw-libraries.png",
