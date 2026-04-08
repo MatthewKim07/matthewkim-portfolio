@@ -140,6 +140,14 @@ const state = {
     startAt: 0,
     duration: 2000,
   },
+  mapWarmup: {
+    ready: false,
+    promise: null,
+    consumed: false,
+    revealPreparedCamera: false,
+    freezeUntil: 0,
+    primed: false,
+  },
 };
 
 const els = {
@@ -305,6 +313,21 @@ function setReady() {
   });
 }
 
+function waitForAnimationFrames(count = 1) {
+  return new Promise((resolve) => {
+    const step = () => {
+      if (count <= 0) {
+        resolve();
+        return;
+      }
+      count -= 1;
+      requestAnimationFrame(step);
+    };
+
+    requestAnimationFrame(step);
+  });
+}
+
 function setViewMode(view) {
   state.view = view;
   if (els.body) {
@@ -427,8 +450,37 @@ function finishTransitionToMap() {
     state.transition.rafId = 0;
   }
 
-  showMapView({ focusPins: true });
+  if (state.mapWarmup.revealPreparedCamera) {
+    state.mapWarmup.revealPreparedCamera = false;
+    revealPreparedMapView();
+  } else {
+    showMapView({ focusPins: true });
+  }
   resetTransitionVisuals();
+}
+
+function revealPreparedMapView() {
+  setViewMode(VIEW.MAP);
+  if (window.history && typeof window.history.replaceState === "function") {
+    window.history.replaceState(null, "", window.location.pathname + window.location.search);
+  }
+  window.scrollTo({ top: 0, behavior: "auto" });
+  syncMapImageDimensions();
+  cacheViewportSize();
+  stopCameraLoop();
+  applyCameraTransform();
+  state.mapWarmup.freezeUntil = performance.now() + 1400;
+
+  if (els.mapViewport) {
+    els.mapViewport.style.width = "100%";
+    els.mapViewport.style.height = "100%";
+    els.mapViewport.style.minHeight = "100vh";
+  }
+
+  const firstPin = document.querySelector(".map-pin");
+  if (firstPin) {
+    requestAnimationFrame(() => firstPin.focus());
+  }
 }
 
 function forceMapReveal() {
@@ -441,6 +493,12 @@ function forceMapReveal() {
   }
 
   resetTransitionVisuals();
+  if (state.mapWarmup.revealPreparedCamera) {
+    state.mapWarmup.revealPreparedCamera = false;
+    revealPreparedMapView();
+    return;
+  }
+
   setViewMode(VIEW.MAP);
   syncMapImageDimensions();
   cacheViewportSize();
@@ -808,6 +866,82 @@ function syncMapImageDimensions() {
   }
 }
 
+function stabilizeMapForTransition() {
+  syncMapImageDimensions();
+  cacheViewportSize();
+
+  const target = getFitMapCameraTarget();
+  setCameraInstant(target.x, target.y, target.scale);
+
+  if (els.mapWorld) {
+    els.mapWorld.getBoundingClientRect();
+  }
+}
+
+function warmMapForTransition() {
+  if (state.mapWarmup.ready) return Promise.resolve();
+  if (state.mapWarmup.promise) return state.mapWarmup.promise;
+
+  const imageReady = new Promise((resolve) => {
+    if (!els.mapBaseImage) {
+      resolve();
+      return;
+    }
+
+    const finalize = () => {
+      if (typeof els.mapBaseImage.decode === "function") {
+        els.mapBaseImage.decode().catch(() => {}).finally(resolve);
+        return;
+      }
+
+      resolve();
+    };
+
+    if (els.mapBaseImage.complete && els.mapBaseImage.naturalWidth > 0) {
+      finalize();
+      return;
+    }
+
+    els.mapBaseImage.addEventListener("load", finalize, { once: true });
+    els.mapBaseImage.addEventListener("error", resolve, { once: true });
+  });
+
+  state.mapWarmup.promise = imageReady
+    .then(() => waitForAnimationFrames(2))
+    .then(() => {
+      stabilizeMapForTransition();
+      state.mapWarmup.ready = true;
+    })
+    .finally(() => {
+      state.mapWarmup.promise = null;
+    });
+
+  return state.mapWarmup.promise;
+}
+
+function primeInitialMapState() {
+  if (state.mapWarmup.primed || state.view !== VIEW.INTRO) return Promise.resolve();
+
+  state.mapWarmup.primed = true;
+  setViewMode(VIEW.MAP);
+  stopCameraLoop();
+  applyCameraTransform();
+
+  if (els.mapGate) {
+    els.mapGate.getBoundingClientRect();
+  }
+
+  if (els.mapWorld) {
+    els.mapWorld.getBoundingClientRect();
+  }
+
+  return waitForAnimationFrames(2).then(() => {
+    if (state.view === VIEW.MAP) {
+      setViewMode(VIEW.INTRO);
+    }
+  });
+}
+
 function showMapView(options = {}) {
   const { focusPins = false, resetCamera = false, animateReset = false } = options;
   setViewMode(VIEW.MAP);
@@ -927,10 +1061,7 @@ function flyToSection(sectionId) {
 function bindIntroExperience() {
   if (!els.introGate) return;
 
-  const continueToMap = () => {
-    if (state.view !== VIEW.INTRO || state.introTransitioning) return;
-    state.introTransitioning = true;
-
+  const startMapTransition = () => {
     if (!ENABLE_FALL_TRANSITION) {
       showMapView({ focusPins: true });
       state.introTransitioning = false;
@@ -950,6 +1081,37 @@ function bindIntroExperience() {
     }
 
     runTransitionTimeline();
+  };
+
+  const continueToMap = () => {
+    if (state.view !== VIEW.INTRO || state.introTransitioning) return;
+    state.introTransitioning = true;
+
+    const isInitialEntry = !state.mapWarmup.consumed;
+    state.mapWarmup.consumed = true;
+
+    if (!isInitialEntry) {
+      state.mapWarmup.revealPreparedCamera = true;
+      stabilizeMapForTransition();
+      startMapTransition();
+      return;
+    }
+
+    state.mapWarmup.revealPreparedCamera = true;
+
+    const warmupTask = state.mapWarmup.ready ? Promise.resolve() : state.mapWarmup.promise || warmMapForTransition();
+
+    warmupTask
+      .catch(() => {})
+      .then(() => {
+        if (state.view !== VIEW.INTRO) {
+          state.introTransitioning = false;
+          return;
+        }
+
+        stabilizeMapForTransition();
+        startMapTransition();
+      });
   };
 
   if (els.introContinue) {
@@ -980,6 +1142,10 @@ function bindMapInteractions() {
       () => {
         syncMapImageDimensions();
         cacheViewportSize();
+        if (state.mapWarmup.ready || performance.now() < state.mapWarmup.freezeUntil) {
+          applyCameraTransform();
+          return;
+        }
         if (!state.mapInteracted) {
           fitMapToViewport();
         } else {
@@ -2317,7 +2483,6 @@ function bindScrollHandlers() {
 }
 
 function init() {
-  setReady();
   setMapWorldSize();
   resetTransitionVisuals();
   setViewMode(VIEW.INTRO);
@@ -2353,6 +2518,9 @@ function init() {
   }
 
   window.addEventListener("resize", () => {
+    if (performance.now() < state.mapWarmup.freezeUntil) {
+      return;
+    }
     cacheViewportSize();
     if (state.view === VIEW.MAP || state.view === VIEW.INTRO) {
       if (!state.mapInteracted) {
@@ -2367,6 +2535,13 @@ function init() {
       updateContentMapBackdrop();
     }
   });
+
+  warmMapForTransition()
+    .then(() => primeInitialMapState())
+    .catch(() => {})
+    .finally(() => {
+      setReady();
+    });
 }
 
 init();
