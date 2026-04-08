@@ -595,9 +595,17 @@ function setMapWorldSize(width = mapMeta.width, height = mapMeta.height) {
 
 function cacheViewportSize() {
   if (!els.mapViewport) return { width: 1, height: 1 };
+
+  // Fit calculations should use layout size, not transformed visual size.
+  // During the intro/replay states `.map-gate` is scaled slightly, which makes
+  // getBoundingClientRect() over-report the viewport and causes the reveal to
+  // start too zoomed in. clientWidth/clientHeight ignore that transform.
+  const layoutWidth = els.mapViewport.clientWidth || els.mapViewport.offsetWidth;
+  const layoutHeight = els.mapViewport.clientHeight || els.mapViewport.offsetHeight;
   const rect = els.mapViewport.getBoundingClientRect();
-  state.camera.viewportWidth = Math.max(1, rect.width);
-  state.camera.viewportHeight = Math.max(1, rect.height);
+
+  state.camera.viewportWidth = Math.max(1, layoutWidth || rect.width);
+  state.camera.viewportHeight = Math.max(1, layoutHeight || rect.height);
   return { width: state.camera.viewportWidth, height: state.camera.viewportHeight };
 }
 
