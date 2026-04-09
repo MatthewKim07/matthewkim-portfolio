@@ -2251,6 +2251,64 @@ body::after {
     radial-gradient(35% 32% at 24% 70%, rgba(112, 146, 136, 0.15), transparent 70%);
 }
 
+.cursor-trail-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  overflow: hidden;
+  contain: layout style paint;
+}
+
+body[data-view="intro"] .cursor-trail-layer,
+body[data-view="content"] .cursor-trail-layer,
+body[data-view="transitioning"] .cursor-trail-layer {
+  opacity: 0;
+}
+
+.cursor-trail-segment {
+  position: absolute;
+  left: var(--trail-x);
+  top: var(--trail-y);
+  width: 20px;
+  height: 6px;
+  border-radius: 999px;
+  transform: translate(-50%, -50%) rotate(var(--trail-angle)) scale(1);
+  transform-origin: center;
+  background: rgba(236, 224, 191, 0.95);
+  border: 1px solid rgba(26, 20, 12, 0.72);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  opacity: 0.86;
+  will-change: transform, opacity, filter;
+  animation: cursorTrailFade 2000ms linear forwards;
+}
+
+.cursor-trail-segment::before {
+  content: none;
+}
+
+.cursor-trail-segment::after {
+  content: none;
+}
+
+@keyframes cursorTrailFade {
+  0% {
+    opacity: 0.86;
+    filter: blur(0px);
+    transform: translate(-50%, -50%) rotate(var(--trail-angle)) scale(1);
+  }
+  55% {
+    opacity: 0.44;
+    filter: blur(0.15px);
+    transform: translate(-50%, -50%) rotate(var(--trail-angle)) scale(0.97);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(0.75px);
+    transform: translate(-50%, -50%) rotate(var(--trail-angle)) scale(0.92);
+  }
+}
+
 .site-header {
   overflow: hidden;
 }

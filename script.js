@@ -160,6 +160,13 @@ const state = {
   projectMedia: {
     autoplayId: 0,
   },
+  cursorTrail: {
+    lastX: null,
+    lastY: null,
+    lastAngle: 0,
+    lastSpawnAt: 0,
+    distanceCarry: 0,
+  },
 };
 
 const els = {
@@ -193,6 +200,7 @@ const els = {
   heroSubline: document.getElementById("page-subline"),
   heroTags: document.getElementById("page-tags"),
   heroActions: document.getElementById("page-actions"),
+  cursorTrailLayer: document.getElementById("cursor-trail-layer"),
   skillsGrid: document.getElementById("skills-grid"),
   projectsBrowser: document.getElementById("projects-browser"),
   projectsGrid: document.getElementById("projects-grid"),
@@ -422,11 +430,27 @@ function waitForAnimationFrames(count = 1) {
   });
 }
 
+function clearCursorTrail() {
+  state.cursorTrail.lastX = null;
+  state.cursorTrail.lastY = null;
+  state.cursorTrail.lastAngle = 0;
+  state.cursorTrail.lastSpawnAt = 0;
+  state.cursorTrail.distanceCarry = 0;
+
+  if (els.cursorTrailLayer) {
+    els.cursorTrailLayer.replaceChildren();
+  }
+}
+
 function setViewMode(view) {
   state.view = view;
   if (els.body) {
     els.body.setAttribute("data-view", view);
     els.body.classList.toggle("expedition-mode", view !== VIEW.CONTENT);
+  }
+
+  if (view !== VIEW.MAP) {
+    clearCursorTrail();
   }
 
   const introVisible = view === VIEW.INTRO || view === VIEW.TRANSITIONING;
@@ -2541,11 +2565,16 @@ function bindContactForm() {
 }
 
 function bindCursorAura() {
-  if (!els.body || prefersReducedMotion) return;
+  if (!els.body || !els.cursorTrailLayer || prefersReducedMotion) return;
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
   let rafPending = false;
   let pointerX = 50;
   let pointerY = 50;
+  const trailSpacing = 26;
+  const trailMinDistance = 0.8;
+  const trailPauseReset = 160;
+  const maxSegments = 90;
 
   const commit = () => {
     els.body.style.setProperty("--cursor-x", `${pointerX.toFixed(2)}%`);
@@ -2553,18 +2582,91 @@ function bindCursorAura() {
     rafPending = false;
   };
 
+  const appendTrailSegment = (x, y, angle) => {
+    const segment = document.createElement("span");
+    segment.className = "cursor-trail-segment";
+    segment.style.setProperty("--trail-x", `${x.toFixed(2)}px`);
+    segment.style.setProperty("--trail-y", `${y.toFixed(2)}px`);
+    segment.style.setProperty("--trail-angle", `${angle.toFixed(2)}deg`);
+    els.cursorTrailLayer.append(segment);
+    segment.addEventListener("animationend", () => segment.remove(), { once: true });
+
+    if (els.cursorTrailLayer.childElementCount > maxSegments) {
+      els.cursorTrailLayer.firstElementChild?.remove();
+    }
+  };
+
+  const updateTrail = (clientX, clientY) => {
+    const now = performance.now();
+    const lastX = state.cursorTrail.lastX;
+    const lastY = state.cursorTrail.lastY;
+
+    if (lastX === null || lastY === null || now - state.cursorTrail.lastSpawnAt > trailPauseReset) {
+      state.cursorTrail.lastX = clientX;
+      state.cursorTrail.lastY = clientY;
+      state.cursorTrail.lastSpawnAt = now;
+      state.cursorTrail.distanceCarry = 0;
+      return;
+    }
+
+    const dx = clientX - lastX;
+    const dy = clientY - lastY;
+    const distance = Math.hypot(dx, dy);
+
+    if (distance < trailMinDistance) {
+      return;
+    }
+
+    const angle = (Math.atan2(dy, dx) * 180) / Math.PI;
+    let carry = state.cursorTrail.distanceCarry;
+    let distanceUntilNext = trailSpacing - carry;
+
+    if (distanceUntilNext <= 0) {
+      distanceUntilNext = trailSpacing;
+      carry = 0;
+    }
+
+    if (distance >= distanceUntilNext) {
+      let traveled = distanceUntilNext;
+
+      while (traveled <= distance) {
+        const progress = traveled / distance;
+        appendTrailSegment(lastX + dx * progress, lastY + dy * progress, angle);
+        traveled += trailSpacing;
+      }
+
+      carry = distance - (traveled - trailSpacing);
+    } else {
+      carry += distance;
+    }
+
+    state.cursorTrail.lastX = clientX;
+    state.cursorTrail.lastY = clientY;
+    state.cursorTrail.lastAngle = angle;
+    state.cursorTrail.lastSpawnAt = now;
+    state.cursorTrail.distanceCarry = carry;
+  };
+
   window.addEventListener(
     "pointermove",
     (event) => {
-      if (state.view !== VIEW.CONTENT) return;
+      if (state.view !== VIEW.MAP) {
+        clearCursorTrail();
+        return;
+      }
+
       pointerX = (event.clientX / window.innerWidth) * 100;
       pointerY = (event.clientY / window.innerHeight) * 100;
+      updateTrail(event.clientX, event.clientY);
       if (rafPending) return;
       rafPending = true;
       requestAnimationFrame(commit);
     },
     { passive: true }
   );
+
+  window.addEventListener("pointerleave", clearCursorTrail);
+  window.addEventListener("blur", clearCursorTrail);
 }
 
 function bindSurfaceEffects() {
