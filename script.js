@@ -1943,7 +1943,26 @@ function renderProjectDetail(project) {
   els.projectDetail.innerHTML = `
     <div class="project-detail-top">
       <button class="btn btn-ghost project-back-btn" type="button" data-project-back="true" id="project-back-button">
-        <span class="project-back-icon" aria-hidden="true">&larr;</span>
+        <span class="project-back-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path
+              d="M19 12H6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+            <path
+              d="M11.5 6.5L6 12l5.5 5.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.1"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></path>
+          </svg>
+        </span>
         <span>Back to all projects</span>
       </button>
     </div>
