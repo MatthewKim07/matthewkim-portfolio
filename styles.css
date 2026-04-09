@@ -1741,7 +1741,7 @@ h1 {
   display: grid;
   gap: 0.85rem;
   grid-template-columns: 1.35fr 1fr;
-  align-items: start;
+  align-items: stretch;
 }
 
 .contact-form,
@@ -1749,6 +1749,20 @@ h1 {
   display: grid;
   gap: 0.55rem;
   align-content: start;
+}
+
+.contact-form {
+  height: 100%;
+  grid-template-rows: auto;
+}
+
+.contact-form textarea {
+  min-height: 15rem;
+  height: 100%;
+}
+
+.contact-form .form-note {
+  margin-top: auto;
 }
 
 .contact-form h3,
