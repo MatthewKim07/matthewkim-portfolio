@@ -99,6 +99,18 @@
               <div class="map-water-overlay" id="map-water-overlay" aria-hidden="true"></div>
             </div>
 
+            <div class="map-secret-layer" id="map-secret-layer" aria-hidden="false">
+              <button
+                class="map-easter-egg"
+                id="map-waterfall-secret"
+                type="button"
+                aria-label="Hidden waterfall interaction"
+              >
+                <span class="map-easter-egg-aura" aria-hidden="true"></span>
+                <span class="map-easter-egg-glyph" aria-hidden="true"></span>
+              </button>
+            </div>
+
             <div class="map-pins-layer" id="map-pins-layer" aria-label="Map locations"></div>
           </div>
         </div>
@@ -539,6 +551,19 @@
               </div>
             </div>
           </div>
+        </section>
+
+        <section class="content-section reveal content-section--secret" id="waterfall-secret" aria-labelledby="waterfall-secret-title">
+          <div class="section-intro section-intro--secret">
+            <h2 id="waterfall-secret-title">???</h2>
+          </div>
+
+          <article class="card section-panel secret-discovery-card reveal" style="--stagger-index:0">
+            <div class="secret-dog-frame">
+              <img class="secret-dog-image" src="./assets/icons/my-dog.png" alt="Matthew's dog hiding in the waterfall easter egg" loading="lazy" />
+            </div>
+            <p class="secret-dog-caption">You found my dog hiding in the waterfall.</p>
+          </article>
         </section>
       </main>
     </div>

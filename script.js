@@ -15,6 +15,7 @@ const mapLocations = mapLocationSource.map((location) => {
     y: Number(location.y) || 0,
     zoomLevel: Number(location.zoomLevel || location.focusScale || 1.4),
     color: location.color || "#cba36d",
+    hiddenPin: Boolean(location.hiddenPin),
   };
 });
 
@@ -97,6 +98,14 @@ const SECTION_PAGE_CONTENT = {
       { label: "Download Resume", variant: "ghost", href: "./assets/Matthew_Kim_Resume.pdf", download: true },
     ],
   },
+  "waterfall-secret": {
+    eyebrow: "Hidden Find",
+    title: "???",
+    headline: "Hi",
+    subline: "You found my dog hiding in the waterfall.",
+    tags: ["Easter Egg", "Waterfall", "Dog"],
+    actions: [],
+  },
 };
 
 const state = {
@@ -165,6 +174,7 @@ const els = {
   mapImageShell: document.getElementById("map-image-shell"),
   mapBaseImage: document.getElementById("map-base-image"),
   mapPinsLayer: document.getElementById("map-pins-layer"),
+  mapWaterfallSecret: document.getElementById("map-waterfall-secret"),
   mapReset: document.getElementById("map-reset"),
   mapIntro: document.getElementById("map-intro"),
   returnToMap: document.getElementById("return-to-map"),
@@ -924,6 +934,7 @@ function renderMapPins() {
   if (!els.mapPinsLayer) return;
 
   els.mapPinsLayer.innerHTML = mapLocations
+    .filter((location) => !location.hiddenPin)
     .map((location) => {
       return `
         <button
@@ -1340,6 +1351,16 @@ function bindMapInteractions() {
     });
   }
 
+  if (els.mapWaterfallSecret) {
+    els.mapWaterfallSecret.addEventListener("click", (event) => {
+      if (state.view !== VIEW.MAP) return;
+      event.preventDefault();
+      event.stopPropagation();
+      state.mapInteracted = true;
+      flyToSection("waterfall-secret");
+    });
+  }
+
   els.mapViewport.addEventListener(
     "wheel",
     (event) => {
@@ -1356,6 +1377,7 @@ function bindMapInteractions() {
     if (state.view !== VIEW.MAP) return;
     if (event.button !== 0) return;
     if (event.target.closest(".map-pin")) return;
+    if (event.target.closest(".map-easter-egg")) return;
     if (!canDragMap()) return;
 
     state.drag.active = true;

@@ -46,4 +46,13 @@ window.EXPEDITION_MAP_PINS = [
     zoomLevel: 1.42,
     color: "#8c7658",
   },
+  {
+    id: "waterfall-secret",
+    label: "Hidden Waterfall",
+    x: 842,
+    y: 620,
+    zoomLevel: 1.64,
+    color: "#8ac7d8",
+    hiddenPin: true,
+  },
 ];
