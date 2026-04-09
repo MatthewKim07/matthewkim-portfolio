@@ -148,6 +148,9 @@ const state = {
     freezeUntil: 0,
     primed: false,
   },
+  projectMedia: {
+    autoplayId: 0,
+  },
 };
 
 const els = {
@@ -197,6 +200,87 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function clearProjectMediaAutoplay() {
+  if (!state.projectMedia.autoplayId) return;
+  window.clearInterval(state.projectMedia.autoplayId);
+  state.projectMedia.autoplayId = 0;
+}
+
+function updateProjectSlideshow(root, nextIndex) {
+  if (!root) return;
+
+  const slideCount = Math.max(1, Number(root.getAttribute("data-slide-count")) || 1);
+  const slideIndex = ((Number(nextIndex) || 0) % slideCount + slideCount) % slideCount;
+  const track = root.querySelector("[data-project-slides-track]");
+  const slideLabel = root.querySelector("[data-project-slide-label]");
+  const dots = Array.from(root.querySelectorAll("[data-project-slide-dot]"));
+
+  root.setAttribute("data-current-slide", String(slideIndex));
+
+  if (track) {
+    track.style.transform = `translate3d(${-slideIndex * 100}%, 0, 0)`;
+  }
+
+  if (slideLabel) {
+    slideLabel.textContent = String(slideIndex + 1);
+  }
+
+  dots.forEach((dot, index) => {
+    dot.classList.toggle("is-active", index === slideIndex);
+    dot.setAttribute("aria-pressed", index === slideIndex ? "true" : "false");
+  });
+}
+
+function bindProjectMedia(project) {
+  clearProjectMediaAutoplay();
+  if (!project || !project.media) return;
+
+  if (project.media.type === "slideshow") {
+    const root = document.querySelector("[data-project-slideshow]");
+    if (!root) return;
+
+    const slideCount = Math.max(1, Number(root.getAttribute("data-slide-count")) || 1);
+    const autoplayMs = Math.max(0, Number(root.getAttribute("data-autoplay-ms")) || 0);
+    const prevButton = root.querySelector("[data-project-slide-prev]");
+    const nextButton = root.querySelector("[data-project-slide-next]");
+    const dots = Array.from(root.querySelectorAll("[data-project-slide-dot]"));
+
+    const step = (delta) => {
+      const current = Number(root.getAttribute("data-current-slide")) || 0;
+      updateProjectSlideshow(root, current + delta);
+    };
+
+    if (prevButton) {
+      prevButton.addEventListener("click", () => step(-1));
+    }
+
+    if (nextButton) {
+      nextButton.addEventListener("click", () => step(1));
+    }
+
+    dots.forEach((dot) => {
+      dot.addEventListener("click", () => {
+        const targetIndex = Number(dot.getAttribute("data-project-slide-dot")) || 0;
+        updateProjectSlideshow(root, targetIndex);
+      });
+    });
+
+    if (slideCount > 1 && autoplayMs > 0) {
+      const stop = () => clearProjectMediaAutoplay();
+      const start = () => {
+        clearProjectMediaAutoplay();
+        state.projectMedia.autoplayId = window.setInterval(() => step(1), autoplayMs);
+      };
+
+      root.addEventListener("mouseenter", stop);
+      root.addEventListener("mouseleave", start);
+      root.addEventListener("focusin", stop);
+      root.addEventListener("focusout", start);
+      start();
+    }
+  }
 }
 
 function clamp(value, min, max) {
@@ -1753,6 +1837,73 @@ function renderProjectDetail(project) {
           </div>
         </section>
       `
+      : project.media && project.media.type === "slideshow"
+        ? `
+        <section class="project-detail-panel project-detail-panel--media">
+          <h4>Preview</h4>
+          <div
+            class="project-detail-media project-detail-media--slideshow"
+            data-project-slideshow
+            data-slide-count="${escapeHtml(String((project.media.slides || []).length || 1))}"
+            data-current-slide="0"
+            data-autoplay-ms="${escapeHtml(String(project.media.autoplayMs || 0))}"
+          >
+            <div class="project-slideshow-viewport">
+              <div class="project-slideshow-dots" aria-label="Slideshow navigation">
+                ${(project.media.slides || [])
+                  .map(
+                    (_, index) => `
+                    <button
+                      class="project-slideshow-dot${index === 0 ? " is-active" : ""}"
+                      type="button"
+                      data-project-slide-dot="${index}"
+                      aria-label="Go to slide ${index + 1}"
+                      aria-pressed="${index === 0 ? "true" : "false"}"
+                    ></button>
+                  `
+                  )
+                  .join("")}
+              </div>
+              <button
+                class="project-slideshow-nav project-slideshow-nav--prev"
+                type="button"
+                data-project-slide-prev="true"
+                aria-label="Previous slide"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+              <div class="project-slideshow-track" data-project-slides-track>
+                ${(project.media.slides || [])
+                  .map(
+                    (slide, index) => `
+                      <figure class="project-slide">
+                        <img
+                          class="project-slide-image"
+                          src="${escapeHtml(slide.src)}"
+                          alt="${escapeHtml(slide.alt || `${project.title} slide ${index + 1}`)}"
+                          loading="lazy"
+                        />
+                      </figure>
+                    `
+                  )
+                  .join("")}
+              </div>
+              <button
+                class="project-slideshow-nav project-slideshow-nav--next"
+                type="button"
+                data-project-slide-next="true"
+                aria-label="Next slide"
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M9.5 5.5L16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+      `
       : "";
 
   const demoLink = project.demoUrl
@@ -1845,6 +1996,7 @@ function openProjectDetail(slug) {
   state.activeProjectSlug = slug;
 
   renderProjectDetail(project);
+  bindProjectMedia(project);
   els.projectDetail.hidden = false;
   els.projectsBrowser.classList.add("is-detail-open");
 
@@ -1857,6 +2009,7 @@ function openProjectDetail(slug) {
 function closeProjectDetail() {
   if (!els.projectsBrowser || !els.projectDetail) return;
 
+  clearProjectMediaAutoplay();
   state.activeProjectSlug = null;
   els.projectDetail.hidden = true;
   els.projectDetail.innerHTML = "";

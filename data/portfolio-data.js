@@ -453,6 +453,32 @@ window.PORTFOLIO_DATA = {
       palette: { a: "#8a7753", b: "#4f5f52" },
       icon: "./assets/icons/fast-research-group.png",
       iconScale: 0.88,
+      media: {
+        type: "slideshow",
+        autoplayMs: 3600,
+        slides: [
+          {
+            src: "./assets/videos/3D Food Printer Slideshow/Image1.jpeg",
+            alt: "3D Food Printer slideshow image 1",
+          },
+          {
+            src: "./assets/videos/3D Food Printer Slideshow/image2.jpeg",
+            alt: "3D Food Printer slideshow image 2",
+          },
+          {
+            src: "./assets/videos/3D Food Printer Slideshow/image3.jpeg",
+            alt: "3D Food Printer slideshow image 3",
+          },
+          {
+            src: "./assets/videos/3D Food Printer Slideshow/image4.jpeg",
+            alt: "3D Food Printer slideshow image 4",
+          },
+          {
+            src: "./assets/videos/3D Food Printer Slideshow/image5.jpeg",
+            alt: "3D Food Printer slideshow image 5",
+          },
+        ],
+      },
       approach: [
         "I designed and iterated custom CAD parts including a four-syringe holder, material cup holder, and heat-lamp mount for the modified printer assembly.",
         "I used Fusion 360 for modeling and Cura and PrusaSlicer for print prep, adjusting parts around fit, rigidity, mounting constraints, and printability.",
