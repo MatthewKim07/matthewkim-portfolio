@@ -423,6 +423,11 @@ window.PORTFOLIO_DATA = {
       ],
       palette: { a: "#6a857f", b: "#4d5f69" },
       icon: "./assets/icons/uw-libraries.png",
+      media: {
+        type: "video",
+        src: "./assets/videos/assignment-planner-demo.mov",
+        fallbackLabel: "Open video in new tab",
+      },
       approach: [
         "I built the app around assignment-specific templates and deterministic planning logic instead of generic task management or AI-generated output.",
         "I exposed lightweight API endpoints for step retrieval and plan generation while keeping the main experience server-rendered and easy to maintain.",

@@ -1278,13 +1278,38 @@ h1 {
 }
 
 .project-detail-title {
+  margin: 0;
   font-size: clamp(1.55rem, 3.2vw, 2.1rem);
 }
 
 .project-detail-head {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 0.72rem;
+  flex-wrap: wrap;
+}
+
+.project-detail-head-main {
+  display: flex;
+  align-items: center;
+  gap: 0.72rem;
+  min-width: 0;
+}
+
+.project-detail-demo-btn {
+  flex: 0 0 auto;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+}
+
+.project-detail-demo-icon {
+  width: 0.95rem;
+  height: 0.95rem;
+  display: block;
+  flex: 0 0 auto;
 }
 
 .project-detail-copy-grid {
@@ -1970,6 +1995,14 @@ textarea:focus-visible {
 
   .project-detail-head {
     align-items: flex-start;
+  }
+
+  .project-detail-head-main {
+    width: 100%;
+  }
+
+  .project-detail-demo-btn {
+    margin-left: 0;
   }
 
   .connect-grid {

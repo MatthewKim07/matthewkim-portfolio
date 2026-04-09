@@ -1755,22 +1755,39 @@ function renderProjectDetail(project) {
       `
       : "";
 
-  const links = [];
-  if (project.demoUrl) {
-    links.push(
-      `<a class="btn btn-primary" href="${escapeHtml(
+  const demoLink = project.demoUrl
+    ? `<a class="btn btn-primary project-detail-demo-btn" href="${escapeHtml(
         project.demoUrl
-      )}" target="_blank" rel="noreferrer">Live Demo</a>`
-    );
-  }
-
-  if (project.media && project.media.src) {
-    links.push(
-      `<a class="btn btn-ghost" href="${escapeHtml(
-        project.media.src
-      )}" target="_blank" rel="noreferrer">Open Media</a>`
-    );
-  }
+      )}" target="_blank" rel="noreferrer">
+        <span>Live Demo</span>
+        <svg class="project-detail-demo-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path
+            d="M14 5h5v5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.85"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+          <path
+            d="M10 14L19 5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.85"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+          <path
+            d="M19 13v4a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.85"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      </a>`
+    : "";
 
   els.projectDetail.innerHTML = `
     <div class="project-detail-top">
@@ -1782,8 +1799,11 @@ function renderProjectDetail(project) {
 
     <section class="project-detail-panel project-detail-panel--overview">
       <div class="project-detail-head">
-        ${iconBadge}
-        <h3 class="project-detail-title">${escapeHtml(project.title)}</h3>
+        <div class="project-detail-head-main">
+          ${iconBadge}
+          <h3 class="project-detail-title">${escapeHtml(project.title)}</h3>
+        </div>
+        ${demoLink}
       </div>
       <div class="project-detail-copy-grid">
         <div class="project-detail-copy-block">
@@ -1814,8 +1834,6 @@ function renderProjectDetail(project) {
       <h4>Tech Stack</h4>
       <div class="project-detail-stack">${stackChips}</div>
     </section>
-
-    ${links.length ? `<div class="project-actions project-detail-panel project-detail-panel--actions">${links.join("")}</div>` : ""}
   `;
 }
 
