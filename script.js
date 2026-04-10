@@ -166,6 +166,7 @@ const state = {
     lastAngle: 0,
     lastSpawnAt: 0,
     distanceCarry: 0,
+    suppressedUntil: 0,
   },
 };
 
@@ -440,6 +441,11 @@ function clearCursorTrail() {
   if (els.cursorTrailLayer) {
     els.cursorTrailLayer.replaceChildren();
   }
+}
+
+function suppressCursorTrail(duration = 960) {
+  clearCursorTrail();
+  state.cursorTrail.suppressedUntil = performance.now() + duration;
 }
 
 function setViewMode(view) {
@@ -1170,6 +1176,7 @@ function updateContentMapBackdrop(sectionId = state.activeSectionId) {
 }
 
 function flyToSection(sectionId) {
+  suppressCursorTrail(980);
   const rawTarget = getSectionCameraTarget(sectionId);
 
   if (!rawTarget) {
@@ -2600,6 +2607,10 @@ function bindCursorAura() {
     const now = performance.now();
     const lastX = state.cursorTrail.lastX;
     const lastY = state.cursorTrail.lastY;
+
+    if (now < state.cursorTrail.suppressedUntil) {
+      return;
+    }
 
     if (lastX === null || lastY === null || now - state.cursorTrail.lastSpawnAt > trailPauseReset) {
       state.cursorTrail.lastX = clientX;
