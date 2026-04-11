@@ -1428,6 +1428,10 @@ h1 {
   border-radius: 2px;
   border: 1px solid var(--line);
   background: #000;
+  display: block;
+  pointer-events: auto;
+  touch-action: auto;
+  user-select: auto;
 }
 
 .project-slideshow-viewport {

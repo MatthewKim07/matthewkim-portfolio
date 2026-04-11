@@ -264,6 +264,11 @@ window.PORTFOLIO_DATA = {
       ],
       palette: { a: "#6b7d92", b: "#40576c" },
       icon: "./assets/icons/icon.svg",
+      media: {
+        type: "video",
+        src: "./assets/videos/clarus-demo.mp4",
+        fallbackLabel: "Open video in new tab",
+      },
       approach: [
         "I helped integrate a Playwright-based Brightspace connector that handles login, session capture, and course and timeline sync without needing a browser extension.",
         "I worked on the planning and workload flows so students can move from raw LMS data to something closer to an actual plan.",

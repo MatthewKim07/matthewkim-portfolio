@@ -160,6 +160,8 @@ const state = {
   },
   projectMedia: {
     autoplayId: 0,
+    cache: new Map(),
+    loadToken: 0,
   },
   cursorTrail: {
     enabled: true,
@@ -302,6 +304,54 @@ function bindProjectMedia(project) {
       root.addEventListener("focusout", start);
       start();
     }
+    return;
+  }
+
+  if (project.media.type === "video") {
+    const video = document.querySelector(".project-video");
+    if (!video) return;
+
+    ["pointerdown", "click", "mousedown", "touchstart"].forEach((eventName) => {
+      video.addEventListener(eventName, (event) => {
+        event.stopPropagation();
+      });
+    });
+
+    const sourceSrc = project.media.src;
+    if (!sourceSrc) return;
+
+    const applyVideoSrc = (resolvedSrc) => {
+      if (video.getAttribute("src") !== resolvedSrc) {
+        video.setAttribute("src", resolvedSrc);
+        video.load();
+      }
+    };
+
+    const cachedSrc = state.projectMedia.cache.get(sourceSrc);
+    if (cachedSrc) {
+      applyVideoSrc(cachedSrc);
+      return;
+    }
+
+    const loadToken = ++state.projectMedia.loadToken;
+
+    fetch(sourceSrc)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to load media: ${response.status}`);
+        }
+        return response.blob();
+      })
+      .then((blob) => {
+        const objectUrl = URL.createObjectURL(blob);
+        state.projectMedia.cache.set(sourceSrc, objectUrl);
+        if (loadToken !== state.projectMedia.loadToken) return;
+        applyVideoSrc(objectUrl);
+      })
+      .catch(() => {
+        if (loadToken !== state.projectMedia.loadToken) return;
+        applyVideoSrc(sourceSrc);
+      });
   }
 }
 
@@ -1921,8 +1971,7 @@ function renderProjectDetail(project) {
         <section class="project-detail-panel project-detail-panel--media">
           <h4>Preview</h4>
           <div class="project-detail-media">
-            <video class="project-video" controls preload="metadata" playsinline>
-              <source src="${escapeHtml(project.media.src)}" />
+            <video class="project-video" controls preload="auto" playsinline src="${escapeHtml(project.media.src)}">
               Your browser does not support embedded videos.
             </video>
             <a class="project-video-link" href="${escapeHtml(
