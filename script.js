@@ -29,6 +29,7 @@ const CONTACT_FORM_CONFIG = {
       : "") || "https://formspree.io/f/mwvwwney",
   subject: "Portfolio inquiry from matthewkim.com",
 };
+const CURSOR_TRAIL_STORAGE_KEY = "portfolio-map-cursor-trail-enabled";
 
 const VIEW = {
   INTRO: "intro",
@@ -161,6 +162,7 @@ const state = {
     autoplayId: 0,
   },
   cursorTrail: {
+    enabled: true,
     lastX: null,
     lastY: null,
     lastAngle: 0,
@@ -185,6 +187,7 @@ const els = {
   mapWaterfallSecret: document.getElementById("map-waterfall-secret"),
   mapReset: document.getElementById("map-reset"),
   mapIntro: document.getElementById("map-intro"),
+  mapTrailToggle: document.getElementById("map-trail-toggle"),
   returnToMap: document.getElementById("return-to-map"),
 
   siteShell: document.querySelector(".site-shell"),
@@ -446,6 +449,40 @@ function clearCursorTrail() {
 function suppressCursorTrail(duration = 960) {
   clearCursorTrail();
   state.cursorTrail.suppressedUntil = performance.now() + duration;
+}
+
+function setCursorTrailEnabled(enabled, options = {}) {
+  const { persist = true } = options;
+  state.cursorTrail.enabled = enabled;
+
+  if (!enabled) {
+    clearCursorTrail();
+  }
+
+  if (els.mapTrailToggle) {
+    els.mapTrailToggle.setAttribute("aria-pressed", enabled ? "true" : "false");
+    els.mapTrailToggle.setAttribute("aria-label", enabled ? "Turn cursor trail off" : "Turn cursor trail on");
+    els.mapTrailToggle.setAttribute("data-tooltip", enabled ? "Trail on" : "Trail off");
+    els.mapTrailToggle.classList.toggle("is-active", enabled);
+  }
+
+  if (persist) {
+    try {
+      window.localStorage.setItem(CURSOR_TRAIL_STORAGE_KEY, enabled ? "true" : "false");
+    } catch {}
+  }
+}
+
+function restoreCursorTrailPreference() {
+  try {
+    const stored = window.localStorage.getItem(CURSOR_TRAIL_STORAGE_KEY);
+    if (stored === "false") {
+      setCursorTrailEnabled(false, { persist: false });
+      return;
+    }
+  } catch {}
+
+  setCursorTrailEnabled(true, { persist: false });
 }
 
 function setViewMode(view) {
@@ -1315,6 +1352,12 @@ function bindMapInteractions() {
       if (els.introContinue) {
         requestAnimationFrame(() => els.introContinue.focus());
       }
+    });
+  }
+
+  if (els.mapTrailToggle) {
+    els.mapTrailToggle.addEventListener("click", () => {
+      setCursorTrailEnabled(!state.cursorTrail.enabled);
     });
   }
 
@@ -2608,6 +2651,10 @@ function bindCursorAura() {
     const lastX = state.cursorTrail.lastX;
     const lastY = state.cursorTrail.lastY;
 
+    if (!state.cursorTrail.enabled) {
+      return;
+    }
+
     if (now < state.cursorTrail.suppressedUntil) {
       return;
     }
@@ -2825,6 +2872,7 @@ function init() {
   renderProjectTiles();
   renderExperience();
   setActiveContentSection("about");
+  restoreCursorTrailPreference();
 
   observeRevealElements();
 

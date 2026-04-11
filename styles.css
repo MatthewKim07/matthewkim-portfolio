@@ -3498,6 +3498,12 @@ body[data-view="transitioning"] .map-gate {
   font-family: var(--font-ui);
 }
 
+.map-hud-btn svg {
+  width: 1rem;
+  height: 1rem;
+  display: block;
+}
+
 .map-hud-btn::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -3531,6 +3537,21 @@ body[data-view="transitioning"] .map-gate {
   border-color: rgba(180, 144, 76, 0.6);
   color: rgba(91, 70, 44, 0.9);
   background: rgba(248, 241, 212, 0.72);
+}
+
+.map-hud-btn.is-active {
+  border-color: rgba(150, 118, 72, 0.44);
+  color: rgba(78, 61, 38, 0.88);
+  background: rgba(248, 241, 212, 0.68);
+}
+
+.map-hud-btn--trail:not(.is-active) {
+  color: rgba(108, 86, 56, 0.46);
+  background: rgba(238, 229, 196, 0.44);
+}
+
+.map-hud-btn--trail:not(.is-active) svg {
+  opacity: 0.7;
 }
 .map-hud-btn:active {
   transform: scale(0.92);
