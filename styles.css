@@ -3566,6 +3566,12 @@ body[data-view="transitioning"] .map-gate {
   outline-offset: 2px;
 }
 
+@media (hover: none), (pointer: coarse) {
+  .map-hud-btn--trail {
+    display: none;
+  }
+}
+
 .map-viewport {
   position: absolute;
   inset: 0;

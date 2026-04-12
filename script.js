@@ -20,6 +20,7 @@ const mapLocations = mapLocationSource.map((location) => {
 });
 
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const supportsCursorTrail = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 const DEBUG_TRANSITION = false;
 const ENABLE_FALL_TRANSITION = true;
 const CONTACT_FORM_CONFIG = {
@@ -524,6 +525,11 @@ function setCursorTrailEnabled(enabled, options = {}) {
 }
 
 function restoreCursorTrailPreference() {
+  if (!supportsCursorTrail) {
+    setCursorTrailEnabled(false, { persist: false });
+    return;
+  }
+
   try {
     const stored = window.localStorage.getItem(CURSOR_TRAIL_STORAGE_KEY);
     if (stored === "false") {
@@ -2673,7 +2679,7 @@ function bindContactForm() {
 
 function bindCursorAura() {
   if (!els.body || !els.cursorTrailLayer || prefersReducedMotion) return;
-  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  if (!supportsCursorTrail) return;
 
   let rafPending = false;
   let pointerX = 50;
