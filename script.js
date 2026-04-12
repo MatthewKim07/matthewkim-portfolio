@@ -832,7 +832,15 @@ function getViewportSize() {
 }
 
 function canDragMap(scale = state.camera.targetScale) {
-  return scale > state.camera.minScale + 0.01;
+  const { width: viewportWidth, height: viewportHeight } = getViewportSize();
+  const worldWidth = mapMeta.width * scale;
+  const worldHeight = mapMeta.height * scale;
+
+  return (
+    scale > state.camera.minScale + 0.01 ||
+    worldWidth > viewportWidth + 1 ||
+    worldHeight > viewportHeight + 1
+  );
 }
 
 function clampCamera(x, y, scale) {
@@ -1499,7 +1507,7 @@ function bindMapInteractions() {
 
   els.mapViewport.addEventListener("pointerdown", (event) => {
     if (state.view !== VIEW.MAP) return;
-    if (event.button !== 0) return;
+    if (event.pointerType !== "touch" && event.button !== 0) return;
     if (event.target.closest(".map-pin")) return;
     if (event.target.closest(".map-easter-egg")) return;
     if (!canDragMap()) return;
