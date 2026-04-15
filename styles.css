@@ -3144,7 +3144,12 @@ body[data-view="map"] .site-shell {
   position: absolute;
   pointer-events: none;
   user-select: none;
+  --cloud-loop-offset: 0vw;
   transform: translate3d(0, 0, 0);
+}
+
+.cloud--loop-clone {
+  --cloud-loop-offset: calc(-1 * var(--cloud-loop-span, 140vw));
 }
 
 /* ── Far cloud layer — small, high, wispy ── */
@@ -3155,11 +3160,11 @@ body[data-view="map"] .site-shell {
   filter: blur(1.5px);
 }
 
-.cl-f1 { width: 22vw; top: 2%;  left: -4%;  animation: cloudDrift1 30s var(--ease-in-out-smooth) infinite; }
-.cl-f2 { width: 16vw; top: 8%;  left: 18%;  animation: cloudDrift2 36s var(--ease-in-out-smooth) infinite; }
-.cl-f3 { width: 20vw; top: 1%;  left: 44%;  animation: cloudDrift3 33s var(--ease-in-out-smooth) infinite; }
-.cl-f4 { width: 14vw; top: 10%; left: 68%;  animation: cloudDrift4 28s var(--ease-in-out-smooth) infinite; }
-.cl-f5 { width: 18vw; top: 5%;  left: 85%;  animation: cloudDrift5 32s var(--ease-in-out-smooth) infinite; }
+.cl-f1 { --cloud-size: 22vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 2%;  left: -4%;  animation: cloudDrift1 50s linear infinite; animation-delay: 0s; }
+.cl-f2 { --cloud-size: 16vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 8%;  left: 18%;  animation: cloudDrift2 50s linear infinite; animation-delay: -10s; }
+.cl-f3 { --cloud-size: 20vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 1%;  left: 44%;  animation: cloudDrift3 50s linear infinite; animation-delay: -20s; }
+.cl-f4 { --cloud-size: 14vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 10%; left: 68%;  animation: cloudDrift4 50s linear infinite; animation-delay: -30s; }
+.cl-f5 { --cloud-size: 18vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 5%;  left: 85%;  animation: cloudDrift5 50s linear infinite; animation-delay: -40s; }
 
 /* ── Mid cloud layer — medium, varied, split L/R on transition ── */
 .intro-cloud-layer--mid {
@@ -3175,12 +3180,12 @@ body[data-view="map"] .site-shell {
   transform: translate3d(0, 0, 0);
 }
 
-.cl-m1 { width: 30vw; top: 20%; left: -5%;  animation: cloudDrift6 24s var(--ease-in-out-smooth) infinite; }
-.cl-m2 { width: 22vw; top: 28%; left: 16%;  animation: cloudDrift7 27s var(--ease-in-out-smooth) infinite; }
-.cl-m3 { width: 18vw; top: 34%; left: 32%;  animation: cloudDrift8 21s var(--ease-in-out-smooth) infinite; }
-.cl-m4 { width: 28vw; top: 22%; left: 48%;  animation: cloudDrift9 25s var(--ease-in-out-smooth) infinite; }
-.cl-m5 { width: 24vw; top: 30%; left: 68%;  animation: cloudDrift10 22s var(--ease-in-out-smooth) infinite; }
-.cl-m6 { width: 16vw; top: 26%; left: 86%;  animation: cloudDrift11 29s var(--ease-in-out-smooth) infinite; }
+.cl-m1 { --cloud-size: 30vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 20%; left: -5%;  animation: cloudDrift6 36s linear infinite; animation-delay: 0s; }
+.cl-m2 { --cloud-size: 22vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 28%; left: 16%;  animation: cloudDrift7 36s linear infinite; animation-delay: -6s; }
+.cl-m3 { --cloud-size: 18vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 34%; left: 32%;  animation: cloudDrift8 36s linear infinite; animation-delay: -12s; }
+.cl-m4 { --cloud-size: 28vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 22%; left: 48%;  animation: cloudDrift9 36s linear infinite; animation-delay: -18s; }
+.cl-m5 { --cloud-size: 24vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 30%; left: 68%;  animation: cloudDrift10 36s linear infinite; animation-delay: -24s; }
+.cl-m6 { --cloud-size: 16vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 26%; left: 86%;  animation: cloudDrift11 36s linear infinite; animation-delay: -30s; }
 
 /* ── Front cloud layer — large, close, atmospheric banks ── */
 .intro-cloud-layer--front {
@@ -3189,16 +3194,16 @@ body[data-view="map"] .site-shell {
   opacity: 0.88;
 }
 
-.cl-n1 { width: 38vw; top: 48%; left: -10%; animation: cloudDrift12 18s var(--ease-in-out-smooth) infinite; }
-.cl-n2 { width: 44vw; top: 62%; left: -8%;  animation: cloudDrift1  21s var(--ease-in-out-smooth) infinite; }
-.cl-n3 { width: 26vw; top: 55%; left: 22%;  animation: cloudDrift3  19s var(--ease-in-out-smooth) infinite; }
-.cl-n4 { width: 36vw; top: 50%; left: 42%;  animation: cloudDrift6  17s var(--ease-in-out-smooth) infinite; }
-.cl-n5 { width: 42vw; top: 64%; left: 52%;  animation: cloudDrift8  23s var(--ease-in-out-smooth) infinite; }
-.cl-n6 { width: 28vw; top: 56%; left: 78%;  animation: cloudDrift10 20s var(--ease-in-out-smooth) infinite; }
+.cl-n1 { --cloud-size: 38vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 48%; left: -10%; animation: cloudDrift12 28s linear infinite; animation-delay: 0s; }
+.cl-n2 { --cloud-size: 44vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 62%; left: -8%;  animation: cloudDrift1  28s linear infinite; animation-delay: -4.666s; }
+.cl-n3 { --cloud-size: 26vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 55%; left: 22%;  animation: cloudDrift3  28s linear infinite; animation-delay: -9.333s; }
+.cl-n4 { --cloud-size: 36vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 50%; left: 42%;  animation: cloudDrift6  28s linear infinite; animation-delay: -14s; }
+.cl-n5 { --cloud-size: 42vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 64%; left: 52%;  animation: cloudDrift8  28s linear infinite; animation-delay: -18.666s; }
+.cl-n6 { --cloud-size: 28vw; --cloud-loop-span: calc(100vw + var(--cloud-size)); width: var(--cloud-size); top: 56%; left: 78%;  animation: cloudDrift10 28s linear infinite; animation-delay: -23.333s; }
 
 .intro-cloud-layer .cloud {
   animation-timing-function: linear;
-  animation-direction: alternate;
+  animation-direction: normal;
 }
 
 /* ── Bottom fog bank — atmospheric haze ── */
@@ -3211,7 +3216,7 @@ body[data-view="map"] .site-shell {
   background:
     linear-gradient(to top, rgba(195, 185, 136, 0.45), rgba(180, 192, 168, 0.2) 35%, transparent 100%),
     linear-gradient(to top, rgba(210, 205, 172, 0.3), transparent 60%);
-  animation: introFogDrift 20s var(--ease-in-out-smooth) infinite alternate;
+  animation: introFogDrift 20s linear infinite alternate;
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -4080,19 +4085,19 @@ body[data-view="map"] .map-return-btn {
   display: none;
 }
 
-/* ── Individual cloud drift: constant, slow meander ── */
-@keyframes cloudDrift1  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(5vw,0.8vh,0)} }
-@keyframes cloudDrift2  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-4vw,1vh,0)} }
-@keyframes cloudDrift3  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(3.5vw,-0.6vh,0)} }
-@keyframes cloudDrift4  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-4.5vw,0.5vh,0)} }
-@keyframes cloudDrift5  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(6vw,1vh,0)} }
-@keyframes cloudDrift6  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-5.5vw,1.2vh,0)} }
-@keyframes cloudDrift7  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(4.5vw,-0.8vh,0)} }
-@keyframes cloudDrift8  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-5vw,0.9vh,0)} }
-@keyframes cloudDrift9  { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(7vw,1.2vh,0)} }
-@keyframes cloudDrift10 { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-6vw,1.5vh,0)} }
-@keyframes cloudDrift11 { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(6.5vw,-1vh,0)} }
-@keyframes cloudDrift12 { 0%{transform:translate3d(0,0,0)}100%{transform:translate3d(-5.8vw,1.1vh,0)} }
+/* ── Individual cloud drift: offscreen loop in one shared wind direction ── */
+@keyframes cloudDrift1  { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift2  { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift3  { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift4  { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift5  { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift6  { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift7  { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift8  { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift9  { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift10 { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift11 { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
+@keyframes cloudDrift12 { 0%{transform:translate3d(var(--cloud-loop-offset, 0vw),0,0)}100%{transform:translate3d(calc(var(--cloud-loop-offset, 0vw) + var(--cloud-loop-span, 140vw)),0,0)} }
 
 @keyframes introFogDrift {
   from { transform: translateX(-0.8%); }

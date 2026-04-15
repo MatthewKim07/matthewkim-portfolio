@@ -524,6 +524,24 @@ function setCursorTrailEnabled(enabled, options = {}) {
   }
 }
 
+function cloneIntroClouds() {
+  const introClouds = Array.from(document.querySelectorAll(".intro-cloud-layer .cloud:not(.cloud--loop-clone)"));
+  if (!introClouds.length) return;
+
+  introClouds.forEach((cloud) => {
+    if (cloud.dataset.loopReady === "true") return;
+
+    const clone = cloud.cloneNode(true);
+    clone.classList.add("cloud--loop-clone");
+    clone.setAttribute("aria-hidden", "true");
+    clone.removeAttribute("alt");
+    clone.dataset.loopClone = "true";
+
+    cloud.after(clone);
+    cloud.dataset.loopReady = "true";
+  });
+}
+
 function restoreCursorTrailPreference() {
   if (!supportsCursorTrail) {
     setCursorTrailEnabled(false, { persist: false });
@@ -2926,6 +2944,7 @@ function bindScrollHandlers() {
 }
 
 function init() {
+  cloneIntroClouds();
   setMapWorldSize();
   resetTransitionVisuals();
   setViewMode(VIEW.INTRO);
