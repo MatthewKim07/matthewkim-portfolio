@@ -2,6 +2,14 @@
 
 Personal portfolio website for Matthew Kim.
 
+## License
+
+The source code in this repository is licensed under the MIT License. See [LICENSE](./LICENSE).
+
+Non-code assets are excluded from that license unless explicitly stated otherwise. See [ASSETS-LICENSE.md](./ASSETS-LICENSE.md).
+
+Third-party names, logos, and marks in this repository are used only for identification in portfolio content and remain the property of their respective owners.
+
 ## Run Locally
 
 This is a static site with no build step.
