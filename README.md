@@ -1,68 +1,122 @@
-# matthewkim-portfolio
+<div align="center">
 
-Personal portfolio website for Matthew Kim.
+# 🗺️ Matthew Kim — Portfolio
 
-## License
+**An interactive, atlas-style portfolio. Navigate portfolio sections by exploring a hand-illustrated map.**
 
-The source code in this repository is licensed under the MIT License. See [LICENSE](./LICENSE).
+[![Live Site](https://img.shields.io/badge/🌐_Live_Site-matthewkim.ca-0d1117?style=for-the-badge&labelColor=0d1117&color=4f8ef7)](https://matthewkim.ca)
+&nbsp;
+[![MIT License](https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge&labelColor=0d1117)](./LICENSE)
+&nbsp;
+[![Static Site](https://img.shields.io/badge/Build-No_Build_Step-f59e0b?style=for-the-badge&labelColor=0d1117&logo=html5&logoColor=white)](./index.html)
 
-Non-code assets are excluded from that license unless explicitly stated otherwise. See [ASSETS-LICENSE.md](./ASSETS-LICENSE.md).
+</div>
 
-Third-party names, logos, and marks in this repository are used only for identification in portfolio content and remain the property of their respective owners.
+---
 
-## Run Locally
+## ✨ Features
 
-This is a static site with no build step.
+| | Feature |
+|---|---|
+| 🌄 | Cinematic cloud intro with animated entrance |
+| 🗺️ | Hand-illustrated, pannable & zoomable atlas map |
+| 📌 | Map pins that zoom in and open portfolio sections |
+| 🎞️ | Smooth intro → map → content transitions |
+| ⌨️ | Full keyboard navigation (`Tab`, `Enter`, `Space`, `Esc`) |
+| ♿ | `prefers-reduced-motion` support |
+| 📬 | Contact form via Formspree (no backend required) |
+
+---
+
+## 🚀 Run Locally
+
+Static site — no install, no build step.
 
 ```bash
 python3 -m http.server 8080
 ```
 
-Then open [http://localhost:8080](http://localhost:8080).
+Open **[http://localhost:8080](http://localhost:8080)**
 
-## Structure
+---
 
-- `index.html`: intro scene, interactive map scene, and portfolio section markup
-- `styles.css`: visual system, map/intro art styles, section UI styles, and motion
-- `script.js`: rendering logic, state machine (`intro`/`map`/`content`), map pan/zoom, pin navigation
-- `data/portfolio-data.js`: portfolio content source (skills/projects/experience)
-- `data/map-pins.js`: editable pin coordinates and camera focus settings
-- `assets/`: project/experience/education icons, resume, media
+## 🗂️ Project Structure
 
-## Edit Map Pins
+```
+matthewkim-portfolio/
+├── index.html              ← Intro, map scene, section markup
+├── styles.css              ← Visual system, map art, motion
+├── script.js               ← State machine, pan/zoom, pin nav
+├── data/
+│   ├── map-pins.js         ← Pin positions & camera targets  ← edit here for map
+│   └── portfolio-data.js   ← Skills, projects, experience    ← edit here for content
+└── assets/                 ← Icons, resume, media
+```
 
-Update `data/map-pins.js`:
+**App state flow:** `INTRO` → `TRANSITIONING` → `MAP` ⇌ `CONTENT`
 
-- `id`: section target id (`about`, `education`, `skills`, `projects`, `experience`, `contact`)
-- `x`, `y`: pin position in map coordinates
-- `color`: pin accent color
-- `zoomLevel`: camera zoom value used before opening the section
+---
 
-Map dimensions are in `EXPEDITION_MAP_META` and currently set to `1536 x 1024`.
+## ✏️ Editing Guide
 
-## Edit Portfolio Content
+### 📌 Map Pins — `data/map-pins.js`
 
-Update `data/portfolio-data.js`:
+Each pin entry controls a map hotspot:
 
-- `skills`: skills groups and items
-- `projects`: project cards/details, stack, media, icon references
-- `experience`: timeline entries, logos, and highlights
+| Field | Description |
+|---|---|
+| `id` | Target section: `about` `education` `skills` `projects` `experience` `contact` |
+| `x`, `y` | Pin position in map coordinates (map is `1536 × 1024`) |
+| `color` | Pin accent color |
+| `zoomLevel` | Camera zoom level when opening that section |
 
-## Contact Form Setup
+### 📋 Portfolio Content — `data/portfolio-data.js`
 
-The contact form uses Formspree so visitors can submit messages directly on the site without opening an email client.
+| Key | What it controls |
+|---|---|
+| `skills` | Skill groups and items |
+| `projects` | Project cards, stack, media, icons |
+| `experience` | Timeline entries, logos, highlights |
 
-1. Create a free form at [Formspree](https://formspree.io/).
-2. Copy the generated endpoint, which looks like `https://formspree.io/f/xxxxabcd`.
-3. Replace `https://formspree.io/f/YOUR_FORM_ID` in `CONTACT_FORM_CONFIG.endpoint` inside `script.js`.
+---
 
-Notes:
+## 📬 Contact Form Setup
 
-- Formspree's free plan currently allows 50 submissions per month.
-- The form includes a hidden `_gotcha` field for basic spam filtering.
+Uses **[Formspree](https://formspree.io/)** — no backend needed.
 
-## Accessibility + Motion
+1. Create a free form at [formspree.io](https://formspree.io/)
+2. Copy the endpoint: `https://formspree.io/f/xxxxabcd`
+3. Replace the placeholder in `script.js`:
 
-- Keyboard support for map pins (`Tab`, `Enter`, `Space`)
-- Escape closes project detail view
-- `prefers-reduced-motion` disables heavy ambient motion/parallax
+```js
+CONTACT_FORM_CONFIG.endpoint = "https://formspree.io/f/YOUR_FORM_ID"
+```
+
+> **Note:** Free plan = 50 submissions/month. A hidden `_gotcha` field handles basic spam filtering.
+
+---
+
+## ✅ Validation
+
+After any JS edits:
+
+```bash
+node --check script.js
+```
+
+Manual browser checklist:
+- [ ] Intro button triggers transition
+- [ ] Intro → map transition is smooth
+- [ ] Map pan / zoom works
+- [ ] Pins open correct sections
+- [ ] Back-to-map returns correctly
+
+---
+
+## 📄 License
+
+Source code is licensed under the **[MIT License](./LICENSE)**.
+
+Non-code assets are excluded — see **[ASSETS-LICENSE.md](./ASSETS-LICENSE.md)**.
+
+Third-party names, logos, and marks are used only for portfolio identification and remain property of their respective owners.
